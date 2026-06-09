@@ -82,8 +82,40 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   .side.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
   .burger{display:flex !important}
   main{padding:24px 20px 100px}
+  main h1{font-size:28px}
+  main h2{font-size:18px}
+  pre{font-size:11px; padding:12px 14px}
+  .cmd-card .head .name{font-size:13px}
+  .cmd-card .desc{font-size:12px; padding:12px 14px}
+  .cmd-card .args{padding:10px 14px; font-size:11px}
+  table{font-size:11px}
+  th,td{padding:8px 10px}
+  .note{font-size:11.5px; padding:12px 14px}
+  .os-tabs button{padding:8px 12px; font-size:11px}
+}
+@media(max-width:520px){
+  main{padding:20px 14px 80px}
+  main h1{font-size:24px}
+  main h2{font-size:16px; margin-top:40px; padding-top:18px}
+  main p{font-size:12px}
+  pre{font-size:10px; padding:10px 12px; line-height:1.65}
+  code{font-size:10.5px; padding:1px 4px}
+  .cmd-card .head{padding:10px 12px}
+  .cmd-card .head .name{font-size:12px}
+  .cmd-card .head .badge{font-size:9px; padding:2px 5px}
+  .cmd-card .desc{font-size:11px; padding:10px 12px}
+  .cmd-card .args{font-size:10.5px; padding:8px 12px}
+  .cmd-card .args dt code{font-size:10px}
+  table{font-size:10px}
+  th,td{padding:6px 8px}
+  th{font-size:9px}
+  .note{font-size:11px; padding:10px 12px; gap:10px}
+  .note .ic{width:24px; height:24px; flex:0 0 24px; font-size:12px}
+  .os-tabs button{padding:8px 10px; font-size:10px}
 }
 .burger{display:none; position:fixed; top:14px; left:14px; z-index:101; width:40px; height:40px; border:2px solid var(--line); background:var(--paper2); align-items:center; justify-content:center; cursor:pointer}
+.overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:99}
+.overlay.show{display:block}
 
 /* platform tabs */
 .os-tabs{display:flex; border:2px solid var(--line); border-bottom:none; margin-top:14px}
@@ -98,7 +130,8 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 </head>
 <body>
 
-<button class="burger" onclick="document.querySelector('.side').classList.toggle('open')">
+<div class="overlay" onclick="document.querySelector('.side').classList.remove('open');this.classList.remove('show')"></div>
+<button class="burger" onclick="document.querySelector('.side').classList.toggle('open');document.querySelector('.overlay').classList.toggle('show')">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 </button>
 
@@ -527,6 +560,12 @@ document.querySelectorAll('#os-tabs button').forEach(function(b){
 });
 
 var links = document.querySelectorAll('.side nav a');
+links.forEach(function(a){
+  a.addEventListener('click', function(){
+    document.querySelector('.side').classList.remove('open');
+    var ov = document.querySelector('.overlay'); if(ov) ov.classList.remove('show');
+  });
+});
 var sections = [];
 links.forEach(function(a){
   var id = a.getAttribute('href').slice(1);
