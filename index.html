@@ -323,6 +323,8 @@ section{padding:74px 0; border-bottom:2px solid var(--line)}
 .cmd .p{color:var(--lime)}
 .cmd:hover{outline:3px solid var(--lime); outline-offset:-1px}
 .cmd.copied{background:var(--lime); color:var(--ink)} .cmd.copied .p{color:var(--ink)}
+.copy-tip{position:fixed; pointer-events:none; font-family:var(--mono); font-size:11px; font-weight:700; background:var(--ink); color:var(--lime); padding:4px 9px; z-index:999; opacity:0; transition:opacity .15s,transform .15s; transform:translateY(4px)}
+.copy-tip.show{opacity:1; transform:translateY(0)}
 
 /* features */
 .feats{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:44px; border:2px solid var(--line); border-bottom:none; border-right:none}
@@ -595,11 +597,23 @@ footer .links a:hover{color:var(--ink)}
 </footer>
 
 <script>
+  var tip = document.createElement('div');
+  tip.className = 'copy-tip';
+  tip.textContent = 'copied!';
+  document.body.appendChild(tip);
+  var tipTimer;
+
   document.querySelectorAll('[data-cmd]').forEach(function(el){
-    el.addEventListener('click', function(){
-      try{ navigator.clipboard && navigator.clipboard.writeText(el.dataset.cmd); }catch(e){}
+    el.addEventListener('click', function(e){
+      try{ navigator.clipboard && navigator.clipboard.writeText(el.dataset.cmd); }catch(er){}
       el.classList.add('copied');
       setTimeout(function(){ el.classList.remove('copied'); }, 1200);
+
+      clearTimeout(tipTimer);
+      tip.style.left = e.clientX + 12 + 'px';
+      tip.style.top = e.clientY - 28 + 'px';
+      tip.classList.add('show');
+      tipTimer = setTimeout(function(){ tip.classList.remove('show'); }, 900);
     });
   });
 
