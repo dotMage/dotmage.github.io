@@ -181,7 +181,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="server" data-i18n="h_server">Deploy server</h2>
 <p data-i18n="p_server">One command installs everything via Docker:</p>
 <pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/dotmage-server/main/install.sh | bash</pre>
-<p data-i18n="p_server2">This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>8000</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.</p>
+<p data-i18n="p_server2">This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>9470</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.</p>
 
 <div class="note warn">
   <span class="ic">!</span>
@@ -189,16 +189,16 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 </div>
 
 <h2 id="quickstart" data-i18n="h_quick">Quick start</h2>
-<p data-i18n="p_quick">After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>8000</code>):</p>
+<p data-i18n="p_quick">After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>9470</code>):</p>
 <pre><span class="c"># 1. Authenticate with the server</span>
-<span class="p">$</span> dmage auth --server http://167.71.55.12:8000
+<span class="p">$</span> dmage auth --server http://167.71.55.12:9470
 
 <span class="c"># 2. Init an app from your .env</span>
 <span class="p">$</span> dmage init myapp
   <span class="s">✓</span> Created app 'myapp'. Pushed revision 1 from .env (12 keys).
 
 <span class="c"># 3. On another machine — auth and pull</span>
-<span class="p">$</span> dmage auth --server http://167.71.55.12:8000 --enroll &lt;token&gt;
+<span class="p">$</span> dmage auth --server http://167.71.55.12:9470 --enroll &lt;token&gt;
 <span class="p">$</span> dmage pull myapp
   <span class="s">✓</span> Decrypted 12 keys → .env
 
@@ -211,8 +211,8 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <div class="cmd-card">
   <div class="head"><span class="name">auth</span><span class="badge" data-i18n="b_first">required first</span></div>
   <div class="desc" data-i18n="d_auth">Authenticate with the dotMage server. On first device — initializes the account. On subsequent devices — use an enrollment token.</div>
-  <pre><span class="p">$</span> dmage auth --server http://167.71.55.12:8000
-<span class="p">$</span> dmage auth --server http://167.71.55.12:8000 --enroll &lt;token&gt;</pre>
+  <pre><span class="p">$</span> dmage auth --server http://167.71.55.12:9470
+<span class="p">$</span> dmage auth --server http://167.71.55.12:9470 --enroll &lt;token&gt;</pre>
   <div class="args">
     <dl>
       <dt><code>--server &lt;URL&gt;</code></dt><dd data-i18n="a_auth_server">Server URL (required on first auth)</dd>
@@ -436,11 +436,11 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <span class="k">volumes</span>:
       - dotmage-data:/data
     <span class="k">ports</span>:
-      - <span class="s">"8000:8000"</span>
+      - <span class="s">"9470:8000"</span>
 <span class="k">volumes</span>:
   dotmage-data:</pre>
 
-<p data-i18n="p_docker3">The server will be available at <code>http://&lt;your-ip&gt;:8000</code>. Point the CLI at this address when authenticating.</p>
+<p data-i18n="p_docker3">The server will be available at <code>http://&lt;your-ip&gt;:9470</code>. Point the CLI at this address when authenticating.</p>
 
 <h2 id="tls" data-i18n="h_tls">TLS / Production</h2>
 <p data-i18n="p_tls">For production, put a reverse proxy in front of the server. Example with Caddy (automatic HTTPS with Let's Encrypt):</p>
@@ -474,7 +474,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 }</pre>
 
 <p data-i18n="p_tls2">Without a domain, you can also use nginx or Caddy with a self-signed cert, or just run plain HTTP on a private network:</p>
-<pre><span class="p">$</span> dmage auth --server http://192.168.1.50:8000</pre>
+<pre><span class="p">$</span> dmage auth --server http://192.168.1.50:9470</pre>
 
 <h2 id="backup" data-i18n="h_backup">Backup</h2>
 <p data-i18n="p_backup">The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, device tokens, audit log. Back it up regularly.</p>
@@ -560,10 +560,10 @@ en: {
   p_win:'Downloads the binary to <code>%LOCALAPPDATA%\\dotmage\\</code> and adds it to PATH. Restart your terminal — <code>dmage</code> works from anywhere.',
   h_server:"Deploy server",
   p_server:"One command installs everything via Docker:",
-  p_server2:'This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>8000</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.',
+  p_server2:'This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>9470</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.',
   warn_bootstrap:'The <b>bootstrap secret</b> is shown only once at first start. You need it to initialize your account. If you lose it, re-deploy from scratch.',
   h_quick:"Quick start",
-  p_quick:'After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>8000</code>):',
+  p_quick:'After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>9470</code>):',
   b_first:"required first", b_rec:"recommended",
   d_auth:"Authenticate with the dotMage server. On first device — initializes the account. On subsequent devices — use an enrollment token.",
   a_auth_server:"Server URL (required on first auth)", a_auth_enroll:"Enrollment token for 2nd+ devices", a_auth_ttl:'Cache TTL, e.g. <code>7d</code>, <code>30d</code>',
@@ -602,7 +602,7 @@ en: {
   cfg_static:"Path to web admin static files.",
   p_docker:"Quickest way to run the server:",
   p_docker2:'Or with a custom <code>docker-compose.yml</code>:',
-  p_docker3:'The server will be available at <code>http://&lt;your-ip&gt;:8000</code>. Point the CLI at this address when authenticating.',
+  p_docker3:'The server will be available at <code>http://&lt;your-ip&gt;:9470</code>. Point the CLI at this address when authenticating.',
   h_tls:"TLS / Production",
   p_tls:"For production, put a reverse proxy in front of the server. Example with Caddy (automatic HTTPS with Let's Encrypt):",
   p_tls2:"Without a domain, you can also use nginx or Caddy with a self-signed cert, or just run plain HTTP on a private network:",
@@ -630,10 +630,10 @@ ru: {
   p_win:'Скачивает бинарник в <code>%LOCALAPPDATA%\\dotmage\\</code> и добавляет в PATH. После перезапуска терминала <code>dmage</code> работает отовсюду.',
   h_server:"Деплой сервера",
   p_server:"Одна команда устанавливает всё через Docker:",
-  p_server2:'Создаёт директорию <code>dotmage/</code> с <code>docker-compose.yml</code>, скачивает образы сервера и веб-админки, запускает контейнеры на порту <code>8000</code>. Bootstrap secret выводится в консоль — <strong>сохраните его</strong>.',
+  p_server2:'Создаёт директорию <code>dotmage/</code> с <code>docker-compose.yml</code>, скачивает образы сервера и веб-админки, запускает контейнеры на порту <code>9470</code>. Bootstrap secret выводится в консоль — <strong>сохраните его</strong>.',
   warn_bootstrap:'<b>Bootstrap secret</b> показывается только один раз при первом запуске. Он нужен для инициализации аккаунта. Если потеряете — придётся деплоить заново.',
   h_quick:"Быстрый старт",
-  p_quick:'После запуска сервера (пример: VPS на <code>167.71.55.12</code>, порт <code>8000</code>):',
+  p_quick:'После запуска сервера (пример: VPS на <code>167.71.55.12</code>, порт <code>9470</code>):',
   b_first:"обязательно первым", b_rec:"рекомендуется",
   d_auth:"Аутентификация на сервере dotMage. На первом устройстве — инициализирует аккаунт. На последующих — используйте enrollment-токен.",
   a_auth_server:"URL сервера (обязателен при первой авторизации)", a_auth_enroll:"Enrollment-токен для 2-го+ устройства", a_auth_ttl:'TTL кэша, например <code>7d</code>, <code>30d</code>',
@@ -672,7 +672,7 @@ ru: {
   cfg_static:"Путь к статике веб-админки.",
   p_docker:"Самый быстрый способ запустить сервер:",
   p_docker2:'Или с кастомным <code>docker-compose.yml</code>:',
-  p_docker3:'Сервер будет доступен по <code>http://&lt;ваш-ip&gt;:8000</code>. Укажите этот адрес при авторизации CLI.',
+  p_docker3:'Сервер будет доступен по <code>http://&lt;ваш-ip&gt;:9470</code>. Укажите этот адрес при авторизации CLI.',
   h_tls:"TLS / Продакшн",
   p_tls:"Для продакшна поставьте реверс-прокси перед сервером. Пример с Caddy (автоматический HTTPS через Let's Encrypt):",
   p_tls2:"Без домена можно использовать nginx или Caddy с самоподписанным сертификатом, или просто HTTP в приватной сети:",
