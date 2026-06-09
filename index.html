@@ -248,6 +248,11 @@ a{color:inherit; text-decoration:none}
 .btn.ink{background:var(--ink); color:var(--lime)}
 .btn.ink:hover{background:var(--lime); color:var(--ink)}
 .btn.lg{padding:14px 22px; font-size:13.5px}
+.langtog{display:flex; border:2px solid var(--line)}
+.langtog button{font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.04em; padding:9px 11px; border:none; border-right:2px solid var(--line); background:var(--paper2); color:var(--dim); cursor:pointer; transition:.1s}
+.langtog button:last-child{border-right:none}
+.langtog button.on{background:var(--ink); color:var(--lime)}
+.langtog button:not(.on):hover{background:var(--card); color:var(--ink)}
 .btn .ic{display:inline-flex}
 
 /* hero */
@@ -380,14 +385,18 @@ footer .links a:hover{color:var(--ink)}
   <div class="wrap in">
     <a class="brand" href="#top"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b>Mage</b></a>
     <div class="links">
-      <a href="#how">How it works</a>
-      <a href="#steps">Get started</a>
-      <a href="#features">Features</a>
-      <a href="#compare">Compare</a>
+      <a href="#how" data-i18n="nav_how">How it works</a>
+      <a href="#steps" data-i18n="nav_steps">Get started</a>
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#compare" data-i18n="nav_compare">Compare</a>
     </div>
     <div class="right">
+      <div class="langtog" id="langtog">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="ru">RU</button>
+      </div>
       <a class="btn" href="#"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.72 0 0 .84-.27 2.75 1.05a9.34 9.34 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg></span> GitHub</a>
-      <a class="btn ink" href="#steps">Self-host it ▸</a>
+      <a class="btn ink" href="#steps" data-i18n="nav_selfhost">Self-host it ▸</a>
     </div>
   </div>
 </nav>
@@ -396,18 +405,18 @@ footer .links a:hover{color:var(--ink)}
   <div class="grid-bg"></div>
   <div class="wrap in">
     <div>
-      <span class="tagline"><i></i> Self-hosted · zero-knowledge · open source</span>
-      <h1>Sync your <span class="hl">.env</span> files.<br>End-to-end encrypted.</h1>
-      <p class="lede">dotMage moves your secrets between every machine you code on — laptop, work PC, CI runner. Encrypted on-device before they leave. <b>Your server only ever stores ciphertext.</b></p>
+      <span class="tagline" data-i18n="hero_tag"><i></i> Self-hosted · zero-knowledge · open source</span>
+      <h1 data-i18n="hero_h1">Sync your <span class="hl">.env</span> files.<br>End-to-end encrypted.</h1>
+      <p class="lede" data-i18n="hero_lede">dotMage moves your secrets between every machine you code on — laptop, work PC, CI runner. Encrypted on-device before they leave. <b>Your server only ever stores ciphertext.</b></p>
       <div class="cta">
-        <a class="btn ink lg" href="#steps">Deploy your server ▸</a>
-        <a class="btn lg" href="#how">See how it works</a>
+        <a class="btn ink lg" href="#steps" data-i18n="hero_cta1">Deploy your server ▸</a>
+        <a class="btn lg" href="#how" data-i18n="hero_cta2">See how it works</a>
       </div>
       <div class="meta">
-        <span>One binary</span>
-        <span>No DevOps</span>
-        <span>.env native</span>
-        <span>v0.1.0</span>
+        <span data-i18n="hero_m1">One binary</span>
+        <span data-i18n="hero_m2">No DevOps</span>
+        <span data-i18n="hero_m3">.env native</span>
+        <span data-i18n="hero_m4">v0.1.0</span>
       </div>
     </div>
     <div class="term">
@@ -433,68 +442,68 @@ footer .links a:hover{color:var(--ink)}
 
 <section id="how">
   <div class="wrap">
-    <span class="kicker">Zero-knowledge by design</span>
-    <div class="h2">Your server never sees your secrets.</div>
-    <p class="sub">Encryption and decryption happen entirely on your devices. The server is a dumb, untrusted relay — it stores opaque blobs and metadata, nothing it can read.</p>
+    <span class="kicker" data-i18n="how_k">Zero-knowledge by design</span>
+    <div class="h2" data-i18n="how_h2">Your server never sees your secrets.</div>
+    <p class="sub" data-i18n="how_sub">Encryption and decryption happen entirely on your devices. The server is a dumb, untrusted relay — it stores opaque blobs and metadata, nothing it can read.</p>
 
     <div class="enc">
       <div class="node">
-        <div class="lbl"><b></b>Your laptop</div>
-        <div class="ttl">.env (plaintext)</div>
-        <div class="desc">12 keys live only here, decrypted, in your project folder.</div>
+        <div class="lbl" data-i18n="n1_l"><b></b>Your laptop</div>
+        <div class="ttl" data-i18n="n1_t">.env (plaintext)</div>
+        <div class="desc" data-i18n="n1_d">12 keys live only here, decrypted, in your project folder.</div>
       </div>
       <div class="arrow">
-        <div class="op">encrypt<br>on-device</div>
+        <div class="op" data-i18n="a1_op">encrypt<br>on-device</div>
         <div class="ar">→</div>
         <div class="lk">aes-256-gcm</div>
       </div>
       <div class="node server">
-        <div class="lbl"><b></b>Your server</div>
-        <div class="ttl">ciphertext only</div>
-        <div class="desc">Stores versioned blobs + metadata. Can't decrypt anything.</div>
+        <div class="lbl" data-i18n="n2_l"><b></b>Your server</div>
+        <div class="ttl" data-i18n="n2_t">ciphertext only</div>
+        <div class="desc" data-i18n="n2_d">Stores versioned blobs + metadata. Can't decrypt anything.</div>
         <div class="cipher">9f2a··c1 7e0b··44 a83d··9e b21f··07 5c66··d0 e4a9··38</div>
       </div>
       <div class="arrow">
-        <div class="op">decrypt<br>on-device</div>
+        <div class="op" data-i18n="a2_op">decrypt<br>on-device</div>
         <div class="ar">→</div>
-        <div class="lk">your key</div>
+        <div class="lk" data-i18n="a2_lk">your key</div>
       </div>
       <div class="node">
-        <div class="lbl"><b></b>Work PC / CI</div>
-        <div class="ttl">.env (plaintext)</div>
-        <div class="desc">Pulls the blob, decrypts locally with your key. Same secrets.</div>
+        <div class="lbl" data-i18n="n3_l"><b></b>Work PC / CI</div>
+        <div class="ttl" data-i18n="n3_t">.env (plaintext)</div>
+        <div class="desc" data-i18n="n3_d">Pulls the blob, decrypts locally with your key. Same secrets.</div>
       </div>
     </div>
 
     <div class="enc-note">
       <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg></span>
-      <span>Lose your key and even <b>you</b> can't read the data back. That's the point — no server admin, hosting provider, or attacker with database access ever can either.</span>
+      <span data-i18n="enc_note">Lose your key and even <b>you</b> can't read the data back. That's the point — no server admin, hosting provider, or attacker with database access ever can either.</span>
     </div>
   </div>
 </section>
 
 <section id="steps">
   <div class="wrap">
-    <span class="kicker">Three commands</span>
-    <div class="h2">From zero to synced.</div>
-    <p class="sub">Bring your own box — a $5 VPS is plenty. dotMage is a single binary with no external dependencies.</p>
+    <span class="kicker" data-i18n="st_k">Three commands</span>
+    <div class="h2" data-i18n="st_h2">From zero to synced.</div>
+    <p class="sub" data-i18n="st_sub">Bring your own box — a $5 VPS is plenty. dotMage is a single binary with no external dependencies.</p>
     <div class="steps">
       <div class="step">
         <div class="no">01</div>
-        <h3>Deploy server</h3>
-        <p>Run the binary on any machine you control. It's stateless config plus a small store of ciphertext.</p>
+        <h3 data-i18n="st1_h">Deploy server</h3>
+        <p data-i18n="st1_p">Run the binary on any machine you control. It's stateless config plus a small store of ciphertext.</p>
         <button class="cmd" data-cmd="dmage serve --port 8000"><span class="p">$</span> dmage serve --port 8000</button>
       </div>
       <div class="step">
         <div class="no">02</div>
-        <h3>Auth a device</h3>
-        <p>Point the CLI at your server and pair the machine. You get a device token — no passwords, ever.</p>
+        <h3 data-i18n="st2_h">Auth a device</h3>
+        <p data-i18n="st2_p">Point the CLI at your server and pair the machine. You get a device token — no passwords, ever.</p>
         <button class="cmd" data-cmd="dmage login https://you.dev"><span class="p">$</span> dmage login https://you.dev</button>
       </div>
       <div class="step">
         <div class="no">03</div>
-        <h3>Push &amp; pull</h3>
-        <p>Version your .env from any device and pull it down everywhere else. Roll back anytime.</p>
+        <h3 data-i18n="st3_h">Push &amp; pull</h3>
+        <p data-i18n="st3_p">Version your .env from any device and pull it down everywhere else. Roll back anytime.</p>
         <button class="cmd" data-cmd="dmage push myapp"><span class="p">$</span> dmage push myapp</button>
       </div>
     </div>
@@ -503,43 +512,43 @@ footer .links a:hover{color:var(--ink)}
 
 <section id="features">
   <div class="wrap">
-    <span class="kicker">Built for the terminal</span>
-    <div class="h2">Everything you'd reach for.</div>
+    <span class="kicker" data-i18n="ft_k">Built for the terminal</span>
+    <div class="h2" data-i18n="ft_h2">Everything you'd reach for.</div>
     <div class="feats">
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></div>
-        <h3>Versioned revisions</h3>
-        <p>Every push is an immutable, numbered revision with the device and timestamp that made it.</p>
+        <h3 data-i18n="f1_h">Versioned revisions</h3>
+        <p data-i18n="f1_p">Every push is an immutable, numbered revision with the device and timestamp that made it.</p>
         <div class="fc"><span class="p">$</span> dmage history myapp</div>
       </div>
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8a6 6 0 1 1 0 12H9"></path><path d="M4 8l3.5-3.5M4 8l3.5 3.5"></path></svg></div>
-        <h3>One-command rollback</h3>
-        <p>Shipped a bad secret? Roll any environment back to a previous revision instantly.</p>
+        <h3 data-i18n="f2_h">One-command rollback</h3>
+        <p data-i18n="f2_p">Shipped a bad secret? Roll any environment back to a previous revision instantly.</p>
         <div class="fc"><span class="p">$</span> dmage rollback myapp 2</div>
       </div>
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 9l3 3-3 3M13 15h4"></path></svg></div>
-        <h3>Run with secrets</h3>
-        <p>Inject decrypted env into any process without ever writing it to disk.</p>
+        <h3 data-i18n="f3_h">Run with secrets</h3>
+        <p data-i18n="f3_p">Inject decrypted env into any process without ever writing it to disk.</p>
         <div class="fc"><span class="p">$</span> dmage exec myapp -- npm start</div>
       </div>
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="14" height="10" rx="1.5"></rect><path d="M2.5 17.5h14"></path><rect x="18" y="9" width="3.5" height="10.5" rx="1"></rect></svg></div>
-        <h3>Multi-device</h3>
-        <p>Pair as many machines as you want. Revoke any one of them the moment it's lost or stolen.</p>
+        <h3 data-i18n="f4_h">Multi-device</h3>
+        <p data-i18n="f4_p">Pair as many machines as you want. Revoke any one of them the moment it's lost or stolen.</p>
         <div class="fc"><span class="p">$</span> dmage devices</div>
       </div>
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h9l5 5v13H5z"></path><path d="M14 3v5h5"></path><path d="M8.5 13h7M8.5 16.5h7"></path></svg></div>
-        <h3>Full audit log</h3>
-        <p>Every auth, push, pull, rollback and revoke is recorded — query it from CLI or the web admin.</p>
+        <h3 data-i18n="f5_h">Full audit log</h3>
+        <p data-i18n="f5_p">Every auth, push, pull, rollback and revoke is recorded — query it from CLI or the web admin.</p>
         <div class="fc"><span class="p">$</span> dmage audit --app myapp</div>
       </div>
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.2-2.9 7.4-7 9-4.1-1.6-7-4.8-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg></div>
-        <h3>Per-environment</h3>
-        <p>Keep dev, staging and prod as separate, independently versioned secret sets per app.</p>
+        <h3 data-i18n="f6_h">Per-environment</h3>
+        <p data-i18n="f6_p">Keep dev, staging and prod as separate, independently versioned secret sets per app.</p>
         <div class="fc"><span class="p">$</span> dmage pull myapp --env prod</div>
       </div>
     </div>
@@ -548,19 +557,19 @@ footer .links a:hover{color:var(--ink)}
 
 <section id="compare">
   <div class="wrap">
-    <span class="kicker">Where it fits</span>
-    <div class="h2">Not another vault.</div>
-    <p class="sub">dotMage does one thing: sync .env files, end-to-end encrypted, on infrastructure you own.</p>
+    <span class="kicker" data-i18n="cmp_k">Where it fits</span>
+    <div class="h2" data-i18n="cmp_h2">Not another vault.</div>
+    <p class="sub" data-i18n="cmp_sub">dotMage does one thing: sync .env files, end-to-end encrypted, on infrastructure you own.</p>
     <div class="cmp">
       <table>
-        <thead><tr><th>&nbsp;</th><th>Self-hosted</th><th>E2E (zero-knowledge)</th><th>.env-native</th><th>No DevOps</th></tr></thead>
+        <thead><tr><th>&nbsp;</th><th data-i18n="cmp_th1">Self-hosted</th><th data-i18n="cmp_th2">E2E (zero-knowledge)</th><th data-i18n="cmp_th3">.env-native</th><th data-i18n="cmp_th4">No DevOps</th></tr></thead>
         <tbody>
-          <tr class="me"><td>dotMage</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
-          <tr><td>HashiCorp Vault</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td><td class="no">heavy</td></tr>
-          <tr><td>Doppler</td><td class="no">SaaS</td><td class="no">sees secrets</td><td class="yes">yes</td><td class="yes">yes</td></tr>
-          <tr><td>1Password CLI</td><td class="no">SaaS</td><td class="yes">yes</td><td class="no">passwords</td><td class="yes">yes</td></tr>
-          <tr><td>git-crypt</td><td class="yes">in-repo</td><td class="yes">yes</td><td class="no">git-bound</td><td class="yes">yes</td></tr>
-          <tr><td>sops</td><td class="yes">files</td><td class="yes">yes</td><td class="no">yaml/json</td><td class="no">KMS setup</td></tr>
+          <tr class="me"><td>dotMage</td><td class="yes" data-i18n="v_yes">yes</td><td class="yes" data-i18n="v_yes">yes</td><td class="yes" data-i18n="v_yes">yes</td><td class="yes" data-i18n="v_yes">yes</td></tr>
+          <tr><td>HashiCorp Vault</td><td class="yes" data-i18n="v_yes">yes</td><td class="no" data-i18n="v_no">no</td><td class="no" data-i18n="v_no">no</td><td class="no" data-i18n="v_heavy">heavy</td></tr>
+          <tr><td>Doppler</td><td class="no" data-i18n="v_saas">SaaS</td><td class="no" data-i18n="v_sees">sees secrets</td><td class="yes" data-i18n="v_yes">yes</td><td class="yes" data-i18n="v_yes">yes</td></tr>
+          <tr><td>1Password CLI</td><td class="no" data-i18n="v_saas">SaaS</td><td class="yes" data-i18n="v_yes">yes</td><td class="no" data-i18n="v_pwd">passwords</td><td class="yes" data-i18n="v_yes">yes</td></tr>
+          <tr><td>git-crypt</td><td class="yes" data-i18n="v_inrepo">in-repo</td><td class="yes" data-i18n="v_yes">yes</td><td class="no" data-i18n="v_gitbound">git-bound</td><td class="yes" data-i18n="v_yes">yes</td></tr>
+          <tr><td>sops</td><td class="yes" data-i18n="v_files">files</td><td class="yes" data-i18n="v_yes">yes</td><td class="no" data-i18n="v_yamljson">yaml/json</td><td class="no" data-i18n="v_kms">KMS setup</td></tr>
         </tbody>
       </table>
     </div>
@@ -569,8 +578,8 @@ footer .links a:hover{color:var(--ink)}
 
 <section class="final">
   <div class="wrap">
-    <div class="h2" style="margin:0"><h2>Own your <span class="hl">secrets</span>.</h2></div>
-    <p>Install the CLI, deploy the server, stop pasting .env files into Slack.</p>
+    <div class="h2" style="margin:0"><h2 data-i18n="final_h2">Own your <span class="hl">secrets</span>.</h2></div>
+    <p data-i18n="final_p">Install the CLI, deploy the server, stop pasting .env files into Slack.</p>
     <button class="big-cmd" data-cmd="brew install dotmage"><span class="p">$</span> brew install dotmage <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button>
   </div>
 </section>
@@ -578,8 +587,8 @@ footer .links a:hover{color:var(--ink)}
 <footer>
   <div class="wrap in">
     <a class="brand" href="#top" style="font-size:15px"><svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b style="background:#c2f53f;padding:0 3px">Mage</b></a>
-    <span>E2E-encrypted .env manager · v0.1.0 · MIT</span>
-    <div class="links"><a href="#">Docs</a><a href="#">GitHub</a><a href="#">Changelog</a></div>
+    <span data-i18n="foot_span">E2E-encrypted .env manager · v0.1.0 · MIT</span>
+    <div class="links"><a href="#" data-i18n="foot_docs">Docs</a><a href="#">GitHub</a><a href="#" data-i18n="foot_changelog">Changelog</a></div>
   </div>
 </footer>
 
@@ -591,6 +600,97 @@ footer .links a:hover{color:var(--ink)}
       setTimeout(function(){ el.classList.remove('copied'); }, 1200);
     });
   });
+
+  /* ---- RU / EN switch (commands & CLI output stay in English) ---- */
+  var I18N = {
+    en: {
+      nav_how:"How it works", nav_steps:"Get started", nav_features:"Features", nav_compare:"Compare", nav_selfhost:"Self-host it ▸",
+      hero_tag:'<i></i> Self-hosted · zero-knowledge · open source',
+      hero_h1:'Sync your <span class="hl">.env</span> files.<br>End-to-end encrypted.',
+      hero_lede:'dotMage moves your secrets between every machine you code on — laptop, work PC, CI runner. Encrypted on-device before they leave. <b>Your server only ever stores ciphertext.</b>',
+      hero_cta1:"Deploy your server ▸", hero_cta2:"See how it works",
+      hero_m1:"One binary", hero_m2:"No DevOps", hero_m3:".env native", hero_m4:"v0.1.0",
+      how_k:"Zero-knowledge by design", how_h2:"Your server never sees your secrets.",
+      how_sub:"Encryption and decryption happen entirely on your devices. The server is a dumb, untrusted relay — it stores opaque blobs and metadata, nothing it can read.",
+      n1_l:'<b></b>Your laptop', n1_t:".env (plaintext)", n1_d:"12 keys live only here, decrypted, in your project folder.",
+      a1_op:"encrypt<br>on-device",
+      n2_l:'<b></b>Your server', n2_t:"ciphertext only", n2_d:"Stores versioned blobs + metadata. Can't decrypt anything.",
+      a2_op:"decrypt<br>on-device", a2_lk:"your key",
+      n3_l:'<b></b>Work PC / CI', n3_t:".env (plaintext)", n3_d:"Pulls the blob, decrypts locally with your key. Same secrets.",
+      enc_note:"Lose your key and even <b>you</b> can't read the data back. That's the point — no server admin, hosting provider, or attacker with database access ever can either.",
+      st_k:"Three commands", st_h2:"From zero to synced.",
+      st_sub:"Bring your own box — a $5 VPS is plenty. dotMage is a single binary with no external dependencies.",
+      st1_h:"Deploy server", st1_p:"Run the binary on any machine you control. It's stateless config plus a small store of ciphertext.",
+      st2_h:"Auth a device", st2_p:"Point the CLI at your server and pair the machine. You get a device token — no passwords, ever.",
+      st3_h:"Push & pull", st3_p:"Version your .env from any device and pull it down everywhere else. Roll back anytime.",
+      ft_k:"Built for the terminal", ft_h2:"Everything you'd reach for.",
+      f1_h:"Versioned revisions", f1_p:"Every push is an immutable, numbered revision with the device and timestamp that made it.",
+      f2_h:"One-command rollback", f2_p:"Shipped a bad secret? Roll any environment back to a previous revision instantly.",
+      f3_h:"Run with secrets", f3_p:"Inject decrypted env into any process without ever writing it to disk.",
+      f4_h:"Multi-device", f4_p:"Pair as many machines as you want. Revoke any one of them the moment it's lost or stolen.",
+      f5_h:"Full audit log", f5_p:"Every auth, push, pull, rollback and revoke is recorded — query it from CLI or the web admin.",
+      f6_h:"Per-environment", f6_p:"Keep dev, staging and prod as separate, independently versioned secret sets per app.",
+      cmp_k:"Where it fits", cmp_h2:"Not another vault.",
+      cmp_sub:"dotMage does one thing: sync .env files, end-to-end encrypted, on infrastructure you own.",
+      cmp_th1:"Self-hosted", cmp_th2:"E2E (zero-knowledge)", cmp_th3:".env-native", cmp_th4:"No DevOps",
+      v_yes:"yes", v_no:"no", v_heavy:"heavy", v_saas:"SaaS", v_sees:"sees secrets", v_pwd:"passwords", v_inrepo:"in-repo", v_gitbound:"git-bound", v_files:"files", v_yamljson:"yaml/json", v_kms:"KMS setup",
+      final_h2:'Own your <span class="hl">secrets</span>.', final_p:"Install the CLI, deploy the server, stop pasting .env files into Slack.",
+      foot_span:"E2E-encrypted .env manager · v0.1.0 · MIT", foot_docs:"Docs", foot_changelog:"Changelog"
+    },
+    ru: {
+      nav_how:"Как работает", nav_steps:"Старт", nav_features:"Возможности", nav_compare:"Сравнение", nav_selfhost:"Развернуть у себя ▸",
+      hero_tag:'<i></i> Свой сервер · zero-knowledge · open source',
+      hero_h1:'Синхронизация <span class="hl">.env</span> файлов.<br>Сквозное шифрование.',
+      hero_lede:'dotMage переносит секреты между всеми машинами, где вы пишете код — ноутбук, рабочий ПК, CI-раннер. Шифрование происходит на устройстве, ещё до отправки. <b>Сервер хранит только шифротекст.</b>',
+      hero_cta1:"Развернуть сервер ▸", hero_cta2:"Как это работает",
+      hero_m1:"Один бинарник", hero_m2:"Без DevOps", hero_m3:".env из коробки", hero_m4:"v0.1.0",
+      how_k:"Zero-knowledge по умолчанию", how_h2:"Сервер никогда не видит ваши секреты.",
+      how_sub:"Шифрование и расшифровка происходят целиком на ваших устройствах. Сервер — глупый недоверенный ретранслятор: он хранит непрозрачные блобы и метаданные и не может прочитать ничего из этого.",
+      n1_l:'<b></b>Ваш ноутбук', n1_t:".env (открытый текст)", n1_d:"12 ключей живут только здесь, расшифрованные, в папке проекта.",
+      a1_op:"шифрование<br>на устройстве",
+      n2_l:'<b></b>Ваш сервер', n2_t:"только шифротекст", n2_d:"Хранит версии блобов + метаданные. Не может ничего расшифровать.",
+      a2_op:"расшифровка<br>на устройстве", a2_lk:"ваш ключ",
+      n3_l:'<b></b>Рабочий ПК / CI', n3_t:".env (открытый текст)", n3_d:"Скачивает блоб, расшифровывает локально вашим ключом. Те же секреты.",
+      enc_note:"Потеряете ключ — и даже <b>вы</b> не прочитаете данные обратно. В этом и смысл: ни админ сервера, ни хостинг-провайдер, ни злоумышленник с доступом к базе тоже не смогут.",
+      st_k:"Три команды", st_h2:"От нуля до синхронизации.",
+      st_sub:"Возьмите любой свой сервер — хватит VPS за $5. dotMage — это один бинарник без внешних зависимостей.",
+      st1_h:"Разверните сервер", st1_p:"Запустите бинарник на любой своей машине. Это stateless-конфиг плюс небольшое хранилище шифротекста.",
+      st2_h:"Авторизуйте устройство", st2_p:"Укажите CLI на ваш сервер и привяжите машину. Вы получаете токен устройства — никаких паролей.",
+      st3_h:"Push и pull", st3_p:"Версионируйте .env с любого устройства и подтягивайте его везде. Откат — в любой момент.",
+      ft_k:"Сделано для терминала", ft_h2:"Всё, что понадобится.",
+      f1_h:"Версии-ревизии", f1_p:"Каждый push — неизменяемая нумерованная ревизия с устройством и временем создания.",
+      f2_h:"Откат одной командой", f2_p:"Залили плохой секрет? Мгновенно откатите любое окружение к предыдущей ревизии.",
+      f3_h:"Запуск с секретами", f3_p:"Подставляйте расшифрованные переменные в любой процесс, не записывая их на диск.",
+      f4_h:"Много устройств", f4_p:"Привяжите сколько угодно машин. Отзовите любую, как только она потеряна или украдена.",
+      f5_h:"Полный аудит-лог", f5_p:"Каждый вход, push, pull, откат и отзыв записывается — смотрите из CLI или веб-админки.",
+      f6_h:"По окружениям", f6_p:"Держите dev, staging и prod как отдельные, независимо версионируемые наборы секретов для каждого приложения.",
+      cmp_k:"Где это уместно", cmp_h2:"Не очередной vault.",
+      cmp_sub:"dotMage делает одно: синхронизирует .env с E2E-шифрованием на вашей инфраструктуре.",
+      cmp_th1:"Свой сервер", cmp_th2:"E2E (zero-knowledge)", cmp_th3:".env-native", cmp_th4:"Без DevOps",
+      v_yes:"да", v_no:"нет", v_heavy:"тяжёлый", v_saas:"SaaS", v_sees:"видит секреты", v_pwd:"пароли", v_inrepo:"в репо", v_gitbound:"привязан к git", v_files:"файлы", v_yamljson:"yaml/json", v_kms:"настройка KMS",
+      final_h2:'Владейте своими <span class="hl">секретами</span>.', final_p:"Поставьте CLI, разверните сервер, перестаньте кидать .env в Slack.",
+      foot_span:"E2E-шифрованный менеджер .env · v0.1.0 · MIT", foot_docs:"Документация", foot_changelog:"Изменения"
+    }
+  };
+
+  function setLang(lang){
+    if(!I18N[lang]) lang = "en";
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var v = I18N[lang][el.getAttribute('data-i18n')];
+      if(v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll('#langtog button').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-lang') === lang);
+    });
+    try{ localStorage.setItem('dm_lang', lang); }catch(e){}
+  }
+  document.querySelectorAll('#langtog button').forEach(function(b){
+    b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
+  });
+  var saved = "en";
+  try{ saved = localStorage.getItem('dm_lang') || "en"; }catch(e){}
+  setLang(saved);
 </script>
 
 
