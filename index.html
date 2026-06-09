@@ -493,14 +493,14 @@ footer .links a:hover{color:var(--ink)}
       <div class="step">
         <div class="no">01</div>
         <h3 data-i18n="st1_h">Deploy server</h3>
-        <p data-i18n="st1_p">Run the binary on any machine you control. It's stateless config plus a small store of ciphertext.</p>
-        <button class="cmd" data-cmd="dmage serve --port 8000"><span class="p">$</span> dmage serve --port 8000</button>
+        <p data-i18n="st1_p">One command pulls the Docker image and starts the server. A $5 VPS is plenty.</p>
+        <button class="cmd" data-cmd="curl -fsSL https://raw.githubusercontent.com/dotMage/dotmage-server/main/install.sh | bash"><span class="p">$</span> curl -fsSL ...install.sh | bash</button>
       </div>
       <div class="step">
         <div class="no">02</div>
         <h3 data-i18n="st2_h">Auth a device</h3>
-        <p data-i18n="st2_p">Point the CLI at your server and pair the machine. You get a device token — no passwords, ever.</p>
-        <button class="cmd" data-cmd="dmage login https://you.dev"><span class="p">$</span> dmage login https://you.dev</button>
+        <p data-i18n="st2_p">Point the CLI at your server's IP and port. You get a device token — no passwords, ever.</p>
+        <button class="cmd" data-cmd="dmage auth --server http://your-ip:8000"><span class="p">$</span> dmage auth --server http://&lt;ip&gt;:8000</button>
       </div>
       <div class="step">
         <div class="no">03</div>
@@ -622,8 +622,8 @@ footer .links a:hover{color:var(--ink)}
       enc_note:"Lose your key and even <b>you</b> can't read the data back. That's the point — no server admin, hosting provider, or attacker with database access ever can either.",
       st_k:"Three commands", st_h2:"From zero to synced.",
       st_sub:"Bring your own box — a $5 VPS is plenty. dotMage is a single binary with no external dependencies.",
-      st1_h:"Deploy server", st1_p:"Run the binary on any machine you control. It's stateless config plus a small store of ciphertext.",
-      st2_h:"Auth a device", st2_p:"Point the CLI at your server and pair the machine. You get a device token — no passwords, ever.",
+      st1_h:"Deploy server", st1_p:"One command pulls the Docker image and starts the server. A $5 VPS is plenty.",
+      st2_h:"Auth a device", st2_p:"Point the CLI at your server's IP and port. You get a device token — no passwords, ever.",
       st3_h:"Push & pull", st3_p:"Version your .env from any device and pull it down everywhere else. Roll back anytime.",
       ft_k:"Built for the terminal", ft_h2:"Everything you'd reach for.",
       f1_h:"Versioned revisions", f1_p:"Every push is an immutable, numbered revision with the device and timestamp that made it.",
@@ -656,8 +656,8 @@ footer .links a:hover{color:var(--ink)}
       enc_note:"Потеряете ключ — и даже <b>вы</b> не прочитаете данные обратно. В этом и смысл: ни админ сервера, ни хостинг-провайдер, ни злоумышленник с доступом к базе тоже не смогут.",
       st_k:"Три команды", st_h2:"От нуля до синхронизации.",
       st_sub:"Возьмите любой свой сервер — хватит VPS за $5. dotMage — это один бинарник без внешних зависимостей.",
-      st1_h:"Разверните сервер", st1_p:"Запустите бинарник на любой своей машине. Это stateless-конфиг плюс небольшое хранилище шифротекста.",
-      st2_h:"Авторизуйте устройство", st2_p:"Укажите CLI на ваш сервер и привяжите машину. Вы получаете токен устройства — никаких паролей.",
+      st1_h:"Разверните сервер", st1_p:"Одна команда скачивает Docker-образ и запускает сервер. Хватит VPS за $5.",
+      st2_h:"Авторизуйте устройство", st2_p:"Укажите CLI на IP и порт сервера. Получите токен устройства — никаких паролей.",
       st3_h:"Push и pull", st3_p:"Версионируйте .env с любого устройства и подтягивайте его везде. Откат — в любой момент.",
       ft_k:"Сделано для терминала", ft_h2:"Всё, что понадобится.",
       f1_h:"Версии-ревизии", f1_p:"Каждый push — неизменяемая нумерованная ревизия с устройством и временем создания.",
