@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotMage — Docs</title>
+<style>
+@font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:400; font-display:swap; src:url("../fonts/jetbrains-mono-1.woff2") format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:400; font-display:swap; src:url("../fonts/jetbrains-mono-5.woff2") format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:700; font-display:swap; src:url("../fonts/jetbrains-mono-1.woff2") format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:700; font-display:swap; src:url("../fonts/jetbrains-mono-5.woff2") format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:800; font-display:swap; src:url("../fonts/jetbrains-mono-1.woff2") format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:800; font-display:swap; src:url("../fonts/jetbrains-mono-5.woff2") format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+:root{
+  --paper:#e9e5d8; --paper2:#f1eee4; --card:#f6f4ec; --ink:#16140d;
+  --line:#16140d; --dim:#5d584a; --faint:#8c8472;
+  --lime:#c2f53f; --amber:#e8a417; --red:#e0402b; --green:#54d06a;
+  --mono:"JetBrains Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--mono); background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.6}
+::selection{background:var(--lime)}
+a{color:inherit; text-decoration:none}
+.page{display:grid; grid-template-columns:260px 1fr; min-height:100vh}
+.side{background:var(--paper2); border-right:2px solid var(--line); padding:24px 0; position:sticky; top:0; height:100vh; overflow-y:auto}
+.side .logo{display:flex; align-items:center; gap:10px; font-weight:800; font-size:16px; padding:0 20px 20px; border-bottom:2px solid var(--line)}
+.side .logo b{background:var(--lime); padding:0 3px}
+.side .back{display:block; padding:14px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--faint); border-bottom:2px solid var(--line)}
+.side .back:hover{color:var(--ink); background:var(--card)}
+.side nav{padding:16px 0}
+.side nav .group{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--faint); padding:16px 20px 6px}
+.side nav a{display:block; padding:7px 20px; font-size:12.5px; font-weight:600; color:var(--dim)}
+.side nav a:hover{background:var(--card); color:var(--ink)}
+.side nav a.active{background:var(--lime); color:var(--ink); font-weight:700}
+.langtog{display:flex; border:2px solid var(--line); margin:16px 20px 0}
+.langtog button{font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.04em; padding:7px 0; border:none; border-right:2px solid var(--line); background:var(--paper2); color:var(--dim); cursor:pointer; transition:.1s; flex:1; text-align:center}
+.langtog button:last-child{border-right:none}
+.langtog button.on{background:var(--ink); color:var(--lime)}
+.langtog button:not(.on):hover{background:var(--card); color:var(--ink)}
+main{padding:48px 56px 120px; max-width:860px}
+main h1{font-size:36px; font-weight:800; letter-spacing:-.03em; line-height:1.1}
+main h2{font-size:22px; font-weight:800; letter-spacing:-.02em; margin-top:56px; padding-top:24px; border-top:2px solid var(--line)}
+main h2:first-of-type{margin-top:32px}
+main h3{font-size:16px; font-weight:800; margin-top:32px}
+main p{font-size:13px; color:var(--dim); margin-top:12px; max-width:640px}
+main p b,main p strong{color:var(--ink)}
+main ul,main ol{margin-top:12px; padding-left:20px; font-size:13px; color:var(--dim)}
+main li{margin-top:6px}
+main li code{background:var(--card); border:1px solid rgba(22,20,13,.15); padding:1px 5px; font-size:12px}
+pre{background:var(--ink); color:#d7d2c4; padding:16px 18px; margin-top:14px; font-size:12px; line-height:1.75; overflow-x:auto; border:2px solid var(--line)}
+pre .p{color:var(--lime); font-weight:700}
+pre .c{color:#8c8472}
+pre .s{color:var(--lime)}
+pre .f{color:var(--amber)}
+pre .k{color:#5fd7d0}
+code{font-family:var(--mono); font-size:12px; background:var(--card); border:1px solid rgba(22,20,13,.15); padding:2px 6px}
+.cmd-card{margin-top:24px; border:2px solid var(--line); background:var(--card)}
+.cmd-card .head{display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:2px solid var(--line); background:var(--paper2)}
+.cmd-card .head .name{font-weight:800; font-size:15px}
+.cmd-card .head .badge{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 7px; border:1.5px solid var(--line)}
+.cmd-card .desc{padding:14px 16px; font-size:13px; color:var(--dim)}
+.cmd-card pre{margin:0; border:none; border-top:2px solid var(--line)}
+.cmd-card .args{padding:12px 16px; border-top:1px solid rgba(22,20,13,.15); font-size:12px}
+.cmd-card .args dt{font-weight:700; margin-top:8px}
+.cmd-card .args dt:first-child{margin-top:0}
+.cmd-card .args dd{color:var(--dim); margin-left:0; margin-top:2px}
+table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12px; border:2px solid var(--line)}
+th,td{padding:10px 14px; text-align:left; border-bottom:1px solid rgba(22,20,13,.2); border-right:1px solid rgba(22,20,13,.12)}
+th{background:var(--ink); color:var(--paper); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em}
+td:last-child,th:last-child{border-right:none}
+tr:last-child td{border-bottom:none}
+td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
+.note{display:flex; align-items:flex-start; gap:12px; margin-top:18px; border:2px dashed var(--line); padding:14px 16px; font-size:12.5px; font-weight:600}
+.note .ic{width:28px; height:28px; flex:0 0 28px; background:var(--ink); color:var(--lime); display:grid; place-items:center; font-size:14px}
+.note b{background:var(--lime); padding:0 3px}
+.note.warn{border-color:var(--red)}
+.note.warn .ic{background:var(--red); color:#fff}
+@media(max-width:880px){
+  .page{grid-template-columns:1fr}
+  .side{position:fixed; left:-280px; z-index:100; width:280px; transition:.2s; box-shadow:none}
+  .side.open{left:0; box-shadow:4px 0 20px rgba(0,0,0,.15)}
+  .burger{display:flex !important}
+  main{padding:24px 20px 100px}
+}
+.burger{display:none; position:fixed; top:14px; left:14px; z-index:101; width:40px; height:40px; border:2px solid var(--line); background:var(--paper2); align-items:center; justify-content:center; cursor:pointer}
+
+/* platform tabs */
+.os-tabs{display:flex; border:2px solid var(--line); border-bottom:none; margin-top:14px}
+.os-tabs button{font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.04em; padding:10px 18px; border:none; border-right:2px solid var(--line); background:var(--paper2); color:var(--dim); cursor:pointer; transition:.1s; flex:1; text-align:center}
+.os-tabs button:last-child{border-right:none}
+.os-tabs button.on{background:var(--ink); color:var(--lime)}
+.os-tabs button:not(.on):hover{background:var(--card); color:var(--ink)}
+.os-panel{display:none; margin-top:0}
+.os-panel.on{display:block}
+.os-panel pre{margin-top:0; border-top:none}
+</style>
+</head>
+<body>
+
+<button class="burger" onclick="document.querySelector('.side').classList.toggle('open')">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+</button>
+
+<div class="page">
+<aside class="side">
+  <a class="logo" href="../index.html"><svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"/><rect x="6" y="6" width="20" height="20" fill="#c2f53f"/><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"/><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"/></svg> dot<b>Mage</b></a>
+  <a class="back" href="../index.html" data-i18n="back">&larr; Back to landing</a>
+  <div class="langtog" id="langtog">
+    <button data-lang="en" class="on">EN</button>
+    <button data-lang="ru">RU</button>
+  </div>
+  <nav>
+    <div class="group" data-i18n="g_start">Getting started</div>
+    <a href="#install" data-i18n="s_install">Install CLI</a>
+    <a href="#server" data-i18n="s_server">Deploy server</a>
+    <a href="#quickstart" data-i18n="s_quick">Quick start</a>
+
+    <div class="group" data-i18n="g_cli">CLI Reference</div>
+    <a href="#auth">auth</a>
+    <a href="#init">init</a>
+    <a href="#push">push</a>
+    <a href="#pull">pull</a>
+    <a href="#exec">exec</a>
+    <a href="#diff">diff</a>
+    <a href="#history">history</a>
+    <a href="#rollback">rollback</a>
+    <a href="#apps">apps</a>
+    <a href="#env">env</a>
+    <a href="#status">status</a>
+    <a href="#gen-token">gen-token</a>
+    <a href="#token">token</a>
+    <a href="#lock">lock</a>
+    <a href="#logout">logout</a>
+    <a href="#clean">clean</a>
+
+    <div class="group" data-i18n="g_srv">Server</div>
+    <a href="#config" data-i18n="s_config">Configuration</a>
+    <a href="#docker">Docker</a>
+    <a href="#tls" data-i18n="s_tls">TLS / Production</a>
+    <a href="#backup" data-i18n="s_backup">Backup</a>
+
+    <div class="group" data-i18n="g_other">Other</div>
+    <a href="#flags" data-i18n="s_flags">Global flags</a>
+    <a href="#exit-codes" data-i18n="s_exit">Exit codes</a>
+  </nav>
+</aside>
+
+<main>
+
+<h1 data-i18n="title">Documentation</h1>
+<p data-i18n="subtitle">Everything you need to install, deploy and use dotMage — the E2E-encrypted .env manager.</p>
+
+<!-- ═══════════════════ GETTING STARTED ═══════════════════ -->
+
+<h2 id="install" data-i18n="h_install">Install CLI</h2>
+<p data-i18n="p_install">dotMage CLI is a single Rust binary with no dependencies. Choose your platform:</p>
+
+<div class="os-tabs" id="os-tabs">
+  <button data-os="mac" class="on">macOS</button>
+  <button data-os="linux">Linux</button>
+  <button data-os="windows">Windows</button>
+</div>
+
+<div class="os-panel on" data-os="mac">
+  <pre><span class="p">$</span> brew install dotMage/dotmage/dotmage</pre>
+</div>
+
+<div class="os-panel" data-os="linux">
+  <pre><span class="p">$</span> curl -fsSL https://github.com/dotMage/dotmage-cli/releases/latest/download/dmage-linux-amd64 -o /usr/local/bin/dmage
+<span class="p">$</span> chmod +x /usr/local/bin/dmage</pre>
+</div>
+
+<div class="os-panel" data-os="windows">
+  <pre><span class="p">&gt;</span> irm https://raw.githubusercontent.com/dotMage/dotmage/main/install.ps1 | iex</pre>
+  <p data-i18n="p_win">Downloads the binary to <code>%LOCALAPPDATA%\dotmage\</code> and adds it to PATH. Restart your terminal — <code>dmage</code> works from anywhere.</p>
+</div>
+
+<p data-i18n="p_install2">Or download from <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.</p>
+
+<h2 id="server" data-i18n="h_server">Deploy server</h2>
+<p data-i18n="p_server">One command installs everything via Docker:</p>
+<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/dotmage-server/main/install.sh | bash</pre>
+<p data-i18n="p_server2">This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>8000</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.</p>
+
+<div class="note warn">
+  <span class="ic">!</span>
+  <span data-i18n="warn_bootstrap">The <b>bootstrap secret</b> is shown only once at first start. You need it to initialize your account. If you lose it, re-deploy from scratch.</span>
+</div>
+
+<h2 id="quickstart" data-i18n="h_quick">Quick start</h2>
+<p data-i18n="p_quick">After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>8000</code>):</p>
+<pre><span class="c"># 1. Authenticate with the server</span>
+<span class="p">$</span> dmage auth --server http://167.71.55.12:8000
+
+<span class="c"># 2. Init an app from your .env</span>
+<span class="p">$</span> dmage init myapp
+  <span class="s">✓</span> Created app 'myapp'. Pushed revision 1 from .env (12 keys).
+
+<span class="c"># 3. On another machine — auth and pull</span>
+<span class="p">$</span> dmage auth --server http://167.71.55.12:8000 --enroll &lt;token&gt;
+<span class="p">$</span> dmage pull myapp
+  <span class="s">✓</span> Decrypted 12 keys → .env
+
+<span class="c"># 4. Run your app with injected secrets (no .env on disk)</span>
+<span class="p">$</span> dmage exec myapp -- npm run dev</pre>
+
+<!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
+
+<h2 id="auth">dmage auth</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">auth</span><span class="badge" data-i18n="b_first">required first</span></div>
+  <div class="desc" data-i18n="d_auth">Authenticate with the dotMage server. On first device — initializes the account. On subsequent devices — use an enrollment token.</div>
+  <pre><span class="p">$</span> dmage auth --server http://167.71.55.12:8000
+<span class="p">$</span> dmage auth --server http://167.71.55.12:8000 --enroll &lt;token&gt;</pre>
+  <div class="args">
+    <dl>
+      <dt><code>--server &lt;URL&gt;</code></dt><dd data-i18n="a_auth_server">Server URL (required on first auth)</dd>
+      <dt><code>--enroll &lt;TOKEN&gt;</code></dt><dd data-i18n="a_auth_enroll">Enrollment token for 2nd+ devices</dd>
+      <dt><code>--ttl &lt;DURATION&gt;</code></dt><dd data-i18n="a_auth_ttl">Cache TTL, e.g. <code>7d</code>, <code>30d</code></dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="init">dmage init</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">init</span></div>
+  <div class="desc" data-i18n="d_init">Create a new app from the current <code>.env</code> file. Encrypts and pushes as revision 1.</div>
+  <pre><span class="p">$</span> dmage init myapp
+<span class="p">$</span> dmage init myapp --file .env.local</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>--file &lt;PATH&gt;</code></dt><dd data-i18n="a_file">Path to .env file (default: <code>.env</code>)</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="push">dmage push</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">push</span></div>
+  <div class="desc" data-i18n="d_push">Push local <code>.env</code> as a new encrypted revision.</div>
+  <pre><span class="p">$</span> dmage push myapp
+<span class="p">$</span> dmage push myapp --file .env.production --env prod</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>--file &lt;PATH&gt;</code></dt><dd data-i18n="a_file">Path to .env file (default: <code>.env</code>)</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="pull">dmage pull</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">pull</span></div>
+  <div class="desc" data-i18n="d_pull">Pull secrets from the server, decrypt locally, and write to <code>.env</code>.</div>
+  <pre><span class="p">$</span> dmage pull myapp
+<span class="p">$</span> dmage pull myapp --rev 3 --env prod
+<span class="p">$</span> dmage pull myapp --stdout</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>--rev &lt;N&gt;</code></dt><dd data-i18n="a_rev">Specific revision number (default: latest)</dd>
+      <dt><code>--output &lt;PATH&gt;</code></dt><dd data-i18n="a_output">Output file path</dd>
+      <dt><code>--stdout</code></dt><dd data-i18n="a_stdout">Print to stdout instead of writing file</dd>
+      <dt><code>--force</code></dt><dd data-i18n="a_force">Overwrite without confirmation</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="exec">dmage exec</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">exec</span><span class="badge" data-i18n="b_rec">recommended</span></div>
+  <div class="desc" data-i18n="d_exec">Run a command with decrypted secrets injected as environment variables. Secrets stay in memory — never written to disk.</div>
+  <pre><span class="p">$</span> dmage exec myapp -- npm run dev
+<span class="p">$</span> dmage exec myapp --env prod -- python manage.py migrate</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>&lt;COMMAND&gt; [ARGS...]</code></dt><dd data-i18n="a_cmd">Command to run (after <code>--</code>)</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="diff">dmage diff</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">diff</span></div>
+  <div class="desc" data-i18n="d_diff">Show difference between local <code>.env</code> and the latest remote revision.</div>
+  <pre><span class="p">$</span> dmage diff myapp
+<span class="p">$</span> dmage diff myapp --show-values</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>--show-values</code></dt><dd data-i18n="a_show">Show actual secret values in the diff</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="history">dmage history</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">history</span></div>
+  <div class="desc" data-i18n="d_history">Show revision history for an app — timestamps, devices, revision numbers.</div>
+  <pre><span class="p">$</span> dmage history myapp</pre>
+  <div class="args"><dl><dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd></dl></div>
+</div>
+
+<h2 id="rollback">dmage rollback</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">rollback</span></div>
+  <div class="desc" data-i18n="d_rollback">Rollback an environment to a previous revision. Creates a new revision that copies the target blob.</div>
+  <pre><span class="p">$</span> dmage rollback myapp --rev 2</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>--rev &lt;N&gt;</code></dt><dd data-i18n="a_rev_req">Target revision number (required)</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="apps">dmage apps</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">apps</span></div>
+  <div class="desc" data-i18n="d_apps">List all applications registered on the server.</div>
+  <pre><span class="p">$</span> dmage apps</pre>
+</div>
+
+<h2 id="env">dmage env</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">env</span></div>
+  <div class="desc" data-i18n="d_env">Manage environments (dev, staging, prod) within an app. Each environment has its own independent revision history.</div>
+  <pre><span class="c"># Show active environment</span>
+<span class="p">$</span> dmage env
+
+<span class="c"># List environments for an app</span>
+<span class="p">$</span> dmage env list myapp
+
+<span class="c"># Create a new environment</span>
+<span class="p">$</span> dmage env new myapp staging
+<span class="p">$</span> dmage env new myapp prod --copy-from dev
+
+<span class="c"># Delete an environment</span>
+<span class="p">$</span> dmage env rm myapp staging --yes</pre>
+  <div class="args">
+    <dl>
+      <dt><code>env</code></dt><dd data-i18n="a_env_show">Show active environment</dd>
+      <dt><code>env list &lt;APP&gt;</code></dt><dd data-i18n="a_env_list">List environments for an app</dd>
+      <dt><code>env new &lt;APP&gt; &lt;NAME&gt;</code></dt><dd data-i18n="a_env_new">Create new environment</dd>
+      <dt><code>--copy-from &lt;ENV&gt;</code></dt><dd data-i18n="a_env_copy">Copy secrets from existing environment</dd>
+      <dt><code>env rm &lt;APP&gt; &lt;NAME&gt;</code></dt><dd data-i18n="a_env_rm">Delete an environment</dd>
+      <dt><code>--yes</code></dt><dd data-i18n="a_yes">Skip confirmation prompt</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="status">dmage status</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">status</span></div>
+  <div class="desc" data-i18n="d_status">Show sync status — what's up-to-date and what's outdated on this device.</div>
+  <pre><span class="p">$</span> dmage status</pre>
+</div>
+
+<h2 id="gen-token">dmage gen-token</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">gen-token</span></div>
+  <div class="desc" data-i18n="d_gentoken">Generate an enrollment or CI token for adding new devices.</div>
+  <pre><span class="p">$</span> dmage gen-token
+<span class="p">$</span> dmage gen-token --name "ci-runner" --ttl 1h</pre>
+  <div class="args">
+    <dl>
+      <dt><code>--name &lt;NAME&gt;</code></dt><dd data-i18n="a_tokname">Token label (optional)</dd>
+      <dt><code>--ttl &lt;DURATION&gt;</code></dt><dd data-i18n="a_tokttl">Time to live, e.g. <code>24h</code> (default: 24h)</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="token">dmage token</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">token</span></div>
+  <div class="desc" data-i18n="d_token">Print the current device token. Useful for web admin login.</div>
+  <pre><span class="p">$</span> dmage token</pre>
+</div>
+
+<h2 id="lock">dmage lock</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">lock</span></div>
+  <div class="desc" data-i18n="d_lock">Remove the cached key from this device's keychain. Device token is kept — you'll need to re-enter your password on next operation.</div>
+  <pre><span class="p">$</span> dmage lock</pre>
+</div>
+
+<h2 id="logout">dmage logout</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">logout</span></div>
+  <div class="desc" data-i18n="d_logout">Full logout — removes cached key, device token, and all local data.</div>
+  <pre><span class="p">$</span> dmage logout</pre>
+</div>
+
+<h2 id="clean">dmage clean</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">clean</span></div>
+  <div class="desc" data-i18n="d_clean">Wipe all dotMage data from this machine (config, tokens, cache). Nuclear option.</div>
+  <pre><span class="p">$</span> dmage clean</pre>
+</div>
+
+<!-- ═══════════════════ SERVER ═══════════════════ -->
+
+<h2 id="config" data-i18n="h_config">Server configuration</h2>
+<p data-i18n="p_config">All settings are configured via environment variables, prefixed with <code>DOTMAGE_</code>.</p>
+
+<table>
+  <thead><tr><th data-i18n="th_var">Variable</th><th data-i18n="th_def">Default</th><th data-i18n="th_desc">Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>DOTMAGE_DB_URL</code></td><td><code>sqlite:////data/dotmage.db</code></td><td data-i18n="cfg_db">Database URL. SQLite or PostgreSQL DSN.</td></tr>
+    <tr><td><code>DOTMAGE_BOOTSTRAP_SECRET</code></td><td data-i18n="cfg_auto">auto-generated</td><td data-i18n="cfg_bs">One-time secret for account init. If empty, printed to stderr at startup.</td></tr>
+    <tr><td><code>DOTMAGE_TOKEN_TTL</code></td><td><code>24h</code></td><td data-i18n="cfg_ttl">Device access token lifetime. Formats: <code>123s</code>, <code>30m</code>, <code>24h</code>, <code>7d</code>.</td></tr>
+    <tr><td><code>DOTMAGE_REFRESH_TTL</code></td><td><code>30d</code></td><td data-i18n="cfg_rttl">Refresh token lifetime for token rotation.</td></tr>
+    <tr><td><code>DOTMAGE_RATE_LIMIT</code></td><td><code>10/min</code></td><td data-i18n="cfg_rate">Rate limit on auth endpoints.</td></tr>
+    <tr><td><code>DOTMAGE_LOG_LEVEL</code></td><td><code>info</code></td><td data-i18n="cfg_log">Log level: <code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>.</td></tr>
+    <tr><td><code>DOTMAGE_STATIC_DIR</code></td><td><code>/app/static</code></td><td data-i18n="cfg_static">Path to web admin static files.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="docker">Docker</h2>
+<p data-i18n="p_docker">Quickest way to run the server:</p>
+<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/dotmage-server/main/install.sh | bash
+<span class="p">$</span> cd dotmage && docker compose up -d</pre>
+
+<p data-i18n="p_docker2">Or with a custom <code>docker-compose.yml</code>:</p>
+<pre><span class="k">version</span>: <span class="s">"3.8"</span>
+<span class="k">services</span>:
+  <span class="k">server</span>:
+    <span class="k">image</span>: ghcr.io/dotmage/dotmage-server:latest
+    <span class="k">restart</span>: unless-stopped
+    <span class="k">environment</span>:
+      <span class="f">DOTMAGE_DB_URL</span>: <span class="s">"sqlite:////data/dotmage.db"</span>
+      <span class="f">DOTMAGE_TOKEN_TTL</span>: <span class="s">"24h"</span>
+    <span class="k">volumes</span>:
+      - dotmage-data:/data
+    <span class="k">ports</span>:
+      - <span class="s">"8000:8000"</span>
+<span class="k">volumes</span>:
+  dotmage-data:</pre>
+
+<p data-i18n="p_docker3">The server will be available at <code>http://&lt;your-ip&gt;:8000</code>. Point the CLI at this address when authenticating.</p>
+
+<h2 id="tls" data-i18n="h_tls">TLS / Production</h2>
+<p data-i18n="p_tls">For production, put a reverse proxy in front of the server. Example with Caddy (automatic HTTPS with Let's Encrypt):</p>
+<pre><span class="k">services</span>:
+  <span class="k">server</span>:
+    <span class="k">image</span>: ghcr.io/dotmage/dotmage-server:latest
+    <span class="k">restart</span>: unless-stopped
+    <span class="k">environment</span>:
+      <span class="f">DOTMAGE_DB_URL</span>: <span class="s">"sqlite:////data/dotmage.db"</span>
+    <span class="k">volumes</span>:
+      - dotmage-data:/data
+    <span class="k">expose</span>:
+      - <span class="s">"8000"</span>
+
+  <span class="k">proxy</span>:
+    <span class="k">image</span>: caddy:2
+    <span class="k">restart</span>: unless-stopped
+    <span class="k">ports</span>:
+      - <span class="s">"443:443"</span>
+      - <span class="s">"80:80"</span>
+    <span class="k">volumes</span>:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+<span class="k">volumes</span>:
+  dotmage-data:
+  caddy-data:</pre>
+
+<p><code>Caddyfile</code>:</p>
+<pre>secrets.example.com {
+    reverse_proxy server:8000
+}</pre>
+
+<p data-i18n="p_tls2">Without a domain, you can also use nginx or Caddy with a self-signed cert, or just run plain HTTP on a private network:</p>
+<pre><span class="p">$</span> dmage auth --server http://192.168.1.50:8000</pre>
+
+<h2 id="backup" data-i18n="h_backup">Backup</h2>
+<p data-i18n="p_backup">The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, device tokens, audit log. Back it up regularly.</p>
+<pre><span class="c"># While the server is running</span>
+<span class="p">$</span> docker compose exec server sqlite3 /data/dotmage.db ".backup /data/backup.db"
+
+<span class="c"># Copy backup out of container</span>
+<span class="p">$</span> docker compose cp server:/data/backup.db ./backup-$(date +%F).db</pre>
+
+<div class="note warn">
+  <span class="ic">!</span>
+  <span data-i18n="warn_backup">Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b></span>
+</div>
+
+<!-- ═══════════════════ OTHER ═══════════════════ -->
+
+<h2 id="flags" data-i18n="h_flags">Global flags</h2>
+<p data-i18n="p_flags">Available on every command:</p>
+<table>
+  <thead><tr><th data-i18n="th_flag">Flag</th><th data-i18n="th_desc">Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>--env &lt;ENV&gt;</code></td><td data-i18n="fl_env">Override the active environment for this command</td></tr>
+    <tr><td><code>-q, --quiet</code></td><td data-i18n="fl_quiet">Suppress non-error output</td></tr>
+    <tr><td><code>--json</code></td><td data-i18n="fl_json">JSON output for scripting</td></tr>
+  </tbody>
+</table>
+
+<h2 id="exit-codes" data-i18n="h_exit">Exit codes</h2>
+<table>
+  <thead><tr><th data-i18n="th_code">Code</th><th data-i18n="th_meaning">Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>0</code></td><td data-i18n="ex_0">Success</td></tr>
+    <tr><td><code>1</code></td><td data-i18n="ex_1">General error / not found</td></tr>
+    <tr><td><code>3</code></td><td data-i18n="ex_3">Not authenticated — run <code>dmage auth</code></td></tr>
+    <tr><td><code>4</code></td><td data-i18n="ex_4">Conflict (e.g. concurrent push)</td></tr>
+  </tbody>
+</table>
+
+</main>
+</div>
+
+<script>
+/* OS tabs */
+document.querySelectorAll('#os-tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var os = b.getAttribute('data-os');
+    document.querySelectorAll('#os-tabs button').forEach(function(t){ t.classList.toggle('on', t.getAttribute('data-os')===os); });
+    document.querySelectorAll('.os-panel').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-os')===os); });
+  });
+});
+
+var links = document.querySelectorAll('.side nav a');
+var sections = [];
+links.forEach(function(a){
+  var id = a.getAttribute('href').slice(1);
+  var el = document.getElementById(id);
+  if(el) sections.push({el:el, a:a});
+});
+function updateActive(){
+  var y = window.scrollY + 80;
+  var cur = sections[0];
+  for(var i=0;i<sections.length;i++){
+    if(sections[i].el.offsetTop <= y) cur = sections[i];
+  }
+  links.forEach(function(a){ a.classList.remove('active'); });
+  if(cur) cur.a.classList.add('active');
+}
+window.addEventListener('scroll', updateActive);
+updateActive();
+
+/* ---- i18n ---- */
+var I18N = {
+en: {
+  back:"&larr; Back to landing",
+  g_start:"Getting started", s_install:"Install CLI", s_server:"Deploy server", s_quick:"Quick start",
+  g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
+  g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
+  title:"Documentation",
+  subtitle:"Everything you need to install, deploy and use dotMage — the E2E-encrypted .env manager.",
+  h_install:"Install CLI",
+  p_install:"dotMage CLI is a single Rust binary with no dependencies. Choose your platform:",
+  p_install2:'Or download from <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
+  p_win:'Downloads the binary to <code>%LOCALAPPDATA%\\dotmage\\</code> and adds it to PATH. Restart your terminal — <code>dmage</code> works from anywhere.',
+  h_server:"Deploy server",
+  p_server:"One command installs everything via Docker:",
+  p_server2:'This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>8000</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.',
+  warn_bootstrap:'The <b>bootstrap secret</b> is shown only once at first start. You need it to initialize your account. If you lose it, re-deploy from scratch.',
+  h_quick:"Quick start",
+  p_quick:'After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>8000</code>):',
+  b_first:"required first", b_rec:"recommended",
+  d_auth:"Authenticate with the dotMage server. On first device — initializes the account. On subsequent devices — use an enrollment token.",
+  a_auth_server:"Server URL (required on first auth)", a_auth_enroll:"Enrollment token for 2nd+ devices", a_auth_ttl:'Cache TTL, e.g. <code>7d</code>, <code>30d</code>',
+  d_init:'Create a new app from the current <code>.env</code> file. Encrypts and pushes as revision 1.',
+  a_name:"Application name (required)", a_file:'Path to .env file (default: <code>.env</code>)',
+  d_push:'Push local <code>.env</code> as a new encrypted revision.',
+  d_pull:'Pull secrets from the server, decrypt locally, and write to <code>.env</code>.',
+  a_rev:"Specific revision number (default: latest)", a_output:"Output file path", a_stdout:"Print to stdout instead of writing file", a_force:"Overwrite without confirmation",
+  d_exec:"Run a command with decrypted secrets injected as environment variables. Secrets stay in memory — never written to disk.",
+  a_cmd:'Command to run (after <code>--</code>)',
+  d_diff:'Show difference between local <code>.env</code> and the latest remote revision.',
+  a_show:"Show actual secret values in the diff",
+  d_history:"Show revision history for an app — timestamps, devices, revision numbers.",
+  d_rollback:"Rollback an environment to a previous revision. Creates a new revision that copies the target blob.",
+  a_rev_req:"Target revision number (required)",
+  d_apps:"List all applications registered on the server.",
+  d_env:"Manage environments (dev, staging, prod) within an app. Each environment has its own independent revision history.",
+  a_env_show:"Show active environment", a_env_list:"List environments for an app", a_env_new:"Create new environment",
+  a_env_copy:"Copy secrets from existing environment", a_env_rm:"Delete an environment", a_yes:"Skip confirmation prompt",
+  d_status:"Show sync status — what's up-to-date and what's outdated on this device.",
+  d_gentoken:"Generate an enrollment or CI token for adding new devices.",
+  a_tokname:"Token label (optional)", a_tokttl:'Time to live, e.g. <code>24h</code> (default: 24h)',
+  d_token:"Print the current device token. Useful for web admin login.",
+  d_lock:"Remove the cached key from this device's keychain. Device token is kept — you'll need to re-enter your password on next operation.",
+  d_logout:"Full logout — removes cached key, device token, and all local data.",
+  d_clean:"Wipe all dotMage data from this machine (config, tokens, cache). Nuclear option.",
+  h_config:"Server configuration",
+  p_config:'All settings are configured via environment variables, prefixed with <code>DOTMAGE_</code>.',
+  th_var:"Variable", th_def:"Default", th_desc:"Description", th_flag:"Flag", th_code:"Code", th_meaning:"Meaning",
+  cfg_db:"Database URL. SQLite or PostgreSQL DSN.", cfg_auto:"auto-generated",
+  cfg_bs:"One-time secret for account init. If empty, printed to stderr at startup.",
+  cfg_ttl:'Device access token lifetime. Formats: <code>123s</code>, <code>30m</code>, <code>24h</code>, <code>7d</code>.',
+  cfg_rttl:"Refresh token lifetime for token rotation.",
+  cfg_rate:"Rate limit on auth endpoints.",
+  cfg_log:'Log level: <code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>.',
+  cfg_static:"Path to web admin static files.",
+  p_docker:"Quickest way to run the server:",
+  p_docker2:'Or with a custom <code>docker-compose.yml</code>:',
+  p_docker3:'The server will be available at <code>http://&lt;your-ip&gt;:8000</code>. Point the CLI at this address when authenticating.',
+  h_tls:"TLS / Production",
+  p_tls:"For production, put a reverse proxy in front of the server. Example with Caddy (automatic HTTPS with Let's Encrypt):",
+  p_tls2:"Without a domain, you can also use nginx or Caddy with a self-signed cert, or just run plain HTTP on a private network:",
+  h_backup:"Backup",
+  p_backup:'The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, device tokens, audit log. Back it up regularly.',
+  warn_backup:'Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b>',
+  h_flags:"Global flags",
+  p_flags:"Available on every command:",
+  fl_env:"Override the active environment for this command", fl_quiet:"Suppress non-error output", fl_json:"JSON output for scripting",
+  h_exit:"Exit codes",
+  ex_0:"Success", ex_1:"General error / not found",
+  ex_3:'Not authenticated — run <code>dmage auth</code>',
+  ex_4:"Conflict (e.g. concurrent push)"
+},
+ru: {
+  back:"&larr; На главную",
+  g_start:"Начало работы", s_install:"Установка CLI", s_server:"Деплой сервера", s_quick:"Быстрый старт",
+  g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
+  g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
+  title:"Документация",
+  subtitle:"Всё, что нужно для установки, деплоя и использования dotMage — E2E-шифрованного менеджера .env.",
+  h_install:"Установка CLI",
+  p_install:"dotMage CLI — один Rust-бинарник без зависимостей. Выберите платформу:",
+  p_install2:'Или скачайте с <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
+  p_win:'Скачивает бинарник в <code>%LOCALAPPDATA%\\dotmage\\</code> и добавляет в PATH. После перезапуска терминала <code>dmage</code> работает отовсюду.',
+  h_server:"Деплой сервера",
+  p_server:"Одна команда устанавливает всё через Docker:",
+  p_server2:'Создаёт директорию <code>dotmage/</code> с <code>docker-compose.yml</code>, скачивает образы сервера и веб-админки, запускает контейнеры на порту <code>8000</code>. Bootstrap secret выводится в консоль — <strong>сохраните его</strong>.',
+  warn_bootstrap:'<b>Bootstrap secret</b> показывается только один раз при первом запуске. Он нужен для инициализации аккаунта. Если потеряете — придётся деплоить заново.',
+  h_quick:"Быстрый старт",
+  p_quick:'После запуска сервера (пример: VPS на <code>167.71.55.12</code>, порт <code>8000</code>):',
+  b_first:"обязательно первым", b_rec:"рекомендуется",
+  d_auth:"Аутентификация на сервере dotMage. На первом устройстве — инициализирует аккаунт. На последующих — используйте enrollment-токен.",
+  a_auth_server:"URL сервера (обязателен при первой авторизации)", a_auth_enroll:"Enrollment-токен для 2-го+ устройства", a_auth_ttl:'TTL кэша, например <code>7d</code>, <code>30d</code>',
+  d_init:'Создать новое приложение из текущего <code>.env</code>. Шифрует и пушит как ревизию 1.',
+  a_name:"Имя приложения (обязательно)", a_file:'Путь к .env файлу (по умолчанию: <code>.env</code>)',
+  d_push:'Запушить локальный <code>.env</code> как новую зашифрованную ревизию.',
+  d_pull:'Скачать секреты с сервера, расшифровать локально и записать в <code>.env</code>.',
+  a_rev:"Номер конкретной ревизии (по умолчанию: последняя)", a_output:"Путь к выходному файлу", a_stdout:"Вывести в stdout вместо записи в файл", a_force:"Перезаписать без подтверждения",
+  d_exec:"Запустить команду с расшифрованными секретами в переменных окружения. Секреты остаются в памяти — не записываются на диск.",
+  a_cmd:'Команда для запуска (после <code>--</code>)',
+  d_diff:'Показать разницу между локальным <code>.env</code> и последней ревизией на сервере.',
+  a_show:"Показать реальные значения секретов в диффе",
+  d_history:"Показать историю ревизий приложения — время, устройства, номера ревизий.",
+  d_rollback:"Откатить окружение к предыдущей ревизии. Создаёт новую ревизию с копией целевого блоба.",
+  a_rev_req:"Целевой номер ревизии (обязательно)",
+  d_apps:"Показать все приложения, зарегистрированные на сервере.",
+  d_env:"Управление окружениями (dev, staging, prod) внутри приложения. У каждого окружения своя независимая история ревизий.",
+  a_env_show:"Показать активное окружение", a_env_list:"Список окружений приложения", a_env_new:"Создать новое окружение",
+  a_env_copy:"Скопировать секреты из существующего окружения", a_env_rm:"Удалить окружение", a_yes:"Пропустить подтверждение",
+  d_status:"Показать статус синхронизации — что актуально, а что устарело на этом устройстве.",
+  d_gentoken:"Сгенерировать enrollment- или CI-токен для добавления новых устройств.",
+  a_tokname:"Метка токена (необязательно)", a_tokttl:'Время жизни, например <code>24h</code> (по умолчанию: 24h)',
+  d_token:"Вывести текущий токен устройства. Полезно для входа в веб-админку.",
+  d_lock:"Удалить кэшированный ключ из keychain устройства. Токен устройства сохраняется — при следующей операции потребуется пароль.",
+  d_logout:"Полный выход — удаляет кэшированный ключ, токен устройства и все локальные данные.",
+  d_clean:"Стереть все данные dotMage с этой машины (конфиг, токены, кэш). Ядерная опция.",
+  h_config:"Конфигурация сервера",
+  p_config:'Все настройки задаются через переменные окружения с префиксом <code>DOTMAGE_</code>.',
+  th_var:"Переменная", th_def:"По умолчанию", th_desc:"Описание", th_flag:"Флаг", th_code:"Код", th_meaning:"Значение",
+  cfg_db:"URL базы данных. SQLite или PostgreSQL DSN.", cfg_auto:"авто-генерация",
+  cfg_bs:"Одноразовый секрет для инициализации аккаунта. Если пустой, выводится в stderr при старте.",
+  cfg_ttl:'Время жизни токена устройства. Форматы: <code>123s</code>, <code>30m</code>, <code>24h</code>, <code>7d</code>.',
+  cfg_rttl:"Время жизни refresh-токена для ротации.",
+  cfg_rate:"Rate limit на auth-эндпоинтах.",
+  cfg_log:'Уровень логирования: <code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>.',
+  cfg_static:"Путь к статике веб-админки.",
+  p_docker:"Самый быстрый способ запустить сервер:",
+  p_docker2:'Или с кастомным <code>docker-compose.yml</code>:',
+  p_docker3:'Сервер будет доступен по <code>http://&lt;ваш-ip&gt;:8000</code>. Укажите этот адрес при авторизации CLI.',
+  h_tls:"TLS / Продакшн",
+  p_tls:"Для продакшна поставьте реверс-прокси перед сервером. Пример с Caddy (автоматический HTTPS через Let's Encrypt):",
+  p_tls2:"Без домена можно использовать nginx или Caddy с самоподписанным сертификатом, или просто HTTP в приватной сети:",
+  h_backup:"Бэкап",
+  p_backup:'SQLite-база в <code>/data/dotmage.db</code> содержит всё — зашифрованные блобы, токены устройств, аудит-лог. Бэкапьте регулярно.',
+  warn_backup:'Потеря базы данных означает потерю доступа ко всем секретам — даже с мастер-паролем. В базе хранится зашифрованный Account Key. <b>Всегда делайте бэкап.</b>',
+  h_flags:"Глобальные флаги",
+  p_flags:"Доступны для любой команды:",
+  fl_env:"Переопределить активное окружение для этой команды", fl_quiet:"Подавить вывод (кроме ошибок)", fl_json:"Вывод в JSON для скриптинга",
+  h_exit:"Коды выхода",
+  ex_0:"Успех", ex_1:"Общая ошибка / не найдено",
+  ex_3:'Не авторизован — выполните <code>dmage auth</code>',
+  ex_4:"Конфликт (например, одновременный push)"
+}
+};
+
+function setLang(lang){
+  if(!I18N[lang]) lang = "en";
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var v = I18N[lang][el.getAttribute('data-i18n')];
+    if(v != null) el.innerHTML = v;
+  });
+  document.querySelectorAll('#langtog button').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-lang') === lang);
+  });
+  try{ localStorage.setItem('dm_lang', lang); }catch(e){}
+}
+document.querySelectorAll('#langtog button').forEach(function(b){
+  b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
+});
+var saved = "en";
+try{ saved = localStorage.getItem('dm_lang') || "en"; }catch(e){}
+setLang(saved);
+</script>
+</body></html>
