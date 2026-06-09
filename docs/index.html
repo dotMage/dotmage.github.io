@@ -180,7 +180,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <h2 id="server" data-i18n="h_server">Deploy server</h2>
 <p data-i18n="p_server">One command installs everything via Docker:</p>
-<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/dotmage-server/main/install.sh | bash</pre>
+<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash</pre>
 <p data-i18n="p_server2">This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>9470</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.</p>
 
 <div class="note warn">
@@ -421,14 +421,14 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <h2 id="docker">Docker</h2>
 <p data-i18n="p_docker">Quickest way to run the server:</p>
-<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/dotmage-server/main/install.sh | bash
+<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash
 <span class="p">$</span> cd dotmage && docker compose up -d</pre>
 
 <p data-i18n="p_docker2">Or with a custom <code>docker-compose.yml</code>:</p>
 <pre><span class="k">version</span>: <span class="s">"3.8"</span>
 <span class="k">services</span>:
   <span class="k">server</span>:
-    <span class="k">image</span>: ghcr.io/dotmage/dotmage-server:latest
+    <span class="k">image</span>: ghcr.io/dotmage/server:latest
     <span class="k">restart</span>: unless-stopped
     <span class="k">environment</span>:
       <span class="f">DOTMAGE_DB_URL</span>: <span class="s">"sqlite:////data/dotmage.db"</span>
@@ -446,7 +446,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <p data-i18n="p_tls">For production, put a reverse proxy in front of the server. Example with Caddy (automatic HTTPS with Let's Encrypt):</p>
 <pre><span class="k">services</span>:
   <span class="k">server</span>:
-    <span class="k">image</span>: ghcr.io/dotmage/dotmage-server:latest
+    <span class="k">image</span>: ghcr.io/dotmage/server:latest
     <span class="k">restart</span>: unless-stopped
     <span class="k">environment</span>:
       <span class="f">DOTMAGE_DB_URL</span>: <span class="s">"sqlite:////data/dotmage.db"</span>
