@@ -247,13 +247,21 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <span class="p">$</span> dmage init myapp
   <span class="s">✓</span> Created app 'myapp'. Pushed revision 1 from .env (12 keys).
 
-<span class="c"># 3. On another machine — auth and pull</span>
-<span class="p">$</span> dmage auth --server http://167.71.55.12:9470 --enroll &lt;token&gt;
-<span class="p">$</span> dmage pull myapp
-  <span class="s">✓</span> Decrypted 12 keys → .env
-
-<span class="c"># 4. Run your app with injected secrets (no .env on disk)</span>
+<span class="c"># 3. Run your app with injected secrets (no .env on disk)</span>
 <span class="p">$</span> dmage exec myapp -- npm run dev</pre>
+
+<h3 data-i18n="h_quick_device">Adding another device</h3>
+<p data-i18n="p_quick_device">On any new machine — just the bootstrap secret and your master password. No first device needed, no tokens to generate.</p>
+<pre><span class="p">$</span> dmage auth --server http://167.71.55.12:9470
+
+  <span class="k">New device — register with bootstrap secret</span>
+
+  Bootstrap secret: <span class="f">****</span>
+  Master password: <span class="f">****</span>
+  <span class="s">✓</span> Device registered. Key cached (expires in 7d).
+
+<span class="p">$</span> dmage pull myapp
+  <span class="s">✓</span> Decrypted 12 keys → .env</pre>
 
 <!-- ═══════════════════ FOLDERS ═══════════════════ -->
 
@@ -720,6 +728,8 @@ var I18N = {
 en: {
   back:"&larr; Back to landing",
   g_start:"Getting started", s_install:"Install CLI", s_server:"Deploy server", s_quick:"Quick start",
+  h_quick_device:"Adding another device",
+  p_quick_device:"On any new machine — just the bootstrap secret and your master password. No first device needed, no tokens to generate.",
   s_folders:"Folders",
   h_folders:"Organizing apps with folders",
   p_folders:'Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.',
@@ -805,6 +815,8 @@ en: {
 ru: {
   back:"&larr; На главную",
   g_start:"Начало работы", s_install:"Установка CLI", s_server:"Деплой сервера", s_quick:"Быстрый старт",
+  h_quick_device:"Добавление нового устройства",
+  p_quick_device:"На любой новой машине — только bootstrap secret и мастер-пароль. Первое устройство не нужно, токены генерировать не надо.",
   s_folders:"Папки",
   h_folders:"Организация приложений в папки",
   p_folders:'Используйте <code>/</code> в имени приложения для группировки в папки. Никакой настройки — папка это просто соглашение об именовании.',
