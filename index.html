@@ -475,7 +475,7 @@ footer .links a:hover{color:var(--ink)}
         <span data-i18n="hero_m1">One binary</span>
         <span data-i18n="hero_m2">No DevOps</span>
         <span data-i18n="hero_m3">.env native</span>
-        <span data-i18n="hero_m4">v0.1.0</span>
+        <span data-i18n="hero_m4">v1.1.0</span>
       </div>
     </div>
     <div class="term">
@@ -639,14 +639,17 @@ footer .links a:hover{color:var(--ink)}
   <div class="wrap">
     <div class="h2" style="margin:0"><h2 data-i18n="final_h2">Own your <span class="hl">secrets</span>.</h2></div>
     <p data-i18n="final_p">Install the CLI, deploy the server, stop pasting .env files into Slack.</p>
-    <button class="big-cmd" data-cmd="brew install dotmage"><span class="p">$</span> brew install dotmage <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button>
+    <div class="cta" style="margin-top:24px">
+      <a class="btn ink lg" href="docs/#install" data-i18n="final_cta1">Install CLI</a>
+      <a class="btn lg" href="docs/#server" data-i18n="final_cta2">Deploy server</a>
+    </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap in">
     <a class="brand" href="#top" style="font-size:15px"><svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b style="background:#c2f53f;padding:0 3px">Mage</b></a>
-    <span data-i18n="foot_span">E2E-encrypted .env manager · v0.1.0 · MIT</span>
+    <span data-i18n="foot_span">E2E-encrypted .env manager · v1.1.0 · AGPL-3.0</span>
     <div class="links"><a href="docs/" data-i18n="foot_docs">Docs</a><a href="https://github.com/dotMage/">GitHub</a><a href="#" data-i18n="foot_changelog">Changelog</a></div>
   </div>
 </footer>
@@ -680,7 +683,7 @@ footer .links a:hover{color:var(--ink)}
       hero_h1:'Sync your <span class="hl">.env</span> files.<br>End-to-end encrypted.',
       hero_lede:'dotMage moves your secrets between every machine you code on — laptop, work PC, CI runner. Encrypted on-device before they leave. <b>Your server only ever stores ciphertext.</b>',
       hero_cta1:"Deploy your server ▸", hero_cta2:"See how it works",
-      hero_m1:"One binary", hero_m2:"No DevOps", hero_m3:".env native", hero_m4:"v0.1.0",
+      hero_m1:"One binary", hero_m2:"No DevOps", hero_m3:".env native", hero_m4:"v1.1.0",
       how_k:"Zero-knowledge by design", how_h2:"Your server never sees your secrets.",
       how_sub:"Encryption and decryption happen entirely on your devices. The server is a dumb, untrusted relay — it stores opaque blobs and metadata, nothing it can read.",
       n1_l:'<b></b>Your laptop', n1_t:".env (plaintext)", n1_d:"12 keys live only here, decrypted, in your project folder.",
@@ -706,7 +709,8 @@ footer .links a:hover{color:var(--ink)}
       cmp_th1:"Self-hosted", cmp_th2:"E2E (zero-knowledge)", cmp_th3:".env-native", cmp_th4:"No DevOps",
       v_yes:"yes", v_no:"no", v_heavy:"heavy", v_saas:"SaaS", v_sees:"sees secrets", v_pwd:"passwords", v_inrepo:"in-repo", v_gitbound:"git-bound", v_files:"files", v_yamljson:"yaml/json", v_kms:"KMS setup",
       final_h2:'Own your <span class="hl">secrets</span>.', final_p:"Install the CLI, deploy the server, stop pasting .env files into Slack.",
-      foot_span:"E2E-encrypted .env manager · v0.1.0 · MIT", foot_docs:"Docs", foot_changelog:"Changelog"
+      final_cta1:"Install CLI", final_cta2:"Deploy server",
+      foot_span:"E2E-encrypted .env manager · v1.1.0 · AGPL-3.0", foot_docs:"Docs", foot_changelog:"Changelog"
     },
     ru: {
       nav_how:"Как работает", nav_steps:"Старт", nav_features:"Возможности", nav_compare:"Сравнение", nav_docs:"Документация", nav_selfhost:"Развернуть у себя ▸",
@@ -714,7 +718,7 @@ footer .links a:hover{color:var(--ink)}
       hero_h1:'Синхронизация <span class="hl">.env</span> файлов.<br>Сквозное шифрование.',
       hero_lede:'dotMage переносит секреты между всеми машинами, где вы пишете код — ноутбук, рабочий ПК, CI-раннер. Шифрование происходит на устройстве, ещё до отправки. <b>Сервер хранит только шифротекст.</b>',
       hero_cta1:"Развернуть сервер ▸", hero_cta2:"Как это работает",
-      hero_m1:"Один бинарник", hero_m2:"Без DevOps", hero_m3:".env из коробки", hero_m4:"v0.1.0",
+      hero_m1:"Один бинарник", hero_m2:"Без DevOps", hero_m3:".env из коробки", hero_m4:"v1.1.0",
       how_k:"Zero-knowledge по умолчанию", how_h2:"Сервер никогда не видит ваши секреты.",
       how_sub:"Шифрование и расшифровка происходят целиком на ваших устройствах. Сервер — глупый недоверенный ретранслятор: он хранит непрозрачные блобы и метаданные и не может прочитать ничего из этого.",
       n1_l:'<b></b>Ваш ноутбук', n1_t:".env (открытый текст)", n1_d:"12 ключей живут только здесь, расшифрованные, в папке проекта.",
@@ -740,7 +744,8 @@ footer .links a:hover{color:var(--ink)}
       cmp_th1:"Свой сервер", cmp_th2:"E2E (zero-knowledge)", cmp_th3:".env-native", cmp_th4:"Без DevOps",
       v_yes:"да", v_no:"нет", v_heavy:"тяжёлый", v_saas:"SaaS", v_sees:"видит секреты", v_pwd:"пароли", v_inrepo:"в репо", v_gitbound:"привязан к git", v_files:"файлы", v_yamljson:"yaml/json", v_kms:"настройка KMS",
       final_h2:'Владейте своими <span class="hl">секретами</span>.', final_p:"Поставьте CLI, разверните сервер, перестаньте кидать .env в Slack.",
-      foot_span:"E2E-шифрованный менеджер .env · v0.1.0 · MIT", foot_docs:"Документация", foot_changelog:"Изменения"
+      final_cta1:"Установить CLI", final_cta2:"Развернуть сервер",
+      foot_span:"E2E-шифрованный менеджер .env · v1.1.0 · AGPL-3.0", foot_docs:"Документация", foot_changelog:"Изменения"
     }
   };
 
