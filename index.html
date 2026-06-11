@@ -475,7 +475,7 @@ footer .links a:hover{color:var(--ink)}
         <span data-i18n="hero_m1">One binary</span>
         <span data-i18n="hero_m2">No DevOps</span>
         <span data-i18n="hero_m3">.env native</span>
-        <span data-i18n="hero_m4">v1.1.0</span>
+        <span data-i18n="hero_m4" id="cli-version">v1.1.0</span>
       </div>
     </div>
     <div class="term">
@@ -767,6 +767,17 @@ footer .links a:hover{color:var(--ink)}
   var saved = "en";
   try{ saved = localStorage.getItem('dm_lang') || "en"; }catch(e){}
   setLang(saved);
+
+  /* Fetch latest version from GitHub */
+  fetch("https://api.github.com/repos/dotMage/dotmage/releases/latest")
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if(!d || !d.tag_name) return;
+      var v = d.tag_name;
+      var el = document.getElementById("cli-version");
+      if(el) el.textContent = v;
+    })
+    .catch(function(){});
 </script>
 
 
