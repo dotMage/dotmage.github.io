@@ -174,6 +174,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#status">status</a>
     <a href="#gen-token">gen-token</a>
     <a href="#token">token</a>
+    <a href="#gen-ci-token">gen-ci-token</a>
     <a href="#lock">lock</a>
     <a href="#logout">logout</a>
     <a href="#clean">clean</a>
@@ -183,6 +184,10 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#docker">Docker</a>
     <a href="#tls" data-i18n="s_tls">TLS / Production</a>
     <a href="#backup" data-i18n="s_backup">Backup</a>
+
+    <div class="group" data-i18n="g_ci">CI/CD</div>
+    <a href="#ci-setup" data-i18n="s_ci_setup">Setup</a>
+    <a href="#ci-github" data-i18n="s_ci_pipe">Pipeline examples</a>
 
     <div class="group" data-i18n="g_other">Other</div>
     <a href="#flags" data-i18n="s_flags">Global flags</a>
@@ -420,8 +425,32 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="token">dmage token</h2>
 <div class="cmd-card">
   <div class="head"><span class="name">token</span></div>
-  <div class="desc" data-i18n="d_token">Print the current device token. Useful for web admin login.</div>
-  <pre><span class="p">$</span> dmage token</pre>
+  <div class="desc" data-i18n="d_token">Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page.</div>
+  <pre><span class="p">$</span> dmage token
+  <span class="s">Web admin login token (one-time, 5 min):</span>
+
+  dmage_etok_a1b2c3d4e5f6...
+
+  <span class="s">Paste this token in the web admin login page.</span></pre>
+</div>
+
+<h2 id="gen-ci-token">dmage gen-ci-token</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">gen-ci-token</span><span class="badge" data-i18n="b_ci">CI/CD</span></div>
+  <div class="desc" data-i18n="d_gencitoken">Generate a scoped CI token for a specific app and environment. The token is self-contained — it includes both API access and decryption key, but is restricted to the specified app+env on the server.</div>
+  <pre><span class="p">$</span> dmage gen-ci-token --app myapp --env prod --ttl 30d
+  <span class="s">CI token for myapp/prod:</span>
+
+  dmage_ci_eyJ0Ijoi...
+
+  <span class="s">Store it as a CI secret (e.g. DOTMAGE_CI_TOKEN).</span></pre>
+  <div class="args">
+    <dl>
+      <dt><code>--app &lt;NAME&gt;</code></dt><dd data-i18n="a_ci_app">Application name (required)</dd>
+      <dt><code>--env &lt;ENV&gt;</code></dt><dd data-i18n="a_ci_env">Environment name (required)</dd>
+      <dt><code>--ttl &lt;DURATION&gt;</code></dt><dd data-i18n="a_ci_ttl">Token lifetime, e.g. <code>30d</code> (default: 30d)</dd>
+    </dl>
+  </div>
 </div>
 
 <h2 id="lock">dmage lock</h2>
@@ -533,6 +562,63 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <span data-i18n="warn_backup">Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b></span>
 </div>
 
+<!-- ═══════════════════ CI/CD ═══════════════════ -->
+
+<h2 id="ci-setup" data-i18n="h_ci_setup">CI/CD setup</h2>
+<p data-i18n="p_ci_intro">dotMage can inject secrets into CI/CD pipelines using scoped CI tokens. Each token gives access to exactly one app+environment — nothing more.</p>
+
+<h3 data-i18n="h_ci_step1">1. Generate a scoped CI token</h3>
+<pre><span class="p">$</span> dmage gen-ci-token --app myapp --env prod --ttl 30d
+<span class="c"># → prints dmage_ci_eyJ0Ijoi...</span></pre>
+<p data-i18n="p_ci_step1">Store this as a CI secret named <code>DOTMAGE_CI_TOKEN</code>. That's it — one variable, no <code>dmage auth</code> in the pipeline.</p>
+
+<h2 id="ci-github" data-i18n="h_ci_pipelines">Pipeline examples</h2>
+
+<div class="os-tabs" id="ci-tabs">
+  <button data-ci="github" class="on">GitHub Actions</button>
+  <button data-ci="gitlab">GitLab CI</button>
+</div>
+
+<div class="os-panel on" data-ci="github">
+<pre><span class="k">jobs</span>:
+  <span class="k">deploy</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+
+      <span class="c"># ── dotMage: pull secrets ──</span>
+      - <span class="k">name</span>: Pull secrets
+        <span class="k">env</span>:
+          <span class="f">DOTMAGE_CI_TOKEN</span>: ${{ secrets.DOTMAGE_CI_TOKEN }}
+        <span class="k">run</span>: |
+          curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-amd64 \
+            -o /usr/local/bin/dmage &amp;&amp; chmod +x /usr/local/bin/dmage
+          dmage pull myapp --env prod --output .env
+
+      <span class="c"># ── your deploy steps ──</span>
+      - <span class="k">name</span>: Deploy
+        <span class="k">run</span>: npm start</pre>
+</div>
+
+<div class="os-panel" data-ci="gitlab">
+<pre><span class="c"># Reusable template — paste once</span>
+<span class="k">.dmage</span>:
+  <span class="k">before_script</span>:
+    - curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-amd64
+        -o /usr/local/bin/dmage &amp;&amp; chmod +x /usr/local/bin/dmage
+    - dmage pull $DMAGE_APP --env $DMAGE_ENV --output .env
+
+<span class="c"># Your job — just extend .dmage</span>
+<span class="k">deploy</span>:
+  <span class="k">extends</span>: .dmage
+  <span class="k">variables</span>:
+    <span class="f">DOTMAGE_CI_TOKEN</span>: $DOTMAGE_CI_TOKEN
+    <span class="f">DMAGE_APP</span>: myapp
+    <span class="f">DMAGE_ENV</span>: prod
+  <span class="k">script</span>:
+    - source .env &amp;&amp; npm start</pre>
+</div>
+
 <!-- ═══════════════════ OTHER ═══════════════════ -->
 
 <h2 id="flags" data-i18n="h_flags">Global flags</h2>
@@ -567,6 +653,15 @@ document.querySelectorAll('#os-tabs button').forEach(function(b){
     var os = b.getAttribute('data-os');
     document.querySelectorAll('#os-tabs button').forEach(function(t){ t.classList.toggle('on', t.getAttribute('data-os')===os); });
     document.querySelectorAll('.os-panel').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-os')===os); });
+  });
+});
+
+/* CI tabs */
+document.querySelectorAll('#ci-tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var ci = b.getAttribute('data-ci');
+    document.querySelectorAll('#ci-tabs button').forEach(function(t){ t.classList.toggle('on', t.getAttribute('data-ci')===ci); });
+    document.querySelectorAll('.os-panel[data-ci]').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-ci')===ci); });
   });
 });
 
@@ -636,7 +731,10 @@ en: {
   d_status:"Show sync status — what's up-to-date and what's outdated on this device.",
   d_gentoken:"Generate an enrollment or CI token for adding new devices.",
   a_tokname:"Token label (optional)", a_tokttl:'Time to live, e.g. <code>24h</code> (default: 24h)',
-  d_token:"Print the current device token. Useful for web admin login.",
+  d_token:"Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page.",
+  b_ci:"CI/CD",
+  d_gencitoken:'Generate a scoped CI token for a specific app and environment. The token is self-contained — it includes both API access and decryption key, but is restricted to the specified app+env on the server.',
+  a_ci_app:"Application name (required)", a_ci_env:"Environment name (required)", a_ci_ttl:'Token lifetime, e.g. <code>30d</code> (default: 30d)',
   d_lock:"Remove the cached key from this device's keychain. Device token is kept — you'll need to re-enter your password on next operation.",
   d_logout:"Full logout — removes cached key, device token, and all local data.",
   d_clean:"Wipe all dotMage data from this machine (config, tokens, cache). Nuclear option.",
@@ -665,7 +763,14 @@ en: {
   h_exit:"Exit codes",
   ex_0:"Success", ex_1:"General error / not found",
   ex_3:'Not authenticated — run <code>dmage auth</code>',
-  ex_4:"Conflict (e.g. concurrent push)"
+  ex_4:"Conflict (e.g. concurrent push)",
+  g_ci:"CI/CD", s_ci_setup:"Setup", s_ci_github:"GitHub Actions", s_ci_gitlab:"GitLab CI",
+  h_ci_setup:"CI/CD setup",
+  p_ci_intro:"dotMage can inject secrets into CI/CD pipelines using scoped CI tokens. Each token gives access to exactly one app+environment — nothing more.",
+  h_ci_step1:"1. Generate a scoped CI token",
+  p_ci_step1:'Store this as a CI secret named <code>DOTMAGE_CI_TOKEN</code>. That\'s it — one variable, no <code>dmage auth</code> in the pipeline.',
+  s_ci_pipe:"Pipeline examples",
+  h_ci_pipelines:"Pipeline examples"
 },
 ru: {
   back:"&larr; На главную",
@@ -706,7 +811,10 @@ ru: {
   d_status:"Показать статус синхронизации — что актуально, а что устарело на этом устройстве.",
   d_gentoken:"Сгенерировать enrollment- или CI-токен для добавления новых устройств.",
   a_tokname:"Метка токена (необязательно)", a_tokttl:'Время жизни, например <code>24h</code> (по умолчанию: 24h)',
-  d_token:"Вывести текущий токен устройства. Полезно для входа в веб-админку.",
+  d_token:"Сгенерировать одноразовый код для входа в веб-админку. Создаёт 5-минутный enrollment-токен. Вставьте его на странице логина веб-админки.",
+  b_ci:"CI/CD",
+  d_gencitoken:'Сгенерировать скоупленный CI-токен для конкретного приложения и окружения. Токен самодостаточный — содержит API-доступ и ключ расшифровки, но ограничен указанным app+env на сервере.',
+  a_ci_app:"Имя приложения (обязательно)", a_ci_env:"Имя окружения (обязательно)", a_ci_ttl:'Время жизни, например <code>30d</code> (по умолчанию: 30d)',
   d_lock:"Удалить кэшированный ключ из keychain устройства. Токен устройства сохраняется — при следующей операции потребуется пароль.",
   d_logout:"Полный выход — удаляет кэшированный ключ, токен устройства и все локальные данные.",
   d_clean:"Стереть все данные dotMage с этой машины (конфиг, токены, кэш). Ядерная опция.",
@@ -735,7 +843,14 @@ ru: {
   h_exit:"Коды выхода",
   ex_0:"Успех", ex_1:"Общая ошибка / не найдено",
   ex_3:'Не авторизован — выполните <code>dmage auth</code>',
-  ex_4:"Конфликт (например, одновременный push)"
+  ex_4:"Конфликт (например, одновременный push)",
+  g_ci:"CI/CD", s_ci_setup:"Настройка", s_ci_github:"GitHub Actions", s_ci_gitlab:"GitLab CI",
+  h_ci_setup:"Настройка CI/CD",
+  p_ci_intro:"dotMage может инжектить секреты в CI/CD пайплайны через скоупленные CI-токены. Каждый токен даёт доступ ровно к одному app+environment — ни к чему больше.",
+  h_ci_step1:"1. Сгенерируйте скоупленный CI-токен",
+  p_ci_step1:'Сохраните как CI-секрет с именем <code>DOTMAGE_CI_TOKEN</code>. Это всё — одна переменная, без <code>dmage auth</code> в пайплайне.',
+  s_ci_pipe:"Примеры пайплайнов",
+  h_ci_pipelines:"Примеры пайплайнов"
 }
 };
 

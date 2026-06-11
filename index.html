@@ -595,8 +595,8 @@ footer .links a:hover{color:var(--ink)}
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="14" height="10" rx="1.5"></rect><path d="M2.5 17.5h14"></path><rect x="18" y="9" width="3.5" height="10.5" rx="1"></rect></svg></div>
         <h3 data-i18n="f4_h">Multi-device</h3>
-        <p data-i18n="f4_p">Pair as many machines as you want. Revoke any one of them the moment it's lost or stolen.</p>
-        <div class="fc"><span class="p">$</span> dmage devices</div>
+        <p data-i18n="f4_p">Add a second device from anywhere — just the bootstrap secret and your master password. No first device needed. Revoke any machine instantly.</p>
+        <div class="fc"><span class="p">$</span> dmage auth --server http://&lt;ip&gt;:9470</div>
       </div>
       <div class="feat">
         <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h9l5 5v13H5z"></path><path d="M14 3v5h5"></path><path d="M8.5 13h7M8.5 16.5h7"></path></svg></div>
@@ -605,10 +605,10 @@ footer .links a:hover{color:var(--ink)}
         <div class="fc"><span class="p">$</span> dmage audit --app myapp</div>
       </div>
       <div class="feat">
-        <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.2-2.9 7.4-7 9-4.1-1.6-7-4.8-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg></div>
-        <h3 data-i18n="f6_h">Per-environment</h3>
-        <p data-i18n="f6_p">Keep dev, staging and prod as separate, independently versioned secret sets per app.</p>
-        <div class="fc"><span class="p">$</span> dmage pull myapp --env prod</div>
+        <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8 12h3l1.5-4 3 8 1.5-4h3"></path></svg></div>
+        <h3 data-i18n="f6_h">CI/CD ready</h3>
+        <p data-i18n="f6_p">One scoped token per app+env. Drop it into GitHub Actions or GitLab CI — secrets are pulled and decrypted in the runner, no auth step needed.</p>
+        <div class="fc"><span class="p">$</span> dmage gen-ci-token --app myapp --env prod</div>
       </div>
     </div>
   </div>
@@ -698,9 +698,9 @@ footer .links a:hover{color:var(--ink)}
       f1_h:"Versioned revisions", f1_p:"Every push is an immutable, numbered revision with the device and timestamp that made it.",
       f2_h:"One-command rollback", f2_p:"Shipped a bad secret? Roll any environment back to a previous revision instantly.",
       f3_h:"Run with secrets", f3_p:"Inject decrypted env into any process without ever writing it to disk.",
-      f4_h:"Multi-device", f4_p:"Pair as many machines as you want. Revoke any one of them the moment it's lost or stolen.",
+      f4_h:"Multi-device", f4_p:"Add a second device from anywhere — just the bootstrap secret and your master password. No first device needed. Revoke any machine instantly.",
       f5_h:"Full audit log", f5_p:"Every auth, push, pull, rollback and revoke is recorded — query it from CLI or the web admin.",
-      f6_h:"Per-environment", f6_p:"Keep dev, staging and prod as separate, independently versioned secret sets per app.",
+      f6_h:"CI/CD ready", f6_p:"One scoped token per app+env. Drop it into GitHub Actions or GitLab CI — secrets are pulled and decrypted in the runner, no auth step needed.",
       cmp_k:"Where it fits", cmp_h2:"Not another vault.",
       cmp_sub:"dotMage does one thing: sync .env files, end-to-end encrypted, on infrastructure you own.",
       cmp_th1:"Self-hosted", cmp_th2:"E2E (zero-knowledge)", cmp_th3:".env-native", cmp_th4:"No DevOps",
@@ -732,9 +732,9 @@ footer .links a:hover{color:var(--ink)}
       f1_h:"Версии-ревизии", f1_p:"Каждый push — неизменяемая нумерованная ревизия с устройством и временем создания.",
       f2_h:"Откат одной командой", f2_p:"Залили плохой секрет? Мгновенно откатите любое окружение к предыдущей ревизии.",
       f3_h:"Запуск с секретами", f3_p:"Подставляйте расшифрованные переменные в любой процесс, не записывая их на диск.",
-      f4_h:"Много устройств", f4_p:"Привяжите сколько угодно машин. Отзовите любую, как только она потеряна или украдена.",
+      f4_h:"Много устройств", f4_p:"Добавьте второе устройство откуда угодно — нужен только bootstrap secret и мастер-пароль. Первое устройство не требуется. Отзовите любую машину мгновенно.",
       f5_h:"Полный аудит-лог", f5_p:"Каждый вход, push, pull, откат и отзыв записывается — смотрите из CLI или веб-админки.",
-      f6_h:"По окружениям", f6_p:"Держите dev, staging и prod как отдельные, независимо версионируемые наборы секретов для каждого приложения.",
+      f6_h:"CI/CD из коробки", f6_p:"Один скоупленный токен на app+env. Вставьте в GitHub Actions или GitLab CI — секреты подтягиваются и расшифровываются в раннере, без шага авторизации.",
       cmp_k:"Где это уместно", cmp_h2:"Не очередной vault.",
       cmp_sub:"dotMage делает одно: синхронизирует .env с E2E-шифрованием на вашей инфраструктуре.",
       cmp_th1:"Свой сервер", cmp_th2:"E2E (zero-knowledge)", cmp_th3:".env-native", cmp_th4:"Без DevOps",
