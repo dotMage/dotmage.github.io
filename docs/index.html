@@ -217,7 +217,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 </div>
 
 <div class="os-panel" data-os="linux">
-  <pre><span class="p">$</span> curl -fsSL https://github.com/dotMage/dotmage-cli/releases/latest/download/dmage-linux-amd64 -o /usr/local/bin/dmage
+  <pre><span class="p">$</span> curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-x86_64 -o /usr/local/bin/dmage
 <span class="p">$</span> chmod +x /usr/local/bin/dmage</pre>
 </div>
 
@@ -235,7 +235,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <div class="note warn">
   <span class="ic">!</span>
-  <span data-i18n="warn_bootstrap">The <b>bootstrap secret</b> is shown only once at first start. You need it to initialize your account. If you lose it, re-deploy from scratch.</span>
+  <span data-i18n="warn_bootstrap">The <b>bootstrap secret</b> is printed at first start. Save it — you need it to create the account and to add every new device.</span>
 </div>
 
 <h2 id="quickstart" data-i18n="h_quick">Quick start</h2>
@@ -292,8 +292,14 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="auth">dmage auth</h2>
 <div class="cmd-card">
   <div class="head"><span class="name">auth</span><span class="badge" data-i18n="b_first">required first</span></div>
-  <div class="desc" data-i18n="d_auth">Authenticate with the dotMage server. On first device — initializes the account. On subsequent devices — use an enrollment token.</div>
-  <pre><span class="p">$</span> dmage auth --server http://167.71.55.12:9470
+  <div class="desc" data-i18n="d_auth">Authenticate with the dotMage server. First device — creates the account. Subsequent devices — registers with bootstrap secret. Or use <code>--enroll</code> for programmatic enrollment.</div>
+  <pre><span class="c"># First device (creates account)</span>
+<span class="p">$</span> dmage auth --server http://167.71.55.12:9470
+
+<span class="c"># Additional devices (bootstrap secret + master password)</span>
+<span class="p">$</span> dmage auth --server http://167.71.55.12:9470
+
+<span class="c"># Programmatic enrollment (CI, scripts)</span>
 <span class="p">$</span> dmage auth --server http://167.71.55.12:9470 --enroll &lt;token&gt;</pre>
   <div class="args">
     <dl>
@@ -444,9 +450,8 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="gen-token">dmage gen-token</h2>
 <div class="cmd-card">
   <div class="head"><span class="name">gen-token</span></div>
-  <div class="desc" data-i18n="d_gentoken">Generate an enrollment or CI token for adding new devices.</div>
-  <pre><span class="p">$</span> dmage gen-token
-<span class="p">$</span> dmage gen-token --name "ci-runner" --ttl 1h</pre>
+  <div class="desc" data-i18n="d_gentoken">Generate an enrollment token for adding a new device programmatically (e.g. via <code>--enroll</code>). For CI/CD, use <code>gen-ci-token</code> instead.</div>
+  <pre><span class="p">$</span> dmage gen-token --name "work-pc" --ttl 24h</pre>
   <div class="args">
     <dl>
       <dt><code>--name &lt;NAME&gt;</code></dt><dd data-i18n="a_tokname">Token label (optional)</dd>
@@ -746,11 +751,11 @@ en: {
   h_server:"Deploy server",
   p_server:"One command installs everything via Docker:",
   p_server2:'This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>9470</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.',
-  warn_bootstrap:'The <b>bootstrap secret</b> is shown only once at first start. You need it to initialize your account. If you lose it, re-deploy from scratch.',
+  warn_bootstrap:'The <b>bootstrap secret</b> is printed at first start. Save it — you need it to create the account and to add every new device.',
   h_quick:"Quick start",
   p_quick:'After the server is running (example: VPS at <code>167.71.55.12</code>, port <code>9470</code>):',
   b_first:"required first", b_rec:"recommended",
-  d_auth:"Authenticate with the dotMage server. On first device — initializes the account. On subsequent devices — use an enrollment token.",
+  d_auth:'Authenticate with the dotMage server. First device — creates the account. Subsequent devices — registers with bootstrap secret. Or use <code>--enroll</code> for programmatic enrollment.',
   a_auth_server:"Server URL (required on first auth)", a_auth_enroll:"Enrollment token for 2nd+ devices", a_auth_ttl:'Cache TTL, e.g. <code>7d</code>, <code>30d</code>',
   d_init:'Create a new app from the current <code>.env</code> file. Encrypts and pushes as revision 1.',
   a_name:"Application name (required)", a_file:'Path to .env file (default: <code>.env</code>)',
@@ -769,7 +774,7 @@ en: {
   a_env_show:"Show active environment", a_env_list:"List environments for an app", a_env_new:"Create new environment",
   a_env_copy:"Copy secrets from existing environment", a_env_rm:"Delete an environment", a_yes:"Skip confirmation prompt",
   d_status:"Show sync status — what's up-to-date and what's outdated on this device.",
-  d_gentoken:"Generate an enrollment or CI token for adding new devices.",
+  d_gentoken:'Generate an enrollment token for adding a new device programmatically (e.g. via <code>--enroll</code>). For CI/CD, use <code>gen-ci-token</code> instead.',
   a_tokname:"Token label (optional)", a_tokttl:'Time to live, e.g. <code>24h</code> (default: 24h)',
   d_token:"Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page.",
   b_ci:"CI/CD",
@@ -833,11 +838,11 @@ ru: {
   h_server:"Деплой сервера",
   p_server:"Одна команда устанавливает всё через Docker:",
   p_server2:'Создаёт директорию <code>dotmage/</code> с <code>docker-compose.yml</code>, скачивает образы сервера и веб-админки, запускает контейнеры на порту <code>9470</code>. Bootstrap secret выводится в консоль — <strong>сохраните его</strong>.',
-  warn_bootstrap:'<b>Bootstrap secret</b> показывается только один раз при первом запуске. Он нужен для инициализации аккаунта. Если потеряете — придётся деплоить заново.',
+  warn_bootstrap:'<b>Bootstrap secret</b> выводится при первом запуске. Сохраните его — он нужен для создания аккаунта и для добавления каждого нового устройства.',
   h_quick:"Быстрый старт",
   p_quick:'После запуска сервера (пример: VPS на <code>167.71.55.12</code>, порт <code>9470</code>):',
   b_first:"обязательно первым", b_rec:"рекомендуется",
-  d_auth:"Аутентификация на сервере dotMage. На первом устройстве — инициализирует аккаунт. На последующих — используйте enrollment-токен.",
+  d_auth:'Аутентификация на сервере dotMage. Первое устройство — создаёт аккаунт. Последующие — регистрируются через bootstrap secret. Или используйте <code>--enroll</code> для программной регистрации.',
   a_auth_server:"URL сервера (обязателен при первой авторизации)", a_auth_enroll:"Enrollment-токен для 2-го+ устройства", a_auth_ttl:'TTL кэша, например <code>7d</code>, <code>30d</code>',
   d_init:'Создать новое приложение из текущего <code>.env</code>. Шифрует и пушит как ревизию 1.',
   a_name:"Имя приложения (обязательно)", a_file:'Путь к .env файлу (по умолчанию: <code>.env</code>)',
@@ -856,7 +861,7 @@ ru: {
   a_env_show:"Показать активное окружение", a_env_list:"Список окружений приложения", a_env_new:"Создать новое окружение",
   a_env_copy:"Скопировать секреты из существующего окружения", a_env_rm:"Удалить окружение", a_yes:"Пропустить подтверждение",
   d_status:"Показать статус синхронизации — что актуально, а что устарело на этом устройстве.",
-  d_gentoken:"Сгенерировать enrollment- или CI-токен для добавления новых устройств.",
+  d_gentoken:'Сгенерировать enrollment-токен для программного добавления устройства (через <code>--enroll</code>). Для CI/CD используйте <code>gen-ci-token</code>.',
   a_tokname:"Метка токена (необязательно)", a_tokttl:'Время жизни, например <code>24h</code> (по умолчанию: 24h)',
   d_token:"Сгенерировать одноразовый код для входа в веб-админку. Создаёт 5-минутный enrollment-токен. Вставьте его на странице логина веб-админки.",
   b_ci:"CI/CD",
