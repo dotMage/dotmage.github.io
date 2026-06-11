@@ -159,6 +159,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#install" data-i18n="s_install">Install CLI</a>
     <a href="#server" data-i18n="s_server">Deploy server</a>
     <a href="#quickstart" data-i18n="s_quick">Quick start</a>
+    <a href="#folders" data-i18n="s_folders">Folders</a>
 
     <div class="group" data-i18n="g_cli">CLI Reference</div>
     <a href="#auth">auth</a>
@@ -253,6 +254,30 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <span class="c"># 4. Run your app with injected secrets (no .env on disk)</span>
 <span class="p">$</span> dmage exec myapp -- npm run dev</pre>
+
+<!-- ═══════════════════ FOLDERS ═══════════════════ -->
+
+<h2 id="folders" data-i18n="h_folders">Organizing apps with folders</h2>
+<p data-i18n="p_folders">Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.</p>
+
+<pre><span class="p">$</span> dmage init <span class="s">work/myapp</span>
+<span class="p">$</span> dmage init <span class="s">work/backend</span>
+<span class="p">$</span> dmage init <span class="s">personal/blog</span>
+
+<span class="p">$</span> dmage apps
+  <span class="k">work/</span>
+    myapp                2   envs   2026-06-11
+    backend              1   envs   2026-06-10
+
+  <span class="k">personal/</span>
+    blog                 3   envs   2026-06-11</pre>
+
+<p data-i18n="p_folders2">All commands work the same — just use the full name with the folder prefix:</p>
+<pre><span class="p">$</span> dmage push work/myapp
+<span class="p">$</span> dmage pull work/backend --env prod
+<span class="p">$</span> dmage exec personal/blog -- npm run dev</pre>
+
+<p data-i18n="p_folders3">The web admin groups apps by folder automatically. Apps without a <code>/</code> appear at the root level as before.</p>
 
 <!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
 
@@ -695,6 +720,11 @@ var I18N = {
 en: {
   back:"&larr; Back to landing",
   g_start:"Getting started", s_install:"Install CLI", s_server:"Deploy server", s_quick:"Quick start",
+  s_folders:"Folders",
+  h_folders:"Organizing apps with folders",
+  p_folders:'Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.',
+  p_folders2:"All commands work the same — just use the full name with the folder prefix:",
+  p_folders3:'The web admin groups apps by folder automatically. Apps without a <code>/</code> appear at the root level as before.',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
@@ -775,6 +805,11 @@ en: {
 ru: {
   back:"&larr; На главную",
   g_start:"Начало работы", s_install:"Установка CLI", s_server:"Деплой сервера", s_quick:"Быстрый старт",
+  s_folders:"Папки",
+  h_folders:"Организация приложений в папки",
+  p_folders:'Используйте <code>/</code> в имени приложения для группировки в папки. Никакой настройки — папка это просто соглашение об именовании.',
+  p_folders2:"Все команды работают так же — просто используйте полное имя с префиксом папки:",
+  p_folders3:'Веб-админка группирует приложения по папкам автоматически. Приложения без <code>/</code> отображаются на корневом уровне как раньше.',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",
