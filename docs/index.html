@@ -185,6 +185,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#docker">Docker</a>
     <a href="#tls" data-i18n="s_tls">TLS / Production</a>
     <a href="#backup" data-i18n="s_backup">Backup</a>
+    <a href="#upgrade" data-i18n="s_upgrade">Upgrade</a>
 
     <div class="group" data-i18n="g_ci">CI/CD</div>
     <a href="#ci-setup" data-i18n="s_ci_setup">Setup</a>
@@ -600,6 +601,30 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <span data-i18n="warn_backup">Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b></span>
 </div>
 
+<!-- ═══════════════════ UPGRADE ═══════════════════ -->
+
+<h2 id="upgrade" data-i18n="h_upgrade">Upgrading the server</h2>
+<p data-i18n="p_upgrade">dotMage server is distributed as a Docker image. To upgrade an existing installation:</p>
+
+<h3 data-i18n="h_upgrade_step1">1. Backup the database</h3>
+<pre><span class="p">$</span> cd dotmage
+<span class="p">$</span> docker compose exec server sqlite3 /data/dotmage.db ".backup /data/backup.db"
+<span class="p">$</span> docker compose cp server:/data/backup.db ./backup-$(date +%F).db</pre>
+
+<h3 data-i18n="h_upgrade_step2">2. Pull the latest image and restart</h3>
+<pre><span class="p">$</span> docker compose pull
+<span class="p">$</span> docker compose up -d</pre>
+<p data-i18n="p_upgrade2">Docker will download the new image and recreate the container. The data volume is preserved — your database, accounts, and all encrypted secrets remain intact.</p>
+
+<h3 data-i18n="h_upgrade_step3">3. Verify</h3>
+<pre><span class="p">$</span> docker compose logs --tail 20 server</pre>
+<p data-i18n="p_upgrade3">Check the logs to confirm the server started cleanly. The CLI does not require an update for server-only upgrades — but it's a good idea to keep both in sync.</p>
+
+<div class="note">
+  <span class="ic">i</span>
+  <span data-i18n="note_upgrade">The CLI can be upgraded the same way it was installed: <code>brew upgrade dotmage</code> on macOS, or re-run the curl/PowerShell command on Linux/Windows.</span>
+</div>
+
 <!-- ═══════════════════ CI/CD ═══════════════════ -->
 
 <h2 id="ci-setup" data-i18n="h_ci_setup">CI/CD setup</h2>
@@ -815,7 +840,16 @@ en: {
   h_ci_step1:"1. Generate a scoped CI token",
   p_ci_step1:'Store this as a CI secret named <code>DOTMAGE_CI_TOKEN</code>. That\'s it — one variable, no <code>dmage auth</code> in the pipeline.',
   s_ci_pipe:"Pipeline examples",
-  h_ci_pipelines:"Pipeline examples"
+  h_ci_pipelines:"Pipeline examples",
+  s_upgrade:"Upgrade",
+  h_upgrade:"Upgrading the server",
+  p_upgrade:"dotMage server is distributed as a Docker image. To upgrade an existing installation:",
+  h_upgrade_step1:"1. Backup the database",
+  h_upgrade_step2:"2. Pull the latest image and restart",
+  p_upgrade2:"Docker will download the new image and recreate the container. The data volume is preserved — your database, accounts, and all encrypted secrets remain intact.",
+  h_upgrade_step3:"3. Verify",
+  p_upgrade3:"Check the logs to confirm the server started cleanly. The CLI does not require an update for server-only upgrades — but it's a good idea to keep both in sync.",
+  note_upgrade:'The CLI can be upgraded the same way it was installed: <code>brew upgrade dotmage</code> on macOS, or re-run the curl/PowerShell command on Linux/Windows.'
 },
 ru: {
   back:"&larr; На главную",
@@ -902,7 +936,16 @@ ru: {
   h_ci_step1:"1. Сгенерируйте скоупленный CI-токен",
   p_ci_step1:'Сохраните как CI-секрет с именем <code>DOTMAGE_CI_TOKEN</code>. Это всё — одна переменная, без <code>dmage auth</code> в пайплайне.',
   s_ci_pipe:"Примеры пайплайнов",
-  h_ci_pipelines:"Примеры пайплайнов"
+  h_ci_pipelines:"Примеры пайплайнов",
+  s_upgrade:"Обновление",
+  h_upgrade:"Обновление сервера",
+  p_upgrade:"Сервер dotMage распространяется как Docker-образ. Чтобы обновить существующую установку:",
+  h_upgrade_step1:"1. Сделайте бэкап базы данных",
+  h_upgrade_step2:"2. Скачайте новый образ и перезапустите",
+  p_upgrade2:"Docker скачает новый образ и пересоздаст контейнер. Том с данными сохраняется — база, аккаунты и все зашифрованные секреты остаются на месте.",
+  h_upgrade_step3:"3. Проверьте",
+  p_upgrade3:"Проверьте логи, чтобы убедиться что сервер запустился чисто. CLI не требует обновления при апгрейде только сервера — но лучше держать оба в синхронизации.",
+  note_upgrade:'CLI обновляется так же, как устанавливался: <code>brew upgrade dotmage</code> на macOS, или повторный запуск curl/PowerShell на Linux/Windows.'
 }
 };
 
