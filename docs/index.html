@@ -590,8 +590,8 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <h2 id="backup" data-i18n="h_backup">Backup</h2>
 <p data-i18n="p_backup">The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, device tokens, audit log. Back it up regularly.</p>
-<pre><span class="c"># While the server is running</span>
-<span class="p">$</span> docker compose exec server sqlite3 /data/dotmage.db ".backup /data/backup.db"
+<pre><span class="c"># Online backup via Python (safe while server is running)</span>
+<span class="p">$</span> docker compose exec server python -c <span class="s">"import sqlite3; s=sqlite3.connect('/data/dotmage.db'); d=sqlite3.connect('/data/backup.db'); s.backup(d); d.close()"</span>
 
 <span class="c"># Copy backup out of container</span>
 <span class="p">$</span> docker compose cp server:/data/backup.db ./backup-$(date +%F).db</pre>
@@ -608,7 +608,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <h3 data-i18n="h_upgrade_step1">1. Backup the database</h3>
 <pre><span class="p">$</span> cd dotmage
-<span class="p">$</span> docker compose exec server sqlite3 /data/dotmage.db ".backup /data/backup.db"
+<span class="p">$</span> docker compose exec server python -c <span class="s">"import sqlite3; s=sqlite3.connect('/data/dotmage.db'); d=sqlite3.connect('/data/backup.db'); s.backup(d); d.close()"</span>
 <span class="p">$</span> docker compose cp server:/data/backup.db ./backup-$(date +%F).db</pre>
 
 <h3 data-i18n="h_upgrade_step2">2. Pull the latest image and restart</h3>
