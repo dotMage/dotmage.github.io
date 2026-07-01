@@ -171,6 +171,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#history">history</a>
     <a href="#rollback">rollback</a>
     <a href="#apps">apps</a>
+    <a href="#app-rm">app rm</a>
     <a href="#env">env</a>
     <a href="#status">status</a>
     <a href="#gen-token">gen-token</a>
@@ -411,6 +412,20 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <div class="head"><span class="name">apps</span></div>
   <div class="desc" data-i18n="d_apps">List all applications registered on the server.</div>
   <pre><span class="p">$</span> dmage apps</pre>
+</div>
+
+<h2 id="app-rm">dmage app rm</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">app rm</span></div>
+  <div class="desc" data-i18n="d_app_rm">Delete an application and <strong>all</strong> its environments and revisions. This action is irreversible.</div>
+  <pre><span class="p">$</span> dmage app rm myapp
+<span class="p">$</span> dmage app rm work/backend --yes</pre>
+  <div class="args">
+    <dl>
+      <dt><code>&lt;NAME&gt;</code></dt><dd data-i18n="a_name">Application name (required)</dd>
+      <dt><code>--yes</code></dt><dd data-i18n="a_yes">Skip confirmation prompt</dd>
+    </dl>
+  </div>
 </div>
 
 <h2 id="env">dmage env</h2>
@@ -795,6 +810,7 @@ en: {
   d_rollback:"Rollback an environment to a previous revision. Creates a new revision that copies the target blob.",
   a_rev_req:"Target revision number (required)",
   d_apps:"List all applications registered on the server.",
+  d_app_rm:'Delete an application and <strong>all</strong> its environments and revisions. This action is irreversible.',
   d_env:"Manage environments (dev, staging, prod) within an app. Each environment has its own independent revision history.",
   a_env_show:"Show active environment", a_env_list:"List environments for an app", a_env_new:"Create new environment",
   a_env_copy:"Copy secrets from existing environment", a_env_rm:"Delete an environment", a_yes:"Skip confirmation prompt",
@@ -891,6 +907,7 @@ ru: {
   d_rollback:"Откатить окружение к предыдущей ревизии. Создаёт новую ревизию с копией целевого блоба.",
   a_rev_req:"Целевой номер ревизии (обязательно)",
   d_apps:"Показать все приложения, зарегистрированные на сервере.",
+  d_app_rm:'Удалить приложение и <strong>все</strong> его окружения и ревизии. Действие необратимо.',
   d_env:"Управление окружениями (dev, staging, prod) внутри приложения. У каждого окружения своя независимая история ревизий.",
   a_env_show:"Показать активное окружение", a_env_list:"Список окружений приложения", a_env_new:"Создать новое окружение",
   a_env_copy:"Скопировать секреты из существующего окружения", a_env_rm:"Удалить окружение", a_yes:"Пропустить подтверждение",
