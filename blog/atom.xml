@@ -6,6 +6,14 @@
   <id>https://dotmage.github.io/blog/</id>
   <updated>2026-07-03T00:00:00Z</updated>
   <entry>
+    <title>dotMage 1.3.0 — any file, any server</title>
+    <link href="https://dotmage.github.io/blog/2026/dotmage-1-3-0/"/>
+    <id>https://dotmage.github.io/blog/2026/dotmage-1-3-0/</id>
+    <updated>2026-07-03T00:00:00Z</updated>
+    <summary>Store XML/JSON/any config with encrypted metadata, map project directories to work/personal servers, self-update with dmage upgrade, and never push an empty .env again.</summary>
+    <category term="release"/>
+  </entry>
+  <entry>
     <title>dotMage 1.2 — and a blog to announce it on</title>
     <link href="https://dotmage.github.io/blog/2026/dotmage-1-2-and-blog/"/>
     <id>https://dotmage.github.io/blog/2026/dotmage-1-2-and-blog/</id>
