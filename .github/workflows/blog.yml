@@ -1,0 +1,30 @@
+name: Build blog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_blog/**"
+      - "scripts/build_blog.py"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install markdown
+      - run: python3 scripts/build_blog.py
+      - name: Commit generated output
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add blog/ sitemap.xml
+          git diff --cached --quiet && exit 0
+          git commit -m "blog: rebuild"
+          git push

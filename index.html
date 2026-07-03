@@ -17,6 +17,7 @@
 <meta name="twitter:image" content="https://dotmage.github.io/favicon.svg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"dotMage","description":"dotMage syncs .env files across machines and teams with end-to-end encryption.","url":"https://dotmage.github.io","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://opensource.org/licenses/MIT"}</script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate" type="application/atom+xml" title="dotMage blog" href="blog/atom.xml">
 <style>/* cyrillic-ext */
 @font-face {
   font-family: 'JetBrains Mono';
@@ -448,6 +449,7 @@ footer .links a:hover{color:var(--ink)}
       <a href="#features" data-i18n="nav_features">Features</a>
       <a href="#compare" data-i18n="nav_compare">Compare</a>
       <a href="docs/" data-i18n="nav_docs">Docs</a>
+      <a href="blog/" data-i18n="nav_blog">Blog</a>
     </div>
     <div class="right">
       <div class="langtog" id="langtog">
@@ -650,7 +652,7 @@ footer .links a:hover{color:var(--ink)}
   <div class="wrap in">
     <a class="brand" href="#top" style="font-size:15px"><svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b style="background:#c2f53f;padding:0 3px">Mage</b></a>
     <span data-i18n="foot_span">E2E-encrypted .env manager · v1.1.0 · AGPL-3.0</span>
-    <div class="links"><a href="docs/" data-i18n="foot_docs">Docs</a><a href="https://github.com/dotMage/">GitHub</a><a href="#" data-i18n="foot_changelog">Changelog</a></div>
+    <div class="links"><a href="docs/" data-i18n="foot_docs">Docs</a><a href="https://github.com/dotMage/">GitHub</a><a href="blog/" data-i18n="foot_changelog">Changelog</a></div>
   </div>
 </footer>
 
@@ -678,7 +680,7 @@ footer .links a:hover{color:var(--ink)}
   /* ---- RU / EN switch (commands & CLI output stay in English) ---- */
   var I18N = {
     en: {
-      nav_how:"How it works", nav_steps:"Get started", nav_features:"Features", nav_compare:"Compare", nav_docs:"Docs", nav_selfhost:"Self-host it ▸",
+      nav_how:"How it works", nav_steps:"Get started", nav_features:"Features", nav_compare:"Compare", nav_docs:"Docs", nav_blog:"Blog", nav_selfhost:"Self-host it ▸",
       hero_tag:'<i></i> Self-hosted · zero-knowledge · open source',
       hero_h1:'Sync your <span class="hl">.env</span> files.<br>End-to-end encrypted.',
       hero_lede:'dotMage moves your secrets between every machine you code on — laptop, work PC, CI runner. Encrypted on-device before they leave. <b>Your server only ever stores ciphertext.</b>',
@@ -713,7 +715,7 @@ footer .links a:hover{color:var(--ink)}
       foot_span:"E2E-encrypted .env manager · v1.1.0 · AGPL-3.0", foot_docs:"Docs", foot_changelog:"Changelog"
     },
     ru: {
-      nav_how:"Как работает", nav_steps:"Старт", nav_features:"Возможности", nav_compare:"Сравнение", nav_docs:"Документация", nav_selfhost:"Развернуть у себя ▸",
+      nav_how:"Как работает", nav_steps:"Старт", nav_features:"Возможности", nav_compare:"Сравнение", nav_docs:"Документация", nav_blog:"Блог", nav_selfhost:"Развернуть у себя ▸",
       hero_tag:'<i></i> Свой сервер · zero-knowledge · open source',
       hero_h1:'Синхронизация <span class="hl">.env</span> файлов.<br>Сквозное шифрование.',
       hero_lede:'dotMage переносит секреты между всеми машинами, где вы пишете код — ноутбук, рабочий ПК, CI-раннер. Шифрование происходит на устройстве, ещё до отправки. <b>Сервер хранит только шифротекст.</b>',
