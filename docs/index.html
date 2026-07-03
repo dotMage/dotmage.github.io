@@ -161,6 +161,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#quickstart" data-i18n="s_quick">Quick start</a>
     <a href="#folders" data-i18n="s_folders">Folders</a>
     <a href="#servers" data-i18n="s_servers">Multiple servers</a>
+    <a href="#files" data-i18n="s_files">Any file</a>
 
     <div class="group" data-i18n="g_cli">CLI Reference</div>
     <a href="#auth">auth</a>
@@ -309,6 +310,18 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <span class="ok">✓</span> Pushed revision 5 (12 keys).  → work (secrets.corp.com)</pre>
 
 <p data-i18n="p_servers2">Server resolution order: <code>--server &lt;name&gt;</code> flag → <code>DOTMAGE_SERVER</code> env var → longest matching mapped path → default (<code>dmage server use &lt;name&gt;</code>). Ambiguity is an error listing candidates, never a silent guess. <code>dmage status</code> shows which server was picked and why; <code>dmage server list</code> shows all servers with auth state and paths.</p>
+
+<h2 id="files" data-i18n="h_files">Beyond .env — any file</h2>
+<p data-i18n="p_files">Store any config file — DataGrip datasource XML, kubeconfig, service-account JSON. The file name and format are encrypted together with the contents (the server never sees them), and <code>pull</code> on another machine recreates the file under its original name:</p>
+
+<pre><span class="p">$</span> dmage init dbconf --file dataSources.xml
+  <span class="ok">✓</span> Created app 'dbconf'. Pushed revision 1 from dataSources.xml (4.2 KB, text).
+
+<span class="c"># on another machine</span>
+<span class="p">$</span> dmage pull dbconf          <span class="c"># writes dataSources.xml</span>
+<span class="p">$</span> dmage push dbconf          <span class="c"># picks up dataSources.xml automatically</span></pre>
+
+<p data-i18n="p_files2">Formats — <code>env</code> (key diff, <code>exec</code> injection), <code>text</code> (line/byte diff), <code>binary</code> (sha256 compare) — are detected from the extension; override with <code>--format</code>. <code>exec</code> works only with env apps. Non-env apps require dmage ≥ 1.3 on all devices; existing <code>.env</code> apps are unaffected.</p>
 
 <!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
 
@@ -799,6 +812,7 @@ en: {
   p_quick_device:"On any new machine — just the bootstrap secret and your master password. No first device needed, no tokens to generate.",
   s_folders:"Folders",
   s_servers:"Multiple servers",
+  s_files:"Any file",
   h_folders:"Organizing apps with folders",
   p_folders:'Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.',
   p_folders2:"All commands work the same — just use the full name with the folder prefix:",
@@ -806,6 +820,9 @@ en: {
   h_servers:"Multiple servers (work / personal)",
   p_servers:'Optional — with a single server nothing changes. Map project directories to servers in the global config (like git\'s <code>includeIf</code>) and every command picks the right server from the directory you run it in. No files are created inside your projects.',
   p_servers2:'Server resolution order: <code>--server &lt;name&gt;</code> flag → <code>DOTMAGE_SERVER</code> env var → longest matching mapped path → default (<code>dmage server use &lt;name&gt;</code>). Ambiguity is an error listing candidates, never a silent guess. <code>dmage status</code> shows which server was picked and why; <code>dmage server list</code> shows all servers with auth state and paths.',
+  h_files:"Beyond .env — any file",
+  p_files:'Store any config file — DataGrip datasource XML, kubeconfig, service-account JSON. The file name and format are encrypted together with the contents (the server never sees them), and <code>pull</code> on another machine recreates the file under its original name:',
+  p_files2:'Formats — <code>env</code> (key diff, <code>exec</code> injection), <code>text</code> (line/byte diff), <code>binary</code> (sha256 compare) — are detected from the extension; override with <code>--format</code>. <code>exec</code> works only with env apps. Non-env apps require dmage ≥ 1.3 on all devices; existing <code>.env</code> apps are unaffected.',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
@@ -902,6 +919,7 @@ ru: {
   p_quick_device:"На любой новой машине — только bootstrap secret и мастер-пароль. Первое устройство не нужно, токены генерировать не надо.",
   s_folders:"Папки",
   s_servers:"Несколько серверов",
+  s_files:"Любой файл",
   h_folders:"Организация приложений в папки",
   p_folders:'Используйте <code>/</code> в имени приложения для группировки в папки. Никакой настройки — папка это просто соглашение об именовании.',
   p_folders2:"Все команды работают так же — просто используйте полное имя с префиксом папки:",
@@ -909,6 +927,9 @@ ru: {
   h_servers:"Несколько серверов (рабочий / личный)",
   p_servers:'Опционально — с одним сервером ничего не меняется. Директории проектов маппятся на серверы в глобальном конфиге (как <code>includeIf</code> в git), и каждая команда сама выбирает нужный сервер по директории запуска. В проектах никакие файлы не создаются.',
   p_servers2:'Порядок выбора сервера: флаг <code>--server &lt;имя&gt;</code> → переменная <code>DOTMAGE_SERVER</code> → самый длинный совпавший путь → дефолт (<code>dmage server use &lt;имя&gt;</code>). Неоднозначность — ошибка со списком кандидатов, не молчаливое угадывание. <code>dmage status</code> показывает, какой сервер выбран и почему; <code>dmage server list</code> — все серверы со статусом и путями.',
+  h_files:"Не только .env — любой файл",
+  p_files:'Храните любой конфиг — XML-датасорсы DataGrip, kubeconfig, JSON сервис-аккаунтов. Имя и формат файла шифруются вместе с содержимым (сервер их не видит), а <code>pull</code> на другой машине воссоздаёт файл под исходным именем:',
+  p_files2:'Форматы — <code>env</code> (diff по ключам, инжект в <code>exec</code>), <code>text</code> (строки/байты), <code>binary</code> (сравнение sha256) — определяются по расширению; переопределить: <code>--format</code>. <code>exec</code> работает только с env-приложениями. Для не-env приложений нужен dmage ≥ 1.3 на всех устройствах; существующие <code>.env</code>-приложения не затронуты.',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",
