@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="ru"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dotMage 1.2 — and a blog to announce it on — dotMage blog</title>
-<meta name="description" content="App deletion, folders, smarter update checks — and this blog, where every release gets proper notes from now on.">
-<link rel="canonical" href="https://dotmage.github.io/blog/2026/dotmage-1-2-and-blog/">
+<title>dotMage 1.2 — и блог, где об этом рассказать — dotMage blog</title>
+<meta name="description" content="Удаление приложений, папки, умная проверка обновлений — и этот блог, где у каждого релиза теперь будут нормальные заметки.">
+<link rel="canonical" href="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/">
 <link rel="alternate" hreflang="en" href="https://dotmage.github.io/blog/2026/dotmage-1-2-and-blog/">
 <link rel="alternate" hreflang="ru" href="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://dotmage.github.io/blog/2026/dotmage-1-2-and-blog/">
-<meta property="og:title" content="dotMage 1.2 — and a blog to announce it on">
-<meta property="og:description" content="App deletion, folders, smarter update checks — and this blog, where every release gets proper notes from now on.">
+<meta property="og:url" content="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/">
+<meta property="og:title" content="dotMage 1.2 — и блог, где об этом рассказать">
+<meta property="og:description" content="Удаление приложений, папки, умная проверка обновлений — и этот блог, где у каждого релиза теперь будут нормальные заметки.">
 <meta property="og:image" content="https://dotmage.github.io/favicon.svg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="alternate" type="application/atom+xml" title="dotMage blog" href="/blog/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="dotMage blog" href="/blog/ru/atom.xml">
 <style>
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-0.woff2") format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-1.woff2") format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
@@ -79,12 +79,12 @@ footer .in{display:flex; justify-content:space-between; align-items:center; padd
     <a class="brand" href="/"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b>Mage</b></a>
     <div class="links">
       <a href="/docs/">Docs</a>
-      <a href="/blog/" class="on">Blog</a>
+      <a href="/blog/ru/" class="on">Blog</a>
     </div>
     <div class="right">
       <div class="langtog" id="langtog">
-        <a href="/blog/2026/dotmage-1-2-and-blog/" data-lang="en" class="on">EN</a>
-        <a href="/blog/ru/2026/dotmage-1-2-and-blog/" data-lang="ru" class="">RU</a>
+        <a href="/blog/2026/dotmage-1-2-and-blog/" data-lang="en" class="">EN</a>
+        <a href="/blog/ru/2026/dotmage-1-2-and-blog/" data-lang="ru" class="on">RU</a>
       </div>
       <a class="btn" href="https://github.com/dotMage/">GitHub</a>
     </div>
@@ -92,43 +92,44 @@ footer .in{display:flex; justify-content:space-between; align-items:center; padd
 </nav>
 <article class="post">
   <span class="kicker">release</span>
-  <h1>dotMage 1.2 — and a blog to announce it on</h1>
-  <div class="pdate">July 3, 2026</div>
+  <h1>dotMage 1.2 — и блог, где об этом рассказать</h1>
+  <div class="pdate">3 июля 2026</div>
   <div class="content">
-<p>dotMage has been shipping quietly since June — folders, CI tokens, a web admin, an app
-lifecycle. Quietly is the problem: release notes lived in commit messages. From now on
-every release lands here, with a human summary on top and the full changelog below.</p>
-<h2>What's new in 1.2</h2>
-<h3>Delete apps</h3>
-<p>Apps are no longer forever:</p>
+<p>dotMage тихо выкатывал фичи с июня — папки, CI-токены, веб-админка, жизненный цикл
+приложений. «Тихо» — это и есть проблема: заметки о релизах жили в сообщениях коммитов.
+С этого момента каждый релиз публикуется здесь: человеческое резюме сверху, полный
+чейнджлог ниже.</p>
+<h2>Что нового в 1.2</h2>
+<h3>Удаление приложений</h3>
+<p>Приложения больше не навсегда:</p>
 <pre><code>$ dmage app rm old-project
 This will delete 'old-project' and ALL its environments. Type 'old-project' to confirm:
 </code></pre>
-<h3>Smarter update checks</h3>
-<p>The banner checks GitHub for new releases (cached for 24h) and compares versions with
-proper semver ordering — <code>1.10.0</code> is newer than <code>1.9.0</code>.</p>
-<h2>Changelog</h2>
+<h3>Умная проверка обновлений</h3>
+<p>Баннер проверяет GitHub на новые релизы (кэш на 24 часа) и сравнивает версии по
+правилам semver — <code>1.10.0</code> новее, чем <code>1.9.0</code>.</p>
+<h2>Чейнджлог</h2>
 <h3>1.2.1</h3>
-<h4>Fixed</h4>
+<h4>Исправлено</h4>
 <ul>
-<li>Update checker compares versions with proper semver ordering.</li>
+<li>Проверка обновлений сравнивает версии по правилам semver.</li>
 </ul>
 <h3>1.2.0</h3>
-<h4>Added</h4>
+<h4>Добавлено</h4>
 <ul>
-<li><code>dmage app rm</code> — delete an application and all its environments.</li>
+<li><code>dmage app rm</code> — удаление приложения со всеми его окружениями.</li>
 </ul>
-<h2>Downloads</h2>
-<p>Binaries: <a href="https://github.com/dotMage/dotmage/releases">github.com/dotMage/dotmage/releases</a></p>
+<h2>Скачать</h2>
+<p>Бинарники: <a href="https://github.com/dotMage/dotmage/releases">github.com/dotMage/dotmage/releases</a></p>
 <pre><code>brew upgrade dotmage
 </code></pre>
   </div>
-  <a class="backlink" href="/blog/">◂ All posts</a>
+  <a class="backlink" href="/blog/ru/">◂ Все посты</a>
 </article>
 <footer>
   <div class="wrap in">
-    <span>dotMage — E2E-encrypted .env manager</span>
-    <span><a href="/blog/atom.xml">Atom feed</a> · AGPL-3.0</span>
+    <span>dotMage — E2E-шифрованный менеджер .env</span>
+    <span><a href="/blog/ru/atom.xml">Atom-лента</a> · AGPL-3.0</span>
   </div>
 </footer>
 <script>

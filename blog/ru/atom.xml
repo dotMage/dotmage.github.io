@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru">
+  <title>Блог dotMage</title>
+  <link href="https://dotmage.github.io/blog/ru/"/>
+  <link rel="self" href="https://dotmage.github.io/blog/ru/atom.xml"/>
+  <id>https://dotmage.github.io/blog/ru/</id>
+  <updated>2026-07-03T00:00:00Z</updated>
+  <entry>
+    <title>dotMage 1.2 — и блог, где об этом рассказать</title>
+    <link href="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/"/>
+    <id>https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/</id>
+    <updated>2026-07-03T00:00:00Z</updated>
+    <summary>Удаление приложений, папки, умная проверка обновлений — и этот блог, где у каждого релиза теперь будут нормальные заметки.</summary>
+    <category term="release"/>
+  </entry>
+</feed>
