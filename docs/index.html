@@ -160,6 +160,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#server" data-i18n="s_server">Deploy server</a>
     <a href="#quickstart" data-i18n="s_quick">Quick start</a>
     <a href="#folders" data-i18n="s_folders">Folders</a>
+    <a href="#servers" data-i18n="s_servers">Multiple servers</a>
 
     <div class="group" data-i18n="g_cli">CLI Reference</div>
     <a href="#auth">auth</a>
@@ -293,6 +294,21 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <span class="p">$</span> dmage exec personal/blog -- npm run dev</pre>
 
 <p data-i18n="p_folders3">The web admin groups apps by folder automatically. Apps without a <code>/</code> appear at the root level as before.</p>
+
+<h2 id="servers" data-i18n="h_servers">Multiple servers (work / personal)</h2>
+<p data-i18n="p_servers">Optional — with a single server nothing changes. Map project directories to servers in the global config (like git's <code>includeIf</code>) and every command picks the right server from the directory you run it in. No files are created inside your projects.</p>
+
+<pre><span class="p">$</span> dmage server add work https://secrets.corp.com --path ~/code/work
+<span class="p">$</span> dmage auth --server work
+<span class="p">$</span> dmage server add personal https://home.example.com --path ~/code/personal
+<span class="p">$</span> dmage auth --server personal
+
+<span class="c"># inside a mapped directory the app name defaults to the dir name</span>
+<span class="p">$</span> cd ~/code/work/billing-api
+<span class="p">$</span> dmage push
+  <span class="ok">✓</span> Pushed revision 5 (12 keys).  → work (secrets.corp.com)</pre>
+
+<p data-i18n="p_servers2">Server resolution order: <code>--server &lt;name&gt;</code> flag → <code>DOTMAGE_SERVER</code> env var → longest matching mapped path → default (<code>dmage server use &lt;name&gt;</code>). Ambiguity is an error listing candidates, never a silent guess. <code>dmage status</code> shows which server was picked and why; <code>dmage server list</code> shows all servers with auth state and paths.</p>
 
 <!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
 
@@ -710,6 +726,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <thead><tr><th data-i18n="th_flag">Flag</th><th data-i18n="th_desc">Description</th></tr></thead>
   <tbody>
     <tr><td><code>--env &lt;ENV&gt;</code></td><td data-i18n="fl_env">Override the active environment for this command</td></tr>
+    <tr><td><code>--server &lt;NAME&gt;</code></td><td data-i18n="fl_server">Use a specific configured server for this command</td></tr>
     <tr><td><code>-q, --quiet</code></td><td data-i18n="fl_quiet">Suppress non-error output</td></tr>
     <tr><td><code>--json</code></td><td data-i18n="fl_json">JSON output for scripting</td></tr>
   </tbody>
@@ -781,10 +798,14 @@ en: {
   h_quick_device:"Adding another device",
   p_quick_device:"On any new machine — just the bootstrap secret and your master password. No first device needed, no tokens to generate.",
   s_folders:"Folders",
+  s_servers:"Multiple servers",
   h_folders:"Organizing apps with folders",
   p_folders:'Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.',
   p_folders2:"All commands work the same — just use the full name with the folder prefix:",
   p_folders3:'The web admin groups apps by folder automatically. Apps without a <code>/</code> appear at the root level as before.',
+  h_servers:"Multiple servers (work / personal)",
+  p_servers:'Optional — with a single server nothing changes. Map project directories to servers in the global config (like git\'s <code>includeIf</code>) and every command picks the right server from the directory you run it in. No files are created inside your projects.',
+  p_servers2:'Server resolution order: <code>--server &lt;name&gt;</code> flag → <code>DOTMAGE_SERVER</code> env var → longest matching mapped path → default (<code>dmage server use &lt;name&gt;</code>). Ambiguity is an error listing candidates, never a silent guess. <code>dmage status</code> shows which server was picked and why; <code>dmage server list</code> shows all servers with auth state and paths.',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
@@ -852,7 +873,7 @@ en: {
   warn_backup:'Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b>',
   h_flags:"Global flags",
   p_flags:"Available on every command:",
-  fl_env:"Override the active environment for this command", fl_quiet:"Suppress non-error output", fl_json:"JSON output for scripting",
+  fl_env:"Override the active environment for this command", fl_server:"Use a specific configured server for this command", fl_quiet:"Suppress non-error output", fl_json:"JSON output for scripting",
   h_exit:"Exit codes",
   ex_0:"Success", ex_1:"General error / not found",
   ex_3:'Not authenticated — run <code>dmage auth</code>',
@@ -880,10 +901,14 @@ ru: {
   h_quick_device:"Добавление нового устройства",
   p_quick_device:"На любой новой машине — только bootstrap secret и мастер-пароль. Первое устройство не нужно, токены генерировать не надо.",
   s_folders:"Папки",
+  s_servers:"Несколько серверов",
   h_folders:"Организация приложений в папки",
   p_folders:'Используйте <code>/</code> в имени приложения для группировки в папки. Никакой настройки — папка это просто соглашение об именовании.',
   p_folders2:"Все команды работают так же — просто используйте полное имя с префиксом папки:",
   p_folders3:'Веб-админка группирует приложения по папкам автоматически. Приложения без <code>/</code> отображаются на корневом уровне как раньше.',
+  h_servers:"Несколько серверов (рабочий / личный)",
+  p_servers:'Опционально — с одним сервером ничего не меняется. Директории проектов маппятся на серверы в глобальном конфиге (как <code>includeIf</code> в git), и каждая команда сама выбирает нужный сервер по директории запуска. В проектах никакие файлы не создаются.',
+  p_servers2:'Порядок выбора сервера: флаг <code>--server &lt;имя&gt;</code> → переменная <code>DOTMAGE_SERVER</code> → самый длинный совпавший путь → дефолт (<code>dmage server use &lt;имя&gt;</code>). Неоднозначность — ошибка со списком кандидатов, не молчаливое угадывание. <code>dmage status</code> показывает, какой сервер выбран и почему; <code>dmage server list</code> — все серверы со статусом и путями.',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",
@@ -951,7 +976,7 @@ ru: {
   warn_backup:'Потеря базы данных означает потерю доступа ко всем секретам — даже с мастер-паролем. В базе хранится зашифрованный Account Key. <b>Всегда делайте бэкап.</b>',
   h_flags:"Глобальные флаги",
   p_flags:"Доступны для любой команды:",
-  fl_env:"Переопределить активное окружение для этой команды", fl_quiet:"Подавить вывод (кроме ошибок)", fl_json:"Вывод в JSON для скриптинга",
+  fl_env:"Переопределить активное окружение для этой команды", fl_server:"Использовать указанный сервер для этой команды", fl_quiet:"Подавить вывод (кроме ошибок)", fl_json:"Вывод в JSON для скриптинга",
   h_exit:"Коды выхода",
   ex_0:"Успех", ex_1:"Общая ошибка / не найдено",
   ex_3:'Не авторизован — выполните <code>dmage auth</code>',
