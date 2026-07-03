@@ -452,6 +452,10 @@ footer .links a:hover{color:var(--ink)}
       <a href="blog/" data-i18n="nav_blog">Blog</a>
     </div>
     <div class="right">
+      <div class="langtog" id="modetog" title="Solo or team scenario">
+        <button data-mode="solo" class="on">SOLO</button>
+        <button data-mode="team">TEAM</button>
+      </div>
       <div class="langtog" id="langtog">
         <button data-lang="en" class="on">EN</button>
         <button data-lang="ru">RU</button>
@@ -481,8 +485,22 @@ footer .links a:hover{color:var(--ink)}
       </div>
     </div>
     <div class="term">
-      <div class="bar"><span class="dot g"></span><span class="dot"></span><span class="dot"></span><span class="tt">~/code/myapp — zsh</span></div>
-      <div class="body"><span class="d">·  </span><span class="cy">dotMage</span><span class="d">  ·   E2E-encrypted .env manager</span>
+      <div class="bar"><span class="dot g"></span><span class="dot"></span><span class="dot"></span><span class="tt" id="term-title">~/code/myapp — zsh</span></div>
+      <div class="body" id="term-team" style="display:none"><span class="d">·  </span><span class="cy">dotMage</span><span class="d">  ·   team vault · E2E</span>
+
+<span class="p">$</span> <span class="c">dmage user invite kolya --role editor</span>
+  <span class="d">dmage_uinv_eyJp…  › send over a private channel</span>
+
+<span class="d"># on kolya's machine — his OWN password</span>
+<span class="p">$</span> <span class="c">dmage auth --invite dmage_uinv_eyJp…</span>
+  <span class="ok">✓</span> Joined as 'kolya' <span class="d">(editor)</span>.
+
+<span class="p">$</span> <span class="c">dmage user rm kolya</span>
+  <span class="ok">✓</span> removed 'kolya' <span class="d">(1 device revoked)</span>
+  <span class="am">Rotate the Account Key now? [Y/n]</span>
+
+<span class="p">$</span> <span class="cursor"></span></div>
+      <div class="body" id="term-solo"><span class="d">·  </span><span class="cy">dotMage</span><span class="d">  ·   E2E-encrypted .env manager</span>
 
 <span class="p">$</span> <span class="c">dmage init myapp</span>
   <span class="ok">✓</span> Created app 'myapp'. Pushed revision 1 from .env <span class="d">(12 keys)</span>.
@@ -783,4 +801,24 @@ footer .links a:hover{color:var(--ink)}
 </script>
 
 
+<script>
+(function(){
+  var saved = "solo";
+  try { saved = localStorage.getItem('dm_mode') || "solo"; } catch(e){}
+  function setMode(mode){
+    document.getElementById('term-solo').style.display = mode === 'solo' ? '' : 'none';
+    document.getElementById('term-team').style.display = mode === 'team' ? '' : 'none';
+    document.getElementById('term-title').textContent =
+      mode === 'team' ? '~/work — team vault' : '~/code/myapp — zsh';
+    document.querySelectorAll('#modetog button').forEach(function(b){
+      b.classList.toggle('on', b.dataset.mode === mode);
+    });
+    try { localStorage.setItem('dm_mode', mode); } catch(e){}
+  }
+  document.querySelectorAll('#modetog button').forEach(function(b){
+    b.addEventListener('click', function(){ setMode(b.dataset.mode); });
+  });
+  if (saved !== 'solo') setMode(saved);
+})();
+</script>
 </body></html>

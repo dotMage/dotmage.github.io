@@ -6,6 +6,14 @@
   <id>https://dotmage.github.io/blog/</id>
   <updated>2026-07-03T00:00:00Z</updated>
   <entry>
+    <title>dotMage 2.0 — teams, same product, same license</title>
+    <link href="https://dotmage.github.io/blog/2026/dotmage-2-0-0/"/>
+    <id>https://dotmage.github.io/blog/2026/dotmage-2-0-0/</id>
+    <updated>2026-07-03T00:00:00Z</updated>
+    <summary>Invite teammates with their own passwords, enforce roles, offboard people properly — and if you never invite anyone, nothing changes at all. AGPL everywhere, no paid tiers.</summary>
+    <category term="release"/>
+  </entry>
+  <entry>
     <title>dotMage 1.4.0 — key rotation, for everyone</title>
     <link href="https://dotmage.github.io/blog/2026/dotmage-1-4-0/"/>
     <id>https://dotmage.github.io/blog/2026/dotmage-1-4-0/</id>

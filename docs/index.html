@@ -69,6 +69,7 @@ code{font-family:var(--mono); font-size:12px; background:var(--card); border:1px
 .cmd-card{margin-top:24px; border:2px solid var(--line); background:var(--card)}
 .cmd-card .head{display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:2px solid var(--line); background:var(--paper2)}
 .cmd-card .head .name{font-weight:800; font-size:15px}
+h2 .badge{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 8px; background:var(--lime); vertical-align:middle; margin-left:6px}
 .cmd-card .head .badge{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 7px; border:1.5px solid var(--line)}
 .cmd-card .desc{padding:14px 16px; font-size:13px; color:var(--dim)}
 .cmd-card pre{margin:0; border:none; border-top:2px solid var(--line)}
@@ -163,6 +164,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#servers" data-i18n="s_servers">Multiple servers</a>
     <a href="#files" data-i18n="s_files">Any file</a>
     <a href="#rotation" data-i18n="s_rotation">Key rotation</a>
+    <a href="#team" data-i18n="s_team">Team mode</a>
 
     <div class="group" data-i18n="g_cli">CLI Reference</div>
     <a href="#auth">auth</a>
@@ -333,6 +335,42 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <span class="ok">✓</span> Key rotated to generation 2 (51 revision(s) re-encrypted).</pre>
 
 <p data-i18n="p_rotation2">After a rotation: old cached keys stop working for new data (devices re-run <code>dmage auth</code>), CI tokens must be regenerated, and — important — <strong>backups taken before the rotation remain decryptable by the old key</strong>: destroy or re-encrypt them if you rotated because of a compromise.</p>
+
+<h2 id="team" data-i18n="h_team">Team mode <span class="badge">v2</span></h2>
+<p data-i18n="p_team">One product, two modes: solo is a team of one, and nothing changes until you invite a second person. Each member gets their <strong>own master password</strong> wrapping the shared vault key — offboarding stops being "change the shared password and hope".</p>
+
+<pre><span class="c"># on the server (docker-compose environment)</span>
+DOTMAGE_MODE=team
+
+<span class="c"># owner invites a member</span>
+<span class="p">$</span> dmage user invite kolya --role editor
+  dmage_uinv_eyJp...          <span class="c"># one-time token — send over a PRIVATE channel</span>
+
+<span class="c"># on their machine — they pick their OWN password</span>
+<span class="p">$</span> dmage auth --invite dmage_uinv_eyJp...
+  ✓ Joined as 'kolya' (editor). Key cached.
+
+<span class="p">$</span> dmage user list
+  USER           ROLE     STATUS    SINCE
+  owner          owner    active    2026-07-03
+  kolya          editor   active    2026-07-03</pre>
+
+<p data-i18n="p_team2">Roles — <code>owner</code> (everything), <code>editor</code> (push/pull/rollback), <code>viewer</code> (read-only) — are enforced by the server. Note the honest limit: roles are authorization, not cryptography — every member holds the vault key and could technically decrypt any blob they can download. The audit log now names people, not just devices.</p>
+
+<h3 data-i18n="h_offboard">Offboarding (someone leaves)</h3>
+<pre><span class="p">$</span> dmage user rm kolya
+  ✓ removed 'kolya' (1 device(s) revoked)
+  Rotate the Account Key now (recommended)? [Y/n]</pre>
+<p data-i18n="p_offboard">Removal deletes their key wraps and revokes their devices; the chained <code>rotate-key</code> makes their cached key useless for anything pushed afterwards. Then: <strong>rotate the secret values they saw</strong> (what they read, they read) and <strong>destroy pre-rotation backups</strong> — rotation cannot reach into old backups.</p>
+
+<h3 data-i18n="h_sharedpw">Migrating from a shared password</h3>
+<p data-i18n="p_sharedpw">If two of you have been sharing one master password (the pre-v2 workaround):</p>
+<pre><span class="c"># 1. upgrade the server, set DOTMAGE_MODE=team</span>
+<span class="p">$</span> dmage user invite kolya --role editor      <span class="c"># you (owner)</span>
+<span class="p">$</span> dmage auth --invite dmage_uinv_...          <span class="c"># colleague: sets their OWN password</span>
+<span class="c"># 2. colleague re-auths their other devices as themselves; you revoke their old devices</span>
+<span class="p">$</span> dmage rotate-key                            <span class="c"># kills every old cached key</span>
+<span class="c"># 3. change your master password; destroy pre-rotation backups</span></pre>
 
 <!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
 
@@ -825,6 +863,7 @@ en: {
   s_servers:"Multiple servers",
   s_files:"Any file",
   s_rotation:"Key rotation",
+  s_team:"Team mode",
   h_folders:"Organizing apps with folders",
   p_folders:'Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.',
   p_folders2:"All commands work the same — just use the full name with the folder prefix:",
@@ -838,6 +877,13 @@ en: {
   h_rotation:"Key rotation",
   p_rotation:'If a device with a cached key leaves your control, rotate the Account Key — every revision is re-encrypted client-side with a fresh key (the server cannot read blobs, so it cannot do this for you). The operation is resumable: interrupt it at any point and re-run.',
   p_rotation2:'After a rotation: old cached keys stop working for new data (devices re-run <code>dmage auth</code>), CI tokens must be regenerated, and — important — <strong>backups taken before the rotation remain decryptable by the old key</strong>: destroy or re-encrypt them if you rotated because of a compromise.',
+  h_team:'Team mode <span class="badge">v2</span>',
+  p_team:'One product, two modes: solo is a team of one, and nothing changes until you invite a second person. Each member gets their <strong>own master password</strong> wrapping the shared vault key — offboarding stops being "change the shared password and hope".',
+  p_team2:'Roles — <code>owner</code> (everything), <code>editor</code> (push/pull/rollback), <code>viewer</code> (read-only) — are enforced by the server. Note the honest limit: roles are authorization, not cryptography — every member holds the vault key and could technically decrypt any blob they can download. The audit log now names people, not just devices.',
+  h_offboard:"Offboarding (someone leaves)",
+  p_offboard:'Removal deletes their key wraps and revokes their devices; the chained <code>rotate-key</code> makes their cached key useless for anything pushed afterwards. Then: <strong>rotate the secret values they saw</strong> (what they read, they read) and <strong>destroy pre-rotation backups</strong> — rotation cannot reach into old backups.',
+  h_sharedpw:"Migrating from a shared password",
+  p_sharedpw:'If two of you have been sharing one master password (the pre-v2 workaround):',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
@@ -936,6 +982,7 @@ ru: {
   s_servers:"Несколько серверов",
   s_files:"Любой файл",
   s_rotation:"Ротация ключа",
+  s_team:"Командный режим",
   h_folders:"Организация приложений в папки",
   p_folders:'Используйте <code>/</code> в имени приложения для группировки в папки. Никакой настройки — папка это просто соглашение об именовании.',
   p_folders2:"Все команды работают так же — просто используйте полное имя с префиксом папки:",
@@ -949,6 +996,13 @@ ru: {
   h_rotation:"Ротация ключа",
   p_rotation:'Если устройство с закэшированным ключом вышло из-под контроля — ротируйте Account Key: каждая ревизия перешифровывается новым ключом на клиенте (сервер не умеет читать блобы и не может сделать это за вас). Операция возобновляема: прервите в любой момент и запустите снова.',
   p_rotation2:'После ротации: старые кэши ключа перестают работать для новых данных (устройства заново выполняют <code>dmage auth</code>), CI-токены нужно перегенерировать, и — важно — <strong>бэкапы, снятые до ротации, по-прежнему расшифровываются старым ключом</strong>: уничтожьте или перешифруйте их, если ротация была из-за компрометации.',
+  h_team:'Командный режим <span class="badge">v2</span>',
+  p_team:'Один продукт, два режима: solo — это команда из одного, и ничего не меняется, пока вы не пригласите второго человека. У каждого участника <strong>свой мастер-пароль</strong>, оборачивающий общий ключ хранилища — офбординг перестаёт быть «сменим общий пароль и понадеемся».',
+  p_team2:'Роли — <code>owner</code> (всё), <code>editor</code> (push/pull/rollback), <code>viewer</code> (только чтение) — принуждаются сервером. Честная оговорка: роли — это авторизация, а не криптография: каждый участник владеет ключом хранилища и технически может расшифровать любой блоб, который сумеет скачать. Audit-журнал теперь называет людей, а не только устройства.',
+  h_offboard:"Офбординг (кто-то уходит)",
+  p_offboard:'Удаление стирает его обёртки ключа и отзывает устройства; связанная <code>rotate-key</code> делает его кэшированный ключ бесполезным для всего, что запушено после. Дальше: <strong>ротируйте сами значения секретов, которые он видел</strong> (что прочитано — то прочитано) и <strong>уничтожьте доротационные бэкапы</strong> — ротация не дотягивается до старых бэкапов.',
+  h_sharedpw:"Миграция с общего пароля",
+  p_sharedpw:'Если вы вдвоём делили один мастер-пароль (обходной путь до v2):',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",

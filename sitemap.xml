@@ -21,6 +21,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dotmage.github.io/blog/2026/dotmage-2-0-0/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dotmage.github.io/blog/ru/2026/dotmage-2-0-0/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://dotmage.github.io/blog/2026/dotmage-1-4-0/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

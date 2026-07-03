@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotMage 2.0 — teams, same product, same license — dotMage blog</title>
+<meta name="description" content="Invite teammates with their own passwords, enforce roles, offboard people properly — and if you never invite anyone, nothing changes at all. AGPL everywhere, no paid tiers.">
+<link rel="canonical" href="https://dotmage.github.io/blog/2026/dotmage-2-0-0/">
+<link rel="alternate" hreflang="en" href="https://dotmage.github.io/blog/2026/dotmage-2-0-0/">
+<link rel="alternate" hreflang="ru" href="https://dotmage.github.io/blog/ru/2026/dotmage-2-0-0/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dotmage.github.io/blog/2026/dotmage-2-0-0/">
+<meta property="og:title" content="dotMage 2.0 — teams, same product, same license">
+<meta property="og:description" content="Invite teammates with their own passwords, enforce roles, offboard people properly — and if you never invite anyone, nothing changes at all. AGPL everywhere, no paid tiers.">
+<meta property="og:image" content="https://dotmage.github.io/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate" type="application/atom+xml" title="dotMage blog" href="/blog/atom.xml">
+<style>
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-0.woff2") format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-1.woff2") format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-2.woff2") format('woff2');unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-3.woff2") format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-4.woff2") format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-5.woff2") format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{
+  --paper:#e9e5d8; --paper2:#f1eee4; --card:#f6f4ec; --ink:#16140d;
+  --line:#16140d; --dim:#5d584a; --faint:#8c8472;
+  --lime:#c2f53f; --amber:#e8a417; --red:#e0402b; --green:#54d06a;
+  --mono:"JetBrains Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--mono); background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.5}
+::selection{background:var(--lime)}
+a{color:inherit; text-decoration:none}
+.wrap{max-width:1120px; margin:0 auto; padding:0 28px}
+.nav{position:sticky; top:0; z-index:50; background:var(--paper2); border-bottom:2px solid var(--line)}
+.nav .in{display:flex; align-items:center; gap:14px; height:62px}
+.brand{display:flex; align-items:center; gap:11px; font-weight:800; font-size:18px; letter-spacing:-.02em}
+.brand b{background:var(--lime); padding:0 3px}
+.nav .links{display:flex; gap:4px; margin-left:28px}
+.nav .links a{font-size:12.5px; font-weight:600; color:var(--dim); padding:8px 12px; text-transform:uppercase; letter-spacing:.04em}
+.nav .links a:hover, .nav .links a.on{background:var(--card); color:var(--ink)}
+.nav .right{margin-left:auto; display:flex; gap:10px; align-items:center}
+.langtog{display:flex; border:2px solid var(--line)}
+.langtog a{font-weight:700; font-size:12px; letter-spacing:.04em; padding:9px 11px; border-right:2px solid var(--line); background:var(--paper2); color:var(--dim)}
+.langtog a:last-child{border-right:none}
+.langtog a.on{background:var(--ink); color:var(--lime)}
+.langtog a:not(.on):hover{background:var(--card); color:var(--ink)}
+.btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; padding:10px 16px; border:2px solid var(--line); background:var(--paper2); color:var(--ink)}
+.btn:hover{background:var(--ink); color:var(--paper)}
+.post{max-width:760px; margin:0 auto; padding:56px 28px 90px}
+.kicker{display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--ink); background:var(--lime); padding:5px 9px}
+.post h1{font-size:38px; font-weight:800; line-height:1.08; letter-spacing:-.02em; margin:18px 0 10px}
+.pdate{font-size:12px; font-weight:600; color:var(--faint); text-transform:uppercase; letter-spacing:.06em}
+.content{margin-top:34px; font-size:14.5px; line-height:1.75}
+.content h2{font-size:24px; font-weight:800; letter-spacing:-.01em; margin:44px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--line)}
+.content h3{font-size:17px; font-weight:800; margin:30px 0 10px}
+.content p{margin:14px 0; color:#2a2618}
+.content a{font-weight:700; border-bottom:2px solid var(--lime)}
+.content a:hover{background:var(--lime)}
+.content ul,.content ol{margin:14px 0 14px 24px}
+.content li{margin:6px 0}
+.content code{background:var(--card); border:1px solid var(--line); padding:1px 5px; font-size:13px}
+.content pre{background:var(--ink); color:#d7d2c4; border:2px solid var(--line); box-shadow:6px 6px 0 var(--line); padding:16px 18px; overflow-x:auto; font-size:12.5px; line-height:1.7; margin:20px 0}
+.content pre code{background:none; border:none; padding:0; color:inherit; font-size:inherit}
+.content table{border-collapse:collapse; width:100%; margin:20px 0; font-size:12.5px; display:block; overflow-x:auto}
+.content th,.content td{border:2px solid var(--line); padding:8px 12px; text-align:left}
+.content th{background:var(--card); font-size:11px; text-transform:uppercase; letter-spacing:.05em}
+.content blockquote{border-left:4px solid var(--lime); background:var(--card); padding:10px 16px; margin:18px 0; color:var(--dim)}
+.backlink{display:inline-block; margin-top:56px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; border:2px solid var(--line); padding:10px 16px; background:var(--paper2)}
+.backlink:hover{background:var(--ink); color:var(--paper)}
+footer{border-top:2px solid var(--line); background:var(--paper2)}
+footer .in{display:flex; justify-content:space-between; align-items:center; padding:22px 0; font-size:11.5px; color:var(--faint); flex-wrap:wrap; gap:10px}
+@media (max-width:640px){.post h1{font-size:28px}.nav .links{margin-left:8px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap in">
+    <a class="brand" href="/"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b>Mage</b></a>
+    <div class="links">
+      <a href="/docs/">Docs</a>
+      <a href="/blog/" class="on">Blog</a>
+    </div>
+    <div class="right">
+      <div class="langtog" id="langtog">
+        <a href="/blog/2026/dotmage-2-0-0/" data-lang="en" class="on">EN</a>
+        <a href="/blog/ru/2026/dotmage-2-0-0/" data-lang="ru" class="">RU</a>
+      </div>
+      <a class="btn" href="https://github.com/dotMage/">GitHub</a>
+    </div>
+  </div>
+</nav>
+<article class="post">
+  <span class="kicker">release</span>
+  <h1>dotMage 2.0 — teams, same product, same license</h1>
+  <div class="pdate">July 3, 2026</div>
+  <div class="content">
+<p>dotMage started as a solo tool — one person, many machines. Then the obvious happened:
+people brought it to work and shared one master password between colleagues. That works
+until someone leaves. 2.0 makes the team a first-class citizen: each member has their own
+password wrapping the shared vault key, the server enforces roles, and offboarding is one
+command instead of a prayer. Solo users: your workflow is byte-for-byte unchanged — and
+everything stays AGPL, there is no "enterprise edition".</p>
+<h2>Highlights</h2>
+<h3>Your own password, a shared vault</h3>
+<pre><code># owner
+$ dmage user invite kolya --role editor
+  dmage_uinv_eyJp...        # one-time token, send privately
+
+# kolya, on his machine
+$ dmage auth --invite dmage_uinv_eyJp...
+  ✓ Joined as 'kolya' (editor). Key cached.
+  your password is yours alone — nobody else on the team knows it
+</code></pre>
+<p>The invitation carries the vault key sealed with a key that lives <em>only inside the token</em> —
+the server stores a blob it cannot open. One-time use, 24-hour TTL.</p>
+<h3>Roles the server actually enforces</h3>
+<p><code>owner</code> manages people, rotates keys, deletes; <code>editor</code> pushes and pulls; <code>viewer</code> reads.
+The audit log now names people, not just devices. Honest limit, documented in the threat
+model: roles are authorization, not cryptography — every member holds the vault key.</p>
+<h3>Offboarding that actually works</h3>
+<pre><code>$ dmage user rm kolya
+  ✓ removed 'kolya' (1 device(s) revoked)
+  Rotate the Account Key now (recommended)? [Y/n]
+</code></pre>
+<p>Wraps deleted, devices revoked, and the chained key rotation (from 1.4) makes their cached
+key useless for anything pushed afterwards. The docs spell out the two things software
+can't do for you: rotate the secret <em>values</em> they saw, and destroy pre-rotation backups.</p>
+<h3>Migrating from a shared password</h3>
+<p>Been sharing one master password with a colleague? The docs now have a
+<a href="/docs/#team">step-by-step runbook</a>: invite them properly, rotate the key, change your
+password — the shared password dies completely.</p>
+<h2>Solo users</h2>
+<p>Nothing changes. The server defaults to <code>DOTMAGE_MODE=solo</code> where team endpoints don't
+even exist, your output is identical, and your account silently became a "team of one"
+during migration — ready if you ever need it.</p>
+<h2>Changelog</h2>
+<h3>Added</h3>
+<ul>
+<li>Team mode: <code>dmage user invite/list/role/rm</code>, <code>dmage auth --invite</code>, <code>dmage whoami</code>;
+  per-user wraps of the shared Account Key; sealed one-time invitation tokens.</li>
+<li>Server roles (owner/editor/viewer) enforced on every write; last-owner protection.</li>
+<li>Audit log attributes actions to users; web admin shows the team roster.</li>
+<li><code>DOTMAGE_MODE=solo|team</code> (default solo — team endpoints hidden entirely).</li>
+</ul>
+<h3>Security</h3>
+<ul>
+<li>Offboarding chain: wrap removal → device revocation → key rotation, one command.</li>
+</ul>
+<h2>Downloads</h2>
+<p>Binaries and <code>SHA256SUMS</code>: <a href="https://github.com/dotMage/dotmage/releases/tag/v2.0.0">github.com/dotMage/dotmage/releases/tag/v2.0.0</a></p>
+<pre><code>dmage upgrade               # self-update
+brew upgrade dotmage        # Homebrew
+</code></pre>
+  </div>
+  <a class="backlink" href="/blog/">◂ All posts</a>
+</article>
+<footer>
+  <div class="wrap in">
+    <span>dotMage — E2E-encrypted .env manager</span>
+    <span><a href="/blog/atom.xml">Atom feed</a> · AGPL-3.0</span>
+  </div>
+</footer>
+<script>
+(function(){
+  var lang = document.documentElement.lang;
+  var urls = { en: "/blog/2026/dotmage-2-0-0/", ru: "/blog/ru/2026/dotmage-2-0-0/" };
+  try {
+    var saved = localStorage.getItem('dm_lang');
+    if (saved && saved !== lang && urls[saved]) { location.replace(urls[saved]); return; }
+  } catch(e){}
+  document.querySelectorAll('#langtog a').forEach(function(a){
+    a.addEventListener('click', function(){
+      try { localStorage.setItem('dm_lang', a.dataset.lang); } catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
