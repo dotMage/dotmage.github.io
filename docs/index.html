@@ -230,6 +230,11 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <p data-i18n="p_install2">Or download from <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.</p>
 
+<h3 data-i18n="h_cliupgrade">Upgrading</h3>
+<p data-i18n="p_cliupgrade">Direct-binary installs upgrade themselves — the CLI downloads the release, verifies it against the release's <code>SHA256SUMS</code>, and swaps atomically. Homebrew installs use brew:</p>
+<pre><span class="p">$</span> dmage upgrade
+<span class="p">$</span> brew upgrade dotmage   <span class="d"># if installed via Homebrew</span></pre>
+
 <h2 id="server" data-i18n="h_server">Deploy server</h2>
 <p data-i18n="p_server">One command installs everything via Docker:</p>
 <pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash</pre>
@@ -787,6 +792,8 @@ en: {
   h_install:"Install CLI",
   p_install:"dotMage CLI is a single Rust binary with no dependencies. Choose your platform:",
   p_install2:'Or download from <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
+  h_cliupgrade:"Upgrading",
+  p_cliupgrade:'Direct-binary installs upgrade themselves — the CLI downloads the release, verifies it against the release\'s <code>SHA256SUMS</code>, and swaps atomically. Homebrew installs use brew:',
   p_win:'Downloads the binary to <code>%LOCALAPPDATA%\\dotmage\\</code> and adds it to PATH. Restart your terminal — <code>dmage</code> works from anywhere.',
   h_server:"Deploy server",
   p_server:"One command installs everything via Docker:",
@@ -884,6 +891,8 @@ ru: {
   h_install:"Установка CLI",
   p_install:"dotMage CLI — один Rust-бинарник без зависимостей. Выберите платформу:",
   p_install2:'Или скачайте с <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
+  h_cliupgrade:"Обновление",
+  p_cliupgrade:'Бинарные установки обновляются сами — CLI скачивает релиз, сверяет его с <code>SHA256SUMS</code> релиза и атомарно заменяет себя. Homebrew-установки обновляются через brew:',
   p_win:'Скачивает бинарник в <code>%LOCALAPPDATA%\\dotmage\\</code> и добавляет в PATH. После перезапуска терминала <code>dmage</code> работает отовсюду.',
   h_server:"Деплой сервера",
   p_server:"Одна команда устанавливает всё через Docker:",
