@@ -162,6 +162,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#folders" data-i18n="s_folders">Folders</a>
     <a href="#servers" data-i18n="s_servers">Multiple servers</a>
     <a href="#files" data-i18n="s_files">Any file</a>
+    <a href="#rotation" data-i18n="s_rotation">Key rotation</a>
 
     <div class="group" data-i18n="g_cli">CLI Reference</div>
     <a href="#auth">auth</a>
@@ -322,6 +323,16 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <span class="p">$</span> dmage push dbconf          <span class="c"># picks up dataSources.xml automatically</span></pre>
 
 <p data-i18n="p_files2">Formats — <code>env</code> (key diff, <code>exec</code> injection), <code>text</code> (line/byte diff), <code>binary</code> (sha256 compare) — are detected from the extension; override with <code>--format</code>. <code>exec</code> works only with env apps. Non-env apps require dmage ≥ 1.3 on all devices; existing <code>.env</code> apps are unaffected.</p>
+
+<h2 id="rotation" data-i18n="h_rotation">Key rotation</h2>
+<p data-i18n="p_rotation">If a device with a cached key leaves your control, rotate the Account Key — every revision is re-encrypted client-side with a fresh key (the server cannot read blobs, so it cannot do this for you). The operation is resumable: interrupt it at any point and re-run.</p>
+
+<pre><span class="p">$</span> dmage rotate-key
+  Master password: ********
+  re-encrypted 51/51 revisions
+  <span class="ok">✓</span> Key rotated to generation 2 (51 revision(s) re-encrypted).</pre>
+
+<p data-i18n="p_rotation2">After a rotation: old cached keys stop working for new data (devices re-run <code>dmage auth</code>), CI tokens must be regenerated, and — important — <strong>backups taken before the rotation remain decryptable by the old key</strong>: destroy or re-encrypt them if you rotated because of a compromise.</p>
 
 <!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
 
@@ -813,6 +824,7 @@ en: {
   s_folders:"Folders",
   s_servers:"Multiple servers",
   s_files:"Any file",
+  s_rotation:"Key rotation",
   h_folders:"Organizing apps with folders",
   p_folders:'Use <code>/</code> in app names to group them into folders. No configuration needed — the folder is just a naming convention.',
   p_folders2:"All commands work the same — just use the full name with the folder prefix:",
@@ -823,6 +835,9 @@ en: {
   h_files:"Beyond .env — any file",
   p_files:'Store any config file — DataGrip datasource XML, kubeconfig, service-account JSON. The file name and format are encrypted together with the contents (the server never sees them), and <code>pull</code> on another machine recreates the file under its original name:',
   p_files2:'Formats — <code>env</code> (key diff, <code>exec</code> injection), <code>text</code> (line/byte diff), <code>binary</code> (sha256 compare) — are detected from the extension; override with <code>--format</code>. <code>exec</code> works only with env apps. Non-env apps require dmage ≥ 1.3 on all devices; existing <code>.env</code> apps are unaffected.',
+  h_rotation:"Key rotation",
+  p_rotation:'If a device with a cached key leaves your control, rotate the Account Key — every revision is re-encrypted client-side with a fresh key (the server cannot read blobs, so it cannot do this for you). The operation is resumable: interrupt it at any point and re-run.',
+  p_rotation2:'After a rotation: old cached keys stop working for new data (devices re-run <code>dmage auth</code>), CI tokens must be regenerated, and — important — <strong>backups taken before the rotation remain decryptable by the old key</strong>: destroy or re-encrypt them if you rotated because of a compromise.',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
@@ -920,6 +935,7 @@ ru: {
   s_folders:"Папки",
   s_servers:"Несколько серверов",
   s_files:"Любой файл",
+  s_rotation:"Ротация ключа",
   h_folders:"Организация приложений в папки",
   p_folders:'Используйте <code>/</code> в имени приложения для группировки в папки. Никакой настройки — папка это просто соглашение об именовании.',
   p_folders2:"Все команды работают так же — просто используйте полное имя с префиксом папки:",
@@ -930,6 +946,9 @@ ru: {
   h_files:"Не только .env — любой файл",
   p_files:'Храните любой конфиг — XML-датасорсы DataGrip, kubeconfig, JSON сервис-аккаунтов. Имя и формат файла шифруются вместе с содержимым (сервер их не видит), а <code>pull</code> на другой машине воссоздаёт файл под исходным именем:',
   p_files2:'Форматы — <code>env</code> (diff по ключам, инжект в <code>exec</code>), <code>text</code> (строки/байты), <code>binary</code> (сравнение sha256) — определяются по расширению; переопределить: <code>--format</code>. <code>exec</code> работает только с env-приложениями. Для не-env приложений нужен dmage ≥ 1.3 на всех устройствах; существующие <code>.env</code>-приложения не затронуты.',
+  h_rotation:"Ротация ключа",
+  p_rotation:'Если устройство с закэшированным ключом вышло из-под контроля — ротируйте Account Key: каждая ревизия перешифровывается новым ключом на клиенте (сервер не умеет читать блобы и не может сделать это за вас). Операция возобновляема: прервите в любой момент и запустите снова.',
+  p_rotation2:'После ротации: старые кэши ключа перестают работать для новых данных (устройства заново выполняют <code>dmage auth</code>), CI-токены нужно перегенерировать, и — важно — <strong>бэкапы, снятые до ротации, по-прежнему расшифровываются старым ключом</strong>: уничтожьте или перешифруйте их, если ротация была из-за компрометации.',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",
