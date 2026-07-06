@@ -481,7 +481,7 @@ footer .links a:hover{color:var(--ink)}
         <span data-i18n="hero_m1">One binary</span>
         <span data-i18n="hero_m2">No DevOps</span>
         <span data-i18n="hero_m3">.env native</span>
-        <span data-i18n="hero_m4" id="cli-version">v1.1.0</span>
+        <span id="cli-version">v2.0.1</span>
       </div>
     </div>
     <div class="term">
@@ -703,7 +703,7 @@ footer .links a:hover{color:var(--ink)}
       hero_h1:'Sync your <span class="hl">.env</span> files.<br>End-to-end encrypted.',
       hero_lede:'dotMage moves your secrets between every machine you code on — laptop, work PC, CI runner. Encrypted on-device before they leave. <b>Your server only ever stores ciphertext.</b>',
       hero_cta1:"Deploy your server ▸", hero_cta2:"See how it works",
-      hero_m1:"One binary", hero_m2:"No DevOps", hero_m3:".env native", hero_m4:"v1.1.0",
+      hero_m1:"One binary", hero_m2:"No DevOps", hero_m3:".env native",
       how_k:"Zero-knowledge by design", how_h2:"Your server never sees your secrets.",
       how_sub:"Encryption and decryption happen entirely on your devices. The server is a dumb, untrusted relay — it stores opaque blobs and metadata, nothing it can read.",
       n1_l:'<b></b>Your laptop', n1_t:".env (plaintext)", n1_d:"12 keys live only here, decrypted, in your project folder.",
@@ -738,7 +738,7 @@ footer .links a:hover{color:var(--ink)}
       hero_h1:'Синхронизация <span class="hl">.env</span> файлов.<br>Сквозное шифрование.',
       hero_lede:'dotMage переносит секреты между всеми машинами, где вы пишете код — ноутбук, рабочий ПК, CI-раннер. Шифрование происходит на устройстве, ещё до отправки. <b>Сервер хранит только шифротекст.</b>',
       hero_cta1:"Развернуть сервер ▸", hero_cta2:"Как это работает",
-      hero_m1:"Один бинарник", hero_m2:"Без DevOps", hero_m3:".env из коробки", hero_m4:"v1.1.0",
+      hero_m1:"Один бинарник", hero_m2:"Без DevOps", hero_m3:".env из коробки",
       how_k:"Zero-knowledge по умолчанию", how_h2:"Сервер никогда не видит ваши секреты.",
       how_sub:"Шифрование и расшифровка происходят целиком на ваших устройствах. Сервер — глупый недоверенный ретранслятор: он хранит непрозрачные блобы и метаданные и не может прочитать ничего из этого.",
       n1_l:'<b></b>Ваш ноутбук', n1_t:".env (открытый текст)", n1_d:"12 ключей живут только здесь, расшифрованные, в папке проекта.",
@@ -793,7 +793,7 @@ footer .links a:hover{color:var(--ink)}
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
       if(!d || !d.tag_name) return;
-      var v = d.tag_name;
+      var v = d.tag_name[0] === "v" ? d.tag_name : "v" + d.tag_name;
       var el = document.getElementById("cli-version");
       if(el) el.textContent = v;
     })

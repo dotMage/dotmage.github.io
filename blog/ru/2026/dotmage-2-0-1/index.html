@@ -2,15 +2,15 @@
 <html lang="ru"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dotMage 1.2 — и блог, где об этом рассказать — dotMage blog</title>
-<meta name="description" content="Удаление приложений, папки, умная проверка обновлений — и этот блог, где у каждого релиза теперь будут нормальные заметки.">
-<link rel="canonical" href="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/">
-<link rel="alternate" hreflang="en" href="https://dotmage.github.io/blog/2026/dotmage-1-2-and-blog/">
-<link rel="alternate" hreflang="ru" href="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/">
+<title>dotMage 2.0.1 — шлифовка командного онбординга — dotMage blog</title>
+<meta name="description" content="Сервер может объявлять своё имя, чтобы участники не переименовывали вручную, точечная очистка больше не стирает всё, а веб-админка показывает, кто вы на самом деле.">
+<link rel="canonical" href="https://dotmage.github.io/blog/ru/2026/dotmage-2-0-1/">
+<link rel="alternate" hreflang="en" href="https://dotmage.github.io/blog/2026/dotmage-2-0-1/">
+<link rel="alternate" hreflang="ru" href="https://dotmage.github.io/blog/ru/2026/dotmage-2-0-1/">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/">
-<meta property="og:title" content="dotMage 1.2 — и блог, где об этом рассказать">
-<meta property="og:description" content="Удаление приложений, папки, умная проверка обновлений — и этот блог, где у каждого релиза теперь будут нормальные заметки.">
+<meta property="og:url" content="https://dotmage.github.io/blog/ru/2026/dotmage-2-0-1/">
+<meta property="og:title" content="dotMage 2.0.1 — шлифовка командного онбординга">
+<meta property="og:description" content="Сервер может объявлять своё имя, чтобы участники не переименовывали вручную, точечная очистка больше не стирает всё, а веб-админка показывает, кто вы на самом деле.">
 <meta property="og:image" content="https://dotmage.github.io/favicon.svg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate" type="application/atom+xml" title="dotMage blog" href="/blog/ru/atom.xml">
@@ -83,8 +83,8 @@ footer .in{display:flex; justify-content:space-between; align-items:center; padd
     </div>
     <div class="right">
       <div class="langtog" id="langtog">
-        <a href="/blog/2026/dotmage-1-2-and-blog/" data-lang="en" class="">EN</a>
-        <a href="/blog/ru/2026/dotmage-1-2-and-blog/" data-lang="ru" class="on">RU</a>
+        <a href="/blog/2026/dotmage-2-0-1/" data-lang="en" class="">EN</a>
+        <a href="/blog/ru/2026/dotmage-2-0-1/" data-lang="ru" class="on">RU</a>
       </div>
       <a class="btn" href="https://github.com/dotMage/">GitHub</a>
     </div>
@@ -92,36 +92,32 @@ footer .in{display:flex; justify-content:space-between; align-items:center; padd
 </nav>
 <article class="post">
   <span class="kicker">release</span>
-  <h1>dotMage 1.2 — и блог, где об этом рассказать</h1>
-  <div class="pdate">1 июля 2026</div>
+  <h1>dotMage 2.0.1 — шлифовка командного онбординга</h1>
+  <div class="pdate">6 июля 2026</div>
   <div class="content">
-<p>dotMage тихо выкатывал фичи с июня — папки, CI-токены, веб-админка, жизненный цикл
-приложений. «Тихо» — это и есть проблема: заметки о релизах жили в сообщениях коммитов.
-С этого момента каждый релиз публикуется здесь: человеческое резюме сверху, полный
-чейнджлог ниже.</p>
-<h2>Что нового в 1.2</h2>
-<h3>Удаление приложений</h3>
-<p>Приложения больше не навсегда:</p>
-<pre><code>$ dmage app rm old-project
-This will delete 'old-project' and ALL its environments. Type 'old-project' to confirm:
-</code></pre>
-<h3>Умная проверка обновлений</h3>
-<p>Баннер проверяет GitHub на новые релизы (кэш на 24 часа) и сравнивает версии по
-правилам semver — <code>1.10.0</code> новее, чем <code>1.9.0</code>.</p>
-<h2>Чейнджлог</h2>
-<h3>1.2.1</h3>
-<h4>Исправлено</h4>
+<p>Небольшое продолжение 2.0 — всё из реальных шероховатостей командного использования.</p>
+<h2>Исправления</h2>
 <ul>
-<li>Проверка обновлений сравнивает версии по правилам semver.</li>
+<li><strong>Серверы объявляют своё имя.</strong> Задайте <code>DOTMAGE_SERVER_NAME=work</code> на деплое, и каждый
+  клиент при вступлении подхватит его сам — больше не нужен <code>dmage server rename</code> после
+  инвайта. Работает в инсталлере: <code>... | DOTMAGE_MODE=team DOTMAGE_SERVER_NAME=work bash</code>.</li>
+<li><strong><code>dmage clean --server &lt;name&gt;</code></strong> стирает один сервер (ключ + токены + запись конфига).
+  Глобальный <code>dmage clean</code> теперь громко предупреждает, что удалит <em>все</em> серверы, и
+  подсказывает точечную команду — больше не снесёте личное хранилище, убираясь в рабочем.</li>
+<li><strong>Веб-админка показывает, кто вы.</strong> В шапке — ваш реальный пользователь, роль и
+  устройство вместо захардкоженного «admin», а вкладка браузера и шапка несут имя
+  сервера, так что несколько открытых командных панелей наконец различимы.</li>
 </ul>
-<h3>1.2.0</h3>
-<h4>Добавлено</h4>
+<h2>Чейнджлог</h2>
+<h3>Добавлено</h3>
 <ul>
-<li><code>dmage app rm</code> — удаление приложения со всеми его окружениями.</li>
+<li>Клиент подхватывает объявленное сервером имя (<code>DOTMAGE_SERVER_NAME</code>) при <code>dmage auth</code>.</li>
+<li><code>dmage clean --server &lt;name&gt;</code> для точечного удаления; громкое предупреждение у глобального clean.</li>
 </ul>
 <h2>Скачать</h2>
-<p>Бинарники: <a href="https://github.com/dotMage/dotmage/releases">github.com/dotMage/dotmage/releases</a></p>
-<pre><code>brew upgrade dotmage
+<p>Бинарники и <code>SHA256SUMS</code>: <a href="https://github.com/dotMage/dotmage/releases/tag/v2.0.1">github.com/dotMage/dotmage/releases/tag/v2.0.1</a></p>
+<pre><code>dmage upgrade
+brew upgrade dotmage
 </code></pre>
   </div>
   <a class="backlink" href="/blog/ru/">◂ Все посты</a>
@@ -135,7 +131,7 @@ This will delete 'old-project' and ALL its environments. Type 'old-project' to c
 <script>
 (function(){
   var lang = document.documentElement.lang;
-  var urls = { en: "/blog/2026/dotmage-1-2-and-blog/", ru: "/blog/ru/2026/dotmage-1-2-and-blog/" };
+  var urls = { en: "/blog/2026/dotmage-2-0-1/", ru: "/blog/ru/2026/dotmage-2-0-1/" };
   try {
     var saved = localStorage.getItem('dm_lang');
     if (saved && saved !== lang && urls[saved]) { location.replace(urls[saved]); return; }

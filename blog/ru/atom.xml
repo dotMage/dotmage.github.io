@@ -4,7 +4,15 @@
   <link href="https://dotmage.github.io/blog/ru/"/>
   <link rel="self" href="https://dotmage.github.io/blog/ru/atom.xml"/>
   <id>https://dotmage.github.io/blog/ru/</id>
-  <updated>2026-07-03T00:00:00Z</updated>
+  <updated>2026-07-06T00:00:00Z</updated>
+  <entry>
+    <title>dotMage 2.0.1 — шлифовка командного онбординга</title>
+    <link href="https://dotmage.github.io/blog/ru/2026/dotmage-2-0-1/"/>
+    <id>https://dotmage.github.io/blog/ru/2026/dotmage-2-0-1/</id>
+    <updated>2026-07-06T00:00:00Z</updated>
+    <summary>Сервер может объявлять своё имя, чтобы участники не переименовывали вручную, точечная очистка больше не стирает всё, а веб-админка показывает, кто вы на самом деле.</summary>
+    <category term="release"/>
+  </entry>
   <entry>
     <title>dotMage 2.0 — команды, тот же продукт, та же лицензия</title>
     <link href="https://dotmage.github.io/blog/ru/2026/dotmage-2-0-0/"/>
@@ -33,7 +41,7 @@
     <title>dotMage 1.2 — и блог, где об этом рассказать</title>
     <link href="https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/"/>
     <id>https://dotmage.github.io/blog/ru/2026/dotmage-1-2-and-blog/</id>
-    <updated>2026-07-03T00:00:00Z</updated>
+    <updated>2026-07-01T00:00:00Z</updated>
     <summary>Удаление приложений, папки, умная проверка обновлений — и этот блог, где у каждого релиза теперь будут нормальные заметки.</summary>
     <category term="release"/>
   </entry>
