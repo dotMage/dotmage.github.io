@@ -185,6 +185,10 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#lock">lock</a>
     <a href="#logout">logout</a>
     <a href="#clean">clean</a>
+    <a href="#server-cmd">server</a>
+    <a href="#whoami">whoami</a>
+    <a href="#user">user</a>
+    <a href="#rotate-key">rotate-key</a>
 
     <div class="group" data-i18n="g_srv">Server</div>
     <a href="#config" data-i18n="s_config">Configuration</a>
@@ -614,8 +618,66 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="clean">dmage clean</h2>
 <div class="cmd-card">
   <div class="head"><span class="name">clean</span></div>
-  <div class="desc" data-i18n="d_clean">Wipe all dotMage data from this machine (config, tokens, cache). Nuclear option.</div>
-  <pre><span class="p">$</span> dmage clean</pre>
+  <div class="desc" data-i18n="d_clean">Wipe dotMage data from this machine. Without a flag it wipes <b>everything</b> (all servers, config, cache) — nuclear. <code>--server &lt;name&gt;</code> wipes just one server.</div>
+  <pre><span class="p">$</span> dmage clean
+<span class="p">$</span> dmage clean --server work   <span class="c"># just one</span></pre>
+</div>
+
+<h2 id="server-cmd">dmage server</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">server</span><span class="badge">multi-server</span></div>
+  <div class="desc" data-i18n="d_server">Manage named servers and the directories mapped to them. Renaming changes only the local label — the URL, tokens and cached key are keyed by URL and stay put.</div>
+  <pre><span class="p">$</span> dmage server list
+<span class="p">$</span> dmage server add work https://secrets.corp.com --path ~/code/work
+<span class="p">$</span> dmage server rename &lt;old&gt; &lt;new&gt;    <span class="c"># local label only, URL unchanged</span>
+<span class="p">$</span> dmage server map work ~/code/work
+<span class="p">$</span> dmage server unmap work ~/code/work
+<span class="p">$</span> dmage server use work              <span class="c"># default for unmapped dirs</span>
+<span class="p">$</span> dmage server rm work               <span class="c"># remove + wipe its tokens/key</span></pre>
+  <div class="args">
+    <dl>
+      <dt><code>list</code></dt><dd data-i18n="a_srv_list">All servers with auth state and mapped paths</dd>
+      <dt><code>add &lt;name&gt; &lt;url&gt; [--path DIR]</code></dt><dd data-i18n="a_srv_add">Add or update a server; <code>--path</code> may repeat</dd>
+      <dt><code>rename &lt;old&gt; &lt;new&gt;</code></dt><dd data-i18n="a_srv_rename">Rename locally (URL unchanged)</dd>
+      <dt><code>map / unmap &lt;name&gt; &lt;dir&gt;</code></dt><dd data-i18n="a_srv_map">Bind/unbind a directory so commands there auto-route</dd>
+      <dt><code>use &lt;name&gt;</code></dt><dd data-i18n="a_srv_use">Set the fallback default server</dd>
+      <dt><code>rm &lt;name&gt; [--yes]</code></dt><dd data-i18n="a_srv_rm">Remove a server and wipe its local tokens + key</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="whoami">dmage whoami</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">whoami</span></div>
+  <div class="desc" data-i18n="d_whoami">Show who you are on the resolved server — your user, role and device.</div>
+  <pre><span class="p">$</span> dmage whoami</pre>
+</div>
+
+<h2 id="user">dmage user</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">user</span><span class="badge">team</span></div>
+  <div class="desc" data-i18n="d_user">Manage team members on a team-mode server. Invitations are one-time sealed tokens — send them privately. Removing a member deletes their key wraps, revokes their devices and offers a key rotation.</div>
+  <pre><span class="p">$</span> dmage user list
+<span class="p">$</span> dmage user invite kolya --role editor   <span class="c"># prints a one-time token</span>
+<span class="p">$</span> dmage user role kolya owner
+<span class="p">$</span> dmage user rm kolya
+
+<span class="c"># the invitee, on their machine — picks their OWN password:</span>
+<span class="p">$</span> dmage auth --invite dmage_uinv_...</pre>
+  <div class="args">
+    <dl>
+      <dt><code>invite &lt;name&gt; [--role R] [--ttl T]</code></dt><dd data-i18n="a_usr_inv">Roles: owner / editor / viewer. TTL default 24h</dd>
+      <dt><code>role &lt;name&gt; &lt;role&gt;</code></dt><dd data-i18n="a_usr_role">Change a member's role (owner only)</dd>
+      <dt><code>rm &lt;name&gt;</code></dt><dd data-i18n="a_usr_rm">Offboard: wraps removed, devices revoked, rotation offered</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 id="rotate-key">dmage rotate-key</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">rotate-key</span></div>
+  <div class="desc" data-i18n="d_rotate">Re-encrypt every revision with a fresh Account Key (client-side). Resumable after interruption. Run it when a device with a cached key leaves your control — note that pre-rotation backups still decrypt with the old key.</div>
+  <pre><span class="p">$</span> dmage rotate-key</pre>
 </div>
 
 <!-- ═══════════════════ SERVER ═══════════════════ -->
@@ -939,6 +1001,19 @@ en: {
   d_lock:"Remove the cached key from this device's keychain. Device token is kept — you'll need to re-enter your password on next operation.",
   d_logout:"Full logout — removes cached key, device token, and all local data.",
   d_clean:"Wipe all dotMage data from this machine (config, tokens, cache). Nuclear option.",
+  d_server:"Manage named servers and the directories mapped to them. Renaming changes only the local label — the URL, tokens and cached key are keyed by URL and stay put.",
+  a_srv_list:"All servers with auth state and mapped paths",
+  a_srv_add:"Add or update a server; <code>--path</code> may repeat",
+  a_srv_rename:"Rename locally (URL unchanged)",
+  a_srv_map:"Bind/unbind a directory so commands there auto-route",
+  a_srv_use:"Set the fallback default server",
+  a_srv_rm:"Remove a server and wipe its local tokens + key",
+  d_whoami:"Show who you are on the resolved server — your user, role and device.",
+  d_user:"Manage team members on a team-mode server. Invitations are one-time sealed tokens — send them privately. Removing a member deletes their key wraps, revokes their devices and offers a key rotation.",
+  a_usr_inv:"Roles: owner / editor / viewer. TTL default 24h",
+  a_usr_role:"Change a member's role (owner only)",
+  a_usr_rm:"Offboard: wraps removed, devices revoked, rotation offered",
+  d_rotate:"Re-encrypt every revision with a fresh Account Key (client-side). Resumable after interruption. Run it when a device with a cached key leaves your control — note that pre-rotation backups still decrypt with the old key.",
   h_config:"Server configuration",
   p_config:'All settings are configured via environment variables, prefixed with <code>DOTMAGE_</code>.',
   th_var:"Variable", th_def:"Default", th_desc:"Description", th_flag:"Flag", th_code:"Code", th_meaning:"Meaning",
@@ -1060,6 +1135,19 @@ ru: {
   d_lock:"Удалить кэшированный ключ из keychain устройства. Токен устройства сохраняется — при следующей операции потребуется пароль.",
   d_logout:"Полный выход — удаляет кэшированный ключ, токен устройства и все локальные данные.",
   d_clean:"Стереть все данные dotMage с этой машины (конфиг, токены, кэш). Ядерная опция.",
+  d_server:"Управление именованными серверами и привязкой директорий. Переименование меняет только локальную метку — URL, токены и кэш ключа привязаны к URL и остаются на месте.",
+  a_srv_list:"Все серверы со статусом авторизации и путями",
+  a_srv_add:"Добавить/обновить сервер; <code>--path</code> можно повторять",
+  a_srv_rename:"Переименовать локально (URL не меняется)",
+  a_srv_map:"Привязать/отвязать директорию — команды из неё идут на этот сервер",
+  a_srv_use:"Задать сервер по умолчанию для непривязанных директорий",
+  a_srv_rm:"Удалить сервер и стереть его локальные токены + ключ",
+  d_whoami:"Показать, кто вы на выбранном сервере — пользователь, роль, устройство.",
+  d_user:"Управление участниками команды на team-сервере. Приглашения — одноразовые запечатанные токены, передавайте приватно. Удаление участника стирает его обёртки ключа, отзывает устройства и предлагает ротацию.",
+  a_usr_inv:"Роли: owner / editor / viewer. TTL по умолчанию 24ч",
+  a_usr_role:"Сменить роль участника (только owner)",
+  a_usr_rm:"Офбординг: обёртки удалены, устройства отозваны, предложена ротация",
+  d_rotate:"Перешифровать все ревизии новым Account Key (на клиенте). Возобновляемо после обрыва. Запускайте, когда устройство с кэшем ключа вышло из-под контроля — учтите, что доротационные бэкапы всё ещё расшифровываются старым ключом.",
   h_config:"Конфигурация сервера",
   p_config:'Все настройки задаются через переменные окружения с префиксом <code>DOTMAGE_</code>.',
   th_var:"Переменная", th_def:"По умолчанию", th_desc:"Описание", th_flag:"Флаг", th_code:"Код", th_meaning:"Значение",
