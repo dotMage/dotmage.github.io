@@ -571,19 +571,19 @@ footer .links a:hover{color:var(--ink)}
         <div class="no">01</div>
         <h3 data-i18n="st1_h">Deploy server</h3>
         <p data-i18n="st1_p">One command pulls the Docker image and starts the server. A $5 VPS is plenty.</p>
-        <button class="cmd" data-cmd="curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash"><span class="p">$</span> curl -fsSL ...install.sh | bash</button>
+        <button class="cmd" id="stcmd1" data-cmd="curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash"><span class="p">$</span> curl -fsSL ...install.sh | bash</button>
       </div>
       <div class="step">
         <div class="no">02</div>
         <h3 data-i18n="st2_h">Auth a device</h3>
         <p data-i18n="st2_p">Point the CLI at your server's IP and port. You get a device token — no passwords, ever.</p>
-        <button class="cmd" data-cmd="dmage auth --server http://your-ip:9470"><span class="p">$</span> dmage auth --server http://&lt;ip&gt;:9470</button>
+        <button class="cmd" id="stcmd2" data-cmd="dmage auth --server http://your-ip:9470"><span class="p">$</span> dmage auth --server http://&lt;ip&gt;:9470</button>
       </div>
       <div class="step">
         <div class="no">03</div>
         <h3 data-i18n="st3_h">Push &amp; pull</h3>
         <p data-i18n="st3_p">Version your .env from any device and pull it down everywhere else. Roll back anytime.</p>
-        <button class="cmd" data-cmd="dmage push myapp"><span class="p">$</span> dmage push myapp</button>
+        <button class="cmd" id="stcmd3" data-cmd="dmage push myapp"><span class="p">$</span> dmage push myapp</button>
       </div>
     </div>
   </div>
@@ -803,9 +803,75 @@ footer .links a:hover{color:var(--ink)}
 
 <script>
 (function(){
-  var saved = "solo";
-  try { saved = localStorage.getItem('dm_mode') || "solo"; } catch(e){}
-  function setMode(mode){
+  /* SOLO/TEAM scenario engine: overrides base i18n text + step commands.
+     Solo = the base dictionaries; team = the overrides below. */
+  var MODE_I18N = {
+    en: {
+      hero_tag: '<i></i> Self-hosted · zero-knowledge · built for teams',
+      hero_h1: 'Share secrets with your <span class="hl">team</span>.<br>End-to-end encrypted.',
+      hero_lede: 'Everyone gets their <b>own master password</b> over one shared vault. Roles are enforced by the server, offboarding is one command. The server still only ever stores ciphertext.',
+      st_h2: 'From zero to a team vault.',
+      st_sub: 'The same one-liner with one flag turns the server into a team server. Each member picks their own password — nobody shares credentials.',
+      st1_h: 'Deploy in team mode',
+      st1_p: 'One flag on the same installer: the server starts with team endpoints enabled.',
+      st2_h: 'Invite your team',
+      st2_p: 'The owner mints a one-time invitation token. Send it over a private channel — it can unlock the vault exactly once.',
+      st3_h: 'They join &amp; sync',
+      st3_p: 'Colleagues join with their own master password and pull the shared apps. The audit log names people, not just devices.'
+    },
+    ru: {
+      hero_tag: '<i></i> Self-hosted · zero-knowledge · для команд',
+      hero_h1: 'Общие секреты для <span class="hl">команды</span>.<br>Сквозное шифрование.',
+      hero_lede: 'У каждого участника <b>свой мастер-пароль</b> над общим хранилищем. Роли принуждает сервер, офбординг — одна команда. Сервер по-прежнему хранит только шифртекст.',
+      st_h2: 'От нуля до командного хранилища.',
+      st_sub: 'Тот же однострочник с одним флагом превращает сервер в командный. Каждый участник задаёт свой пароль — никто не делит креды.',
+      st1_h: 'Разверните в team-режиме',
+      st1_p: 'Один флаг на том же инсталлере: сервер стартует с командными эндпоинтами.',
+      st2_h: 'Пригласите команду',
+      st2_p: 'Владелец выпускает одноразовый токен приглашения. Передайте по приватному каналу — он открывает хранилище ровно один раз.',
+      st3_h: 'Они вступают и синхронизируются',
+      st3_p: 'Коллеги вступают со своим мастер-паролем и пуллят общие приложения. Audit-журнал называет людей, а не только устройства.'
+    }
+  };
+  var MODE_CMDS = {
+    solo: [
+      ['curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash',
+       '<span class="p">$</span> curl -fsSL ...install.sh | bash'],
+      ['dmage auth --server http://your-ip:9470',
+       '<span class="p">$</span> dmage auth --server http://&lt;ip&gt;:9470'],
+      ['dmage push myapp',
+       '<span class="p">$</span> dmage push myapp']
+    ],
+    team: [
+      ['curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | DOTMAGE_MODE=team bash',
+       '<span class="p">$</span> curl -fsSL ...install.sh | <b>DOTMAGE_MODE=team</b> bash'],
+      ['dmage user invite kolya --role editor',
+       '<span class="p">$</span> dmage user invite kolya --role editor'],
+      ['dmage auth --invite dmage_uinv_...',
+       '<span class="p">$</span> dmage auth --invite dmage_uinv_…']
+    ]
+  };
+
+  function currentLang(){ return document.documentElement.lang || 'en'; }
+  function currentMode(){
+    try { return localStorage.getItem('dm_mode') || 'solo'; } catch(e){ return 'solo'; }
+  }
+
+  function applyMode(mode){
+    var lang = currentLang();
+    if (mode === 'team') {
+      var dict = MODE_I18N[lang] || MODE_I18N.en;
+      Object.keys(dict).forEach(function(key){
+        var el = document.querySelector('[data-i18n="' + key + '"]');
+        if (el) el.innerHTML = dict[key];
+      });
+    }
+    /* solo: base i18n text is already applied by setLang */
+    var cmds = MODE_CMDS[mode];
+    for (var i = 0; i < 3; i++) {
+      var btn = document.getElementById('stcmd' + (i + 1));
+      if (btn) { btn.setAttribute('data-cmd', cmds[i][0]); btn.innerHTML = cmds[i][1]; }
+    }
     document.getElementById('term-solo').style.display = mode === 'solo' ? '' : 'none';
     document.getElementById('term-team').style.display = mode === 'team' ? '' : 'none';
     document.getElementById('term-title').textContent =
@@ -813,12 +879,26 @@ footer .links a:hover{color:var(--ink)}
     document.querySelectorAll('#modetog button').forEach(function(b){
       b.classList.toggle('on', b.dataset.mode === mode);
     });
-    try { localStorage.setItem('dm_mode', mode); } catch(e){}
   }
+
+  function setMode(mode){
+    try { localStorage.setItem('dm_mode', mode); } catch(e){}
+    if (mode === 'solo') {
+      /* restore base text for the current language, then apply solo cmds */
+      document.querySelectorAll('#langtog button.on').forEach(function(b){ b.click(); });
+    }
+    applyMode(mode);
+  }
+
   document.querySelectorAll('#modetog button').forEach(function(b){
     b.addEventListener('click', function(){ setMode(b.dataset.mode); });
   });
-  if (saved !== 'solo') setMode(saved);
+  /* language switch re-applies base text — re-overlay the current mode after it */
+  document.querySelectorAll('#langtog button').forEach(function(b){
+    b.addEventListener('click', function(){ applyMode(currentMode()); });
+  });
+
+  if (currentMode() !== 'solo') applyMode(currentMode());
 })();
 </script>
 </body></html>

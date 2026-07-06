@@ -243,6 +243,8 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="server" data-i18n="h_server">Deploy server</h2>
 <p data-i18n="p_server">One command installs everything via Docker:</p>
 <pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash</pre>
+<p data-i18n="p_server_team">For a <a href="#team" style="text-decoration:underline">team server</a>, add one flag — the same installer starts the server with team endpoints enabled:</p>
+<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | <b>DOTMAGE_MODE=team</b> bash</pre>
 <p data-i18n="p_server2">This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>9470</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.</p>
 
 <div class="note warn">
@@ -339,8 +341,13 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h2 id="team" data-i18n="h_team">Team mode <span class="badge">v2</span></h2>
 <p data-i18n="p_team">One product, two modes: solo is a team of one, and nothing changes until you invite a second person. Each member gets their <strong>own master password</strong> wrapping the shared vault key — offboarding stops being "change the shared password and hope".</p>
 
-<pre><span class="c"># on the server (docker-compose environment)</span>
-DOTMAGE_MODE=team
+<pre><span class="c"># fresh server — one flag on the installer</span>
+<span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | DOTMAGE_MODE=team bash
+
+<span class="c"># existing server — add to docker-compose.yml and restart</span>
+<span class="c">#   environment:</span>
+<span class="c">#     DOTMAGE_MODE: "team"</span>
+<span class="p">$</span> docker compose up -d
 
 <span class="c"># owner invites a member</span>
 <span class="p">$</span> dmage user invite kolya --role editor
@@ -896,6 +903,7 @@ en: {
   p_win:'Downloads the binary to <code>%LOCALAPPDATA%\\dotmage\\</code> and adds it to PATH. Restart your terminal — <code>dmage</code> works from anywhere.',
   h_server:"Deploy server",
   p_server:"One command installs everything via Docker:",
+  p_server_team:'For a <a href="#team" style="text-decoration:underline">team server</a>, add one flag — the same installer starts the server with team endpoints enabled:',
   p_server2:'This creates a <code>dotmage/</code> directory with <code>docker-compose.yml</code>, pulls the server and web-admin images, and starts the containers on port <code>9470</code>. The bootstrap secret is printed to the console — <strong>save it</strong>.',
   warn_bootstrap:'The <b>bootstrap secret</b> is printed at first start. Save it — you need it to create the account and to add every new device.',
   h_quick:"Quick start",
@@ -1014,6 +1022,7 @@ ru: {
   p_cliupgrade:'Бинарные установки обновляются сами — CLI скачивает релиз, сверяет его с <code>SHA256SUMS</code> релиза и атомарно заменяет себя. Homebrew-установки обновляются через brew:',
   p_win:'Скачивает бинарник в <code>%LOCALAPPDATA%\\dotmage\\</code> и добавляет в PATH. После перезапуска терминала <code>dmage</code> работает отовсюду.',
   h_server:"Деплой сервера",
+  p_server_team:'Для <a href="#team" style="text-decoration:underline">командного сервера</a> добавьте один флаг — тот же инсталлер запустит сервер с командными эндпоинтами:',
   p_server:"Одна команда устанавливает всё через Docker:",
   p_server2:'Создаёт директорию <code>dotmage/</code> с <code>docker-compose.yml</code>, скачивает образы сервера и веб-админки, запускает контейнеры на порту <code>9470</code>. Bootstrap secret выводится в консоль — <strong>сохраните его</strong>.',
   warn_bootstrap:'<b>Bootstrap secret</b> выводится при первом запуске. Сохраните его — он нужен для создания аккаунта и для добавления каждого нового устройства.',
