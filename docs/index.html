@@ -628,6 +628,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   <tbody>
     <tr><td><code>DOTMAGE_DB_URL</code></td><td><code>sqlite:////data/dotmage.db</code></td><td data-i18n="cfg_db">Database URL. SQLite or PostgreSQL DSN.</td></tr>
     <tr><td><code>DOTMAGE_BOOTSTRAP_SECRET</code></td><td data-i18n="cfg_auto">auto-generated</td><td data-i18n="cfg_bs">One-time secret for account init. If empty, printed to stderr at startup.</td></tr>
+    <tr><td><code>DOTMAGE_MODE</code></td><td><code>solo</code></td><td data-i18n="cfg_mode"><code>solo</code> | <code>team</code> — team endpoints (users, invitations) exist only in team mode; see <a href="#team" style="text-decoration:underline">Team mode</a>.</td></tr>
     <tr><td><code>DOTMAGE_TOKEN_TTL</code></td><td><code>24h</code></td><td data-i18n="cfg_ttl">Device access token lifetime. Formats: <code>123s</code>, <code>30m</code>, <code>24h</code>, <code>7d</code>.</td></tr>
     <tr><td><code>DOTMAGE_REFRESH_TTL</code></td><td><code>30d</code></td><td data-i18n="cfg_rttl">Refresh token lifetime for token rotation.</td></tr>
     <tr><td><code>DOTMAGE_RATE_LIMIT</code></td><td><code>10/min</code></td><td data-i18n="cfg_rate">Rate limit on auth endpoints.</td></tr>
@@ -944,6 +945,7 @@ en: {
   cfg_db:"Database URL. SQLite or PostgreSQL DSN.", cfg_auto:"auto-generated",
   cfg_bs:"One-time secret for account init. If empty, printed to stderr at startup.",
   cfg_ttl:'Device access token lifetime. Formats: <code>123s</code>, <code>30m</code>, <code>24h</code>, <code>7d</code>.',
+  cfg_mode:'<code>solo</code> | <code>team</code> — team endpoints (users, invitations) exist only in team mode; see <a href="#team" style="text-decoration:underline">Team mode</a>.',
   cfg_rttl:"Refresh token lifetime for token rotation.",
   cfg_rate:"Rate limit on auth endpoints.",
   cfg_log:'Log level: <code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>.',
@@ -1064,6 +1066,7 @@ ru: {
   cfg_db:"URL базы данных. SQLite или PostgreSQL DSN.", cfg_auto:"авто-генерация",
   cfg_bs:"Одноразовый секрет для инициализации аккаунта. Если пустой, выводится в stderr при старте.",
   cfg_ttl:'Время жизни токена устройства. Форматы: <code>123s</code>, <code>30m</code>, <code>24h</code>, <code>7d</code>.',
+  cfg_mode:'<code>solo</code> | <code>team</code> — командные эндпоинты (пользователи, приглашения) существуют только в team-режиме; см. <a href="#team" style="text-decoration:underline">Командный режим</a>.',
   cfg_rttl:"Время жизни refresh-токена для ротации.",
   cfg_rate:"Rate limit на auth-эндпоинтах.",
   cfg_log:'Уровень логирования: <code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>.',
