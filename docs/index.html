@@ -165,6 +165,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#files" data-i18n="s_files">Any file</a>
     <a href="#rotation" data-i18n="s_rotation">Key rotation</a>
     <a href="#team" data-i18n="s_team">Team mode</a>
+    <a href="#python-sdk" data-i18n="s_python">Python SDK</a>
 
     <div class="group" data-i18n="g_cli">CLI Reference</div>
     <a href="#auth">auth</a>
@@ -382,6 +383,34 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <span class="c"># 2. colleague re-auths their other devices as themselves; you revoke their old devices</span>
 <span class="p">$</span> dmage rotate-key                            <span class="c"># kills every old cached key</span>
 <span class="c"># 3. change your master password; destroy pre-rotation backups</span></pre>
+
+<h2 id="python-sdk" data-i18n="h_python">Python SDK</h2>
+<p data-i18n="p_python">Use dotMage from Python code — CI jobs, backend services, scripts. The <a href="https://github.com/dotMage/dotmage-python" style="text-decoration:underline"><code>dotmage</code> package</a> is a second, independent client: a typed API client plus the full client-side crypto, byte-compatible with the <code>dmage</code> CLI. Secrets are encrypted and decrypted locally, exactly as with the CLI — the server still sees only blobs.</p>
+
+<pre><span class="p">$</span> pip install dotmage</pre>
+
+<pre><span class="c"># first device on a fresh server — creates the vault</span>
+from dotmage import DotMage
+
+client, recovery_code = DotMage.init_vault(
+    "https://secrets.example.com", BOOTSTRAP_SECRET, MASTER_PASSWORD,
+    device_name="laptop",
+)
+
+with client:
+    client.create_app("work/api")
+    client.create_env("work/api", "prod")
+    client.push("work/api", "prod", {"DATABASE_URL": "postgres://...", "DEBUG": "0"})
+    secrets = client.pull("work/api", "prod")   <span class="c"># decrypted locally</span></pre>
+
+<p data-i18n="p_python2">Other entry points mirror the CLI flows: <code>DotMage.enroll(...)</code> (add a machine via enrollment token), <code>DotMage.from_ci(...)</code> (scoped <a href="#gen-ci-token" style="text-decoration:underline">CI token</a>), <code>DotMage.join(...)</code> (accept a <a href="#team" style="text-decoration:underline">team invitation</a>). An async client (<code>AsyncDotMage</code>) is included.</p>
+
+<pre><span class="c"># CI: pull one app/env with a scoped token</span>
+client = DotMage.from_ci(SERVER_URL, ci_token=CI_TOKEN, master_password=MASTER_PASSWORD)
+with client:
+    secrets = client.pull("work/api", "prod")</pre>
+
+<p data-i18n="p_python3">Full docs — getting started, API reference, security model and the crypto contract — live in the <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">repository</a>.</p>
 
 <!-- ═══════════════════ CLI REFERENCE ═══════════════════ -->
 
@@ -954,6 +983,11 @@ en: {
   p_offboard:'Removal deletes their key wraps and revokes their devices; the chained <code>rotate-key</code> makes their cached key useless for anything pushed afterwards. Then: <strong>rotate the secret values they saw</strong> (what they read, they read) and <strong>destroy pre-rotation backups</strong> — rotation cannot reach into old backups.',
   h_sharedpw:"Migrating from a shared password",
   p_sharedpw:'If two of you have been sharing one master password (the pre-v2 workaround):',
+  s_python:"Python SDK",
+  h_python:"Python SDK",
+  p_python:'Use dotMage from Python code — CI jobs, backend services, scripts. The <a href="https://github.com/dotMage/dotmage-python" style="text-decoration:underline"><code>dotmage</code> package</a> is a second, independent client: a typed API client plus the full client-side crypto, byte-compatible with the <code>dmage</code> CLI. Secrets are encrypted and decrypted locally, exactly as with the CLI — the server still sees only blobs.',
+  p_python2:'Other entry points mirror the CLI flows: <code>DotMage.enroll(...)</code> (add a machine via enrollment token), <code>DotMage.from_ci(...)</code> (scoped <a href="#gen-ci-token" style="text-decoration:underline">CI token</a>), <code>DotMage.join(...)</code> (accept a <a href="#team" style="text-decoration:underline">team invitation</a>). An async client (<code>AsyncDotMage</code>) is included.',
+  p_python3:'Full docs — getting started, API reference, security model and the crypto contract — live in the <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">repository</a>.',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
@@ -1088,6 +1122,11 @@ ru: {
   p_offboard:'Удаление стирает его обёртки ключа и отзывает устройства; связанная <code>rotate-key</code> делает его кэшированный ключ бесполезным для всего, что запушено после. Дальше: <strong>ротируйте сами значения секретов, которые он видел</strong> (что прочитано — то прочитано) и <strong>уничтожьте доротационные бэкапы</strong> — ротация не дотягивается до старых бэкапов.',
   h_sharedpw:"Миграция с общего пароля",
   p_sharedpw:'Если вы вдвоём делили один мастер-пароль (обходной путь до v2):',
+  s_python:"Python SDK",
+  h_python:"Python SDK",
+  p_python:'Используйте dotMage из Python-кода — CI-джобы, backend-сервисы, скрипты. Пакет <a href="https://github.com/dotMage/dotmage-python" style="text-decoration:underline"><code>dotmage</code></a> — второй независимый клиент: типизированный API-клиент плюс полная клиентская криптография, побайтово совместимая с CLI <code>dmage</code>. Секреты шифруются и расшифровываются локально, как и в CLI — сервер по-прежнему видит только блобы.',
+  p_python2:'Остальные точки входа повторяют сценарии CLI: <code>DotMage.enroll(...)</code> (добавить машину по enrollment-токену), <code>DotMage.from_ci(...)</code> (скоупный <a href="#gen-ci-token" style="text-decoration:underline">CI-токен</a>), <code>DotMage.join(...)</code> (принять <a href="#team" style="text-decoration:underline">приглашение в команду</a>). Асинхронный клиент (<code>AsyncDotMage</code>) в комплекте.',
+  p_python3:'Полная документация — getting started, API reference, модель безопасности и крипто-контракт — в <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">репозитории</a>.',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",
