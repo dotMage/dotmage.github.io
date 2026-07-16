@@ -977,7 +977,7 @@ ok</pre>
     <tr><td><code>--env &lt;ENV&gt;</code></td><td data-i18n="fl_env">Override the active environment for this command</td></tr>
     <tr><td><code>--server &lt;NAME&gt;</code></td><td data-i18n="fl_server">Use a specific configured server for this command</td></tr>
     <tr><td><code>-q, --quiet</code></td><td data-i18n="fl_quiet">Suppress non-error output</td></tr>
-    <tr><td><code>--json</code></td><td data-i18n="fl_json">JSON output for scripting</td></tr>
+    <tr><td><code>--json</code></td><td data-i18n="fl_json">Machine-readable JSON output on <code>status</code>, <code>diff</code>, <code>history</code>, <code>apps</code>, <code>whoami</code>. One JSON document on stdout, errors stay on stderr; schemas are a semver contract. <code>diff --json</code> never includes secret values</td></tr>
   </tbody>
 </table>
 
@@ -1191,7 +1191,7 @@ en: {
   note_restore:'Clients keep working after a restore — device tokens live in the same database. A client that pushed after the backup was taken just creates a new revision on top of the restored state with its next <code>dmage push</code>.',
   h_flags:"Global flags",
   p_flags:"Available on every command:",
-  fl_env:"Override the active environment for this command", fl_server:"Use a specific configured server for this command", fl_quiet:"Suppress non-error output", fl_json:"JSON output for scripting",
+  fl_env:"Override the active environment for this command", fl_server:"Use a specific configured server for this command", fl_quiet:"Suppress non-error output", fl_json:'Machine-readable JSON output on <code>status</code>, <code>diff</code>, <code>history</code>, <code>apps</code>, <code>whoami</code>. One JSON document on stdout, errors stay on stderr; schemas are a semver contract. <code>diff --json</code> never includes secret values',
   h_exit:"Exit codes",
   ex_0:"Success", ex_1:"General error / not found",
   ex_3:'Not authenticated — run <code>dmage auth</code>',
@@ -1363,7 +1363,7 @@ ru: {
   note_restore:'Клиенты продолжают работать после восстановления — токены устройств лежат в той же базе. Клиент, пушивший после снятия бэкапа, при следующем <code>dmage push</code> просто создаст новую ревизию поверх восстановленного состояния.',
   h_flags:"Глобальные флаги",
   p_flags:"Доступны для любой команды:",
-  fl_env:"Переопределить активное окружение для этой команды", fl_server:"Использовать указанный сервер для этой команды", fl_quiet:"Подавить вывод (кроме ошибок)", fl_json:"Вывод в JSON для скриптинга",
+  fl_env:"Переопределить активное окружение для этой команды", fl_server:"Использовать указанный сервер для этой команды", fl_quiet:"Подавить вывод (кроме ошибок)", fl_json:'Машиночитаемый JSON у <code>status</code>, <code>diff</code>, <code>history</code>, <code>apps</code>, <code>whoami</code>. Один JSON-документ в stdout, ошибки — в stderr; схемы — semver-контракт. <code>diff --json</code> никогда не выводит значения секретов',
   h_exit:"Коды выхода",
   ex_0:"Успех", ex_1:"Общая ошибка / не найдено",
   ex_3:'Не авторизован — выполните <code>dmage auth</code>',
