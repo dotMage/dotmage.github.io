@@ -575,7 +575,7 @@ with client:
       <dt><code>env</code></dt><dd data-i18n="a_env_show">Show active environment</dd>
       <dt><code>env list &lt;APP&gt;</code></dt><dd data-i18n="a_env_list">List environments for an app</dd>
       <dt><code>env new &lt;APP&gt; &lt;NAME&gt;</code></dt><dd data-i18n="a_env_new">Create new environment</dd>
-      <dt><code>--copy-from &lt;ENV&gt;</code></dt><dd data-i18n="a_env_copy">Copy secrets from existing environment</dd>
+      <dt><code>--copy-from &lt;ENV&gt;</code></dt><dd data-i18n="a_env_copy">Copy secrets from an existing environment. The copy happens on your machine (decrypt → re-encrypt for the new env) — the server can't copy blobs it can't read. Requires CLI ≥ 2.1</dd>
       <dt><code>env rm &lt;APP&gt; &lt;NAME&gt;</code></dt><dd data-i18n="a_env_rm">Delete an environment</dd>
       <dt><code>--yes</code></dt><dd data-i18n="a_yes">Skip confirmation prompt</dd>
     </dl>
@@ -1134,7 +1134,7 @@ en: {
   d_app_rm:'Delete an application and <strong>all</strong> its environments and revisions. This action is irreversible.',
   d_env:"Manage environments (dev, staging, prod) within an app. Each environment has its own independent revision history.",
   a_env_show:"Show active environment", a_env_list:"List environments for an app", a_env_new:"Create new environment",
-  a_env_copy:"Copy secrets from existing environment", a_env_rm:"Delete an environment", a_yes:"Skip confirmation prompt",
+  a_env_copy:"Copy secrets from an existing environment. The copy happens on your machine (decrypt → re-encrypt for the new env) — the server can't copy blobs it can't read. Requires CLI ≥ 2.1", a_env_rm:"Delete an environment", a_yes:"Skip confirmation prompt",
   d_status:"Show sync status — what's up-to-date and what's outdated on this device.",
   d_gentoken:'Generate an enrollment token for adding a new device programmatically (e.g. via <code>--enroll</code>). For CI/CD, use <code>gen-ci-token</code> instead.',
   a_tokname:"Token label (optional)", a_tokttl:'Time to live, e.g. <code>24h</code> (default: 24h)',
@@ -1306,7 +1306,7 @@ ru: {
   d_app_rm:'Удалить приложение и <strong>все</strong> его окружения и ревизии. Действие необратимо.',
   d_env:"Управление окружениями (dev, staging, prod) внутри приложения. У каждого окружения своя независимая история ревизий.",
   a_env_show:"Показать активное окружение", a_env_list:"Список окружений приложения", a_env_new:"Создать новое окружение",
-  a_env_copy:"Скопировать секреты из существующего окружения", a_env_rm:"Удалить окружение", a_yes:"Пропустить подтверждение",
+  a_env_copy:"Скопировать секреты из существующего окружения. Копия делается на вашей машине (расшифровка → перешифровка под новое окружение) — сервер не может копировать блобы, которые не читает. Нужен CLI ≥ 2.1", a_env_rm:"Удалить окружение", a_yes:"Пропустить подтверждение",
   d_status:"Показать статус синхронизации — что актуально, а что устарело на этом устройстве.",
   d_gentoken:'Сгенерировать enrollment-токен для программного добавления устройства (через <code>--enroll</code>). Для CI/CD используйте <code>gen-ci-token</code>.',
   a_tokname:"Метка токена (необязательно)", a_tokttl:'Время жизни, например <code>24h</code> (по умолчанию: 24h)',
