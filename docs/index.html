@@ -229,7 +229,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 </div>
 
 <div class="os-panel" data-os="linux">
-  <pre><span class="p">$</span> curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-x86_64 -o /usr/local/bin/dmage
+  <pre><span class="p">$</span> curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-$(uname -m) -o /usr/local/bin/dmage
 <span class="p">$</span> chmod +x /usr/local/bin/dmage</pre>
 </div>
 
@@ -851,7 +851,7 @@ with client:
         <span class="k">env</span>:
           <span class="f">DOTMAGE_CI_TOKEN</span>: ${{ secrets.DOTMAGE_CI_TOKEN }}
         <span class="k">run</span>: |
-          curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-amd64 \
+          curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-$(uname -m) \
             -o /usr/local/bin/dmage &amp;&amp; chmod +x /usr/local/bin/dmage
           dmage pull myapp --env prod --output .env
 
@@ -864,7 +864,7 @@ with client:
 <pre><span class="c"># Reusable template — paste once</span>
 <span class="k">.dmage</span>:
   <span class="k">before_script</span>:
-    - curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-amd64
+    - curl -fsSL https://github.com/dotMage/dotmage/releases/latest/download/dmage-linux-$(uname -m)
         -o /usr/local/bin/dmage &amp;&amp; chmod +x /usr/local/bin/dmage
     - dmage pull $DMAGE_APP --env $DMAGE_ENV --output .env
 
