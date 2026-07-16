@@ -195,7 +195,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#config" data-i18n="s_config">Configuration</a>
     <a href="#docker">Docker</a>
     <a href="#tls" data-i18n="s_tls">TLS / Production</a>
-    <a href="#backup" data-i18n="s_backup">Backup</a>
+    <a href="#backup" data-i18n="s_backup">Backup &amp; restore</a>
     <a href="#upgrade" data-i18n="s_upgrade">Upgrade</a>
 
     <div class="group" data-i18n="g_ci">CI/CD</div>
@@ -785,17 +785,56 @@ with client:
 <p data-i18n="p_tls2">Without a domain, you can also use nginx or Caddy with a self-signed cert, or just run plain HTTP on a private network:</p>
 <pre><span class="p">$</span> dmage auth --server http://192.168.1.50:9470</pre>
 
-<h2 id="backup" data-i18n="h_backup">Backup</h2>
-<p data-i18n="p_backup">The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, device tokens, audit log. Back it up regularly.</p>
+<h2 id="backup" data-i18n="h_backup">Backup &amp; restore</h2>
+<p data-i18n="p_backup">The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, the password-wrapped Account Key, device tokens, audit log.</p>
+<p data-i18n="p_backup_why">This is a consequence of the end-to-end design, not an oversight: the server only ever stores ciphertext it cannot open, so there is no "forgot password" flow and no server-side recovery. The server cannot restore what it never sees. That makes the database file the whole vault — and backups your responsibility.</p>
+
+<div class="note warn">
+  <span class="ic">!</span>
+  <span data-i18n="warn_backup">Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b></span>
+</div>
+
+<h3 data-i18n="h_backup_once">One-off backup</h3>
+<p data-i18n="p_backup_once">SQLite's online backup is safe while the server is running — no downtime, no locked writes:</p>
 <pre><span class="c"># Online backup via Python (safe while server is running)</span>
 <span class="p">$</span> docker compose exec server python -c <span class="s">"import sqlite3; s=sqlite3.connect('/data/dotmage.db'); d=sqlite3.connect('/data/backup.db'); s.backup(d); d.close()"</span>
 
 <span class="c"># Copy backup out of container</span>
 <span class="p">$</span> docker compose cp server:/data/backup.db ./backup-$(date +%F).db</pre>
 
-<div class="note warn">
-  <span class="ic">!</span>
-  <span data-i18n="warn_backup">Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b></span>
+<h3 data-i18n="h_backup_cron">Scheduled backup (cron)</h3>
+<p data-i18n="p_backup_cron">The same two commands as a nightly cron job on the Docker host (note the <code>\%</code> — cron treats a bare <code>%</code> as a newline):</p>
+<pre><span class="c"># crontab -e  — nightly at 03:00, keep two weeks</span>
+0 3 * * * cd /opt/dotmage && docker compose exec -T server python -c <span class="s">"import sqlite3; s=sqlite3.connect('/data/dotmage.db'); d=sqlite3.connect('/data/backup.db'); s.backup(d); d.close()"</span> && docker compose cp server:/data/backup.db /var/backups/dotmage-$(date +\%F).db
+30 3 * * * find /var/backups -name <span class="s">'dotmage-*.db'</span> -mtime +14 -delete</pre>
+<p data-i18n="p_backup_cron2">Ship the files off the machine with whatever you already use — rsync, restic, rclone. The blobs inside are E2E-encrypted, but treat backups as sensitive anyway: they contain the password-wrapped Account Key, so a weak master password could be brute-forced offline.</p>
+
+<h3 data-i18n="h_backup_verify">Verify a backup</h3>
+<p data-i18n="p_backup_verify">A backup you never checked is a hope, not a backup:</p>
+<pre><span class="p">$</span> sqlite3 dotmage-2026-07-16.db <span class="s">"PRAGMA integrity_check;"</span>
+ok
+
+<span class="c"># no sqlite3 on the host? borrow the server image:</span>
+<span class="p">$</span> docker run --rm -v <span class="s">"$PWD:/b"</span> ghcr.io/dotmage/server:latest python -c <span class="s">"import sqlite3; print(sqlite3.connect('/b/dotmage-2026-07-16.db').execute('PRAGMA integrity_check').fetchone()[0])"</span>
+ok</pre>
+
+<h3 data-i18n="h_restore">Restore</h3>
+<p data-i18n="p_restore">Restoring replaces the database in the data volume with a backup file. Accounts, devices and secrets return to their state at backup time; anything pushed after that moment is gone.</p>
+<pre><span class="c"># 1. stop the stack</span>
+<span class="p">$</span> cd dotmage && docker compose down
+
+<span class="c"># 2. copy the backup into the data volume (name: &lt;project&gt;_dotmage-data)</span>
+<span class="p">$</span> docker volume ls | grep dotmage-data
+<span class="p">$</span> docker run --rm -v dotmage_dotmage-data:/data -v <span class="s">"$PWD:/host"</span> alpine cp /host/dotmage-2026-07-16.db /data/dotmage.db
+
+<span class="c"># 3. start and verify</span>
+<span class="p">$</span> docker compose up -d
+<span class="p">$</span> curl -s http://localhost:9470/health   <span class="c"># → "account_exists": true</span>
+<span class="p">$</span> dmage status</pre>
+
+<div class="note">
+  <span class="ic">i</span>
+  <span data-i18n="note_restore">Clients keep working after a restore — device tokens live in the same database. A client that pushed after the backup was taken just creates a new revision on top of the restored state with its next <code>dmage push</code>.</span>
 </div>
 
 <!-- ═══════════════════ UPGRADE ═══════════════════ -->
@@ -988,7 +1027,7 @@ en: {
   p_python:'Use dotMage from Python code — CI jobs, backend services, scripts. The <a href="https://github.com/dotMage/dotmage-python" style="text-decoration:underline"><code>dotmage</code> package</a> is a second, independent client: a typed API client plus the full client-side crypto, byte-compatible with the <code>dmage</code> CLI. Secrets are encrypted and decrypted locally, exactly as with the CLI — the server still sees only blobs.',
   p_python2:'Other entry points mirror the CLI flows: <code>DotMage.enroll(...)</code> (add a machine via enrollment token), <code>DotMage.from_ci(...)</code> (scoped <a href="#gen-ci-token" style="text-decoration:underline">CI token</a>), <code>DotMage.join(...)</code> (accept a <a href="#team" style="text-decoration:underline">team invitation</a>). An async client (<code>AsyncDotMage</code>) is included.',
   p_python3:'Full docs — getting started, API reference, security model and the crypto contract — live in the <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">repository</a>.',
-  g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup",
+  g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup & restore",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   title:"Documentation",
   subtitle:"Everything you need to install, deploy and use dotMage — the E2E-encrypted .env manager.",
@@ -1065,9 +1104,20 @@ en: {
   h_tls:"TLS / Production",
   p_tls:"For production, put a reverse proxy in front of the server. Example with Caddy (automatic HTTPS with Let's Encrypt):",
   p_tls2:"Without a domain, you can also use nginx or Caddy with a self-signed cert, or just run plain HTTP on a private network:",
-  h_backup:"Backup",
-  p_backup:'The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, device tokens, audit log. Back it up regularly.',
+  h_backup:"Backup &amp; restore",
+  p_backup:'The SQLite database at <code>/data/dotmage.db</code> contains everything — encrypted blobs, the password-wrapped Account Key, device tokens, audit log.',
+  p_backup_why:'This is a consequence of the end-to-end design, not an oversight: the server only ever stores ciphertext it cannot open, so there is no "forgot password" flow and no server-side recovery. The server cannot restore what it never sees. That makes the database file the whole vault — and backups your responsibility.',
   warn_backup:'Losing the database means losing access to all secrets — even with the master password. The database contains the encrypted Account Key. <b>Always have a backup.</b>',
+  h_backup_once:"One-off backup",
+  p_backup_once:"SQLite's online backup is safe while the server is running — no downtime, no locked writes:",
+  h_backup_cron:"Scheduled backup (cron)",
+  p_backup_cron:'The same two commands as a nightly cron job on the Docker host (note the <code>\\%</code> — cron treats a bare <code>%</code> as a newline):',
+  p_backup_cron2:'Ship the files off the machine with whatever you already use — rsync, restic, rclone. The blobs inside are E2E-encrypted, but treat backups as sensitive anyway: they contain the password-wrapped Account Key, so a weak master password could be brute-forced offline.',
+  h_backup_verify:"Verify a backup",
+  p_backup_verify:'A backup you never checked is a hope, not a backup:',
+  h_restore:"Restore",
+  p_restore:'Restoring replaces the database in the data volume with a backup file. Accounts, devices and secrets return to their state at backup time; anything pushed after that moment is gone.',
+  note_restore:'Clients keep working after a restore — device tokens live in the same database. A client that pushed after the backup was taken just creates a new revision on top of the restored state with its next <code>dmage push</code>.',
   h_flags:"Global flags",
   p_flags:"Available on every command:",
   fl_env:"Override the active environment for this command", fl_server:"Use a specific configured server for this command", fl_quiet:"Suppress non-error output", fl_json:"JSON output for scripting",
@@ -1127,7 +1177,7 @@ ru: {
   p_python:'Используйте dotMage из Python-кода — CI-джобы, backend-сервисы, скрипты. Пакет <a href="https://github.com/dotMage/dotmage-python" style="text-decoration:underline"><code>dotmage</code></a> — второй независимый клиент: типизированный API-клиент плюс полная клиентская криптография, побайтово совместимая с CLI <code>dmage</code>. Секреты шифруются и расшифровываются локально, как и в CLI — сервер по-прежнему видит только блобы.',
   p_python2:'Остальные точки входа повторяют сценарии CLI: <code>DotMage.enroll(...)</code> (добавить машину по enrollment-токену), <code>DotMage.from_ci(...)</code> (скоупный <a href="#gen-ci-token" style="text-decoration:underline">CI-токен</a>), <code>DotMage.join(...)</code> (принять <a href="#team" style="text-decoration:underline">приглашение в команду</a>). Асинхронный клиент (<code>AsyncDotMage</code>) в комплекте.',
   p_python3:'Полная документация — getting started, API reference, модель безопасности и крипто-контракт — в <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">репозитории</a>.',
-  g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап",
+  g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап и восстановление",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   title:"Документация",
   subtitle:"Всё, что нужно для установки, деплоя и использования dotMage — E2E-шифрованного менеджера .env.",
@@ -1204,9 +1254,20 @@ ru: {
   h_tls:"TLS / Продакшн",
   p_tls:"Для продакшна поставьте реверс-прокси перед сервером. Пример с Caddy (автоматический HTTPS через Let's Encrypt):",
   p_tls2:"Без домена можно использовать nginx или Caddy с самоподписанным сертификатом, или просто HTTP в приватной сети:",
-  h_backup:"Бэкап",
-  p_backup:'SQLite-база в <code>/data/dotmage.db</code> содержит всё — зашифрованные блобы, токены устройств, аудит-лог. Бэкапьте регулярно.',
+  h_backup:"Бэкап и восстановление",
+  p_backup:'SQLite-база в <code>/data/dotmage.db</code> содержит всё — зашифрованные блобы, завёрнутый паролем Account Key, токены устройств, аудит-лог.',
+  p_backup_why:'Это следствие E2E-дизайна, а не недоработка: сервер хранит только шифротекст, который не может открыть, поэтому нет ни «забыли пароль», ни восстановления на стороне сервера. Сервер не может восстановить то, чего никогда не видел. Файл базы — это весь ваш сейф, и бэкапы — ваша ответственность.',
   warn_backup:'Потеря базы данных означает потерю доступа ко всем секретам — даже с мастер-паролем. В базе хранится зашифрованный Account Key. <b>Всегда делайте бэкап.</b>',
+  h_backup_once:"Разовый бэкап",
+  p_backup_once:'Онлайн-бэкап SQLite безопасен на работающем сервере — без даунтайма и блокировки записи:',
+  h_backup_cron:"Бэкап по расписанию (cron)",
+  p_backup_cron:'Те же две команды ночным cron-заданием на docker-хосте (обратите внимание на <code>\\%</code> — голый <code>%</code> cron считает переводом строки):',
+  p_backup_cron2:'Увозите файлы с машины чем привыкли — rsync, restic, rclone. Блобы внутри E2E-зашифрованы, но относитесь к бэкапам как к чувствительным данным: в них лежит завёрнутый паролем Account Key, и слабый мастер-пароль можно перебрать офлайн.',
+  h_backup_verify:"Проверка бэкапа",
+  p_backup_verify:'Непроверенный бэкап — это надежда, а не бэкап:',
+  h_restore:"Восстановление",
+  p_restore:'Восстановление подменяет базу в data-томе файлом бэкапа. Аккаунты, устройства и секреты вернутся к состоянию на момент бэкапа; всё, что запушено позже, пропадёт.',
+  note_restore:'Клиенты продолжают работать после восстановления — токены устройств лежат в той же базе. Клиент, пушивший после снятия бэкапа, при следующем <code>dmage push</code> просто создаст новую ревизию поверх восстановленного состояния.',
   h_flags:"Глобальные флаги",
   p_flags:"Доступны для любой команды:",
   fl_env:"Переопределить активное окружение для этой команды", fl_server:"Использовать указанный сервер для этой команды", fl_quiet:"Подавить вывод (кроме ошибок)", fl_json:"Вывод в JSON для скриптинга",
