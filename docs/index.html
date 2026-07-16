@@ -202,6 +202,9 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#ci-setup" data-i18n="s_ci_setup">Setup</a>
     <a href="#ci-github" data-i18n="s_ci_pipe">Pipeline examples</a>
 
+    <div class="group" data-i18n="g_faq">FAQ</div>
+    <a href="#compare" data-i18n="s_compare">vs alternatives</a>
+
     <div class="group" data-i18n="g_other">Other</div>
     <a href="#flags" data-i18n="s_flags">Global flags</a>
     <a href="#exit-codes" data-i18n="s_exit">Exit codes</a>
@@ -920,6 +923,52 @@ ok</pre>
 
 <!-- ═══════════════════ OTHER ═══════════════════ -->
 
+<!-- ═══════════════════ COMPARISON ═══════════════════ -->
+
+<h2 id="compare" data-i18n="h_compare">How does it compare to X?</h2>
+<p data-i18n="p_compare">Honest answer: dotMage does one thing — syncs <code>.env</code>-style secrets between your machines with end-to-end encryption, on a server so small you forget it's there. The tools below do more, or do it differently. Pick by what you actually need.</p>
+
+<div style="overflow-x:auto">
+<table>
+  <thead><tr>
+    <th data-i18n="th_tool">Tool</th>
+    <th data-i18n="th_e2e">E2E by default</th>
+    <th data-i18n="th_selfhost">Self-hosted</th>
+    <th data-i18n="th_weight">Weight &amp; dependencies</th>
+  </tr></thead>
+  <tbody>
+    <tr><td><b>dotMage</b></td><td data-i18n="c_dm_e2e">yes — the server only ever stores ciphertext</td><td data-i18n="c_dm_host">yes; no vendor account</td><td data-i18n="c_dm_weight">one container + SQLite, ~75 MiB RAM for the whole stack</td></tr>
+    <tr><td><b>Infisical</b></td><td data-i18n="c_inf_e2e">no — encryption is server-side, so the backend can power rotation and integrations</td><td data-i18n="c_inf_host">yes</td><td data-i18n="c_inf_weight">Postgres + Redis + API/UI — a small cluster</td></tr>
+    <tr><td><b>Vaultwarden</b></td><td data-i18n="c_vw_e2e">yes (Bitwarden protocol)</td><td data-i18n="c_vw_host">yes</td><td data-i18n="c_vw_weight">one container + SQLite — as light as dotMage</td></tr>
+    <tr><td><b>sops + git</b></td><td data-i18n="c_sops_e2e">yes (age/GPG) — files are encrypted before commit</td><td data-i18n="c_sops_host">no server at all</td><td data-i18n="c_sops_weight">zero infrastructure</td></tr>
+    <tr><td><b>dotenv-vault</b></td><td data-i18n="c_dv_e2e">partially — <code>.env.vault</code> is encrypted, but keys flow through dotenv.org</td><td data-i18n="c_dv_host">no — cloud only</td><td data-i18n="c_dv_weight">zero infra + vendor cloud</td></tr>
+    <tr><td><b>Doppler</b></td><td data-i18n="c_dop_e2e">no — server-side, that's what makes its integrations possible</td><td data-i18n="c_dop_host">no — SaaS only, closed source</td><td data-i18n="c_dop_weight">zero infra (their cloud)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3 data-i18n="h_pick_them">When to pick them instead</h3>
+<ul>
+  <li data-i18n="pick_inf"><b>Infisical</b> — you want a web UI where the team edits secret values, dynamic secrets, automatic credential rotation, a Kubernetes operator, SSO. It's a secrets <i>platform</i>; dotMage is a secrets <i>pipe</i>. The price is Postgres+Redis and a server that can technically read your secrets.</li>
+  <li data-i18n="pick_vw"><b>Vaultwarden</b> — you need a password manager for humans: logins, browser extensions, mobile apps. It does not do <code>.env</code> sync or CI injection (Bitwarden's Secrets Manager isn't part of Vaultwarden) — that's exactly the gap dotMage fills. Many people run both.</li>
+  <li data-i18n="pick_sops"><b>sops + git</b> — you live in GitOps: secrets versioned next to code, reviewed in PRs, decrypted by flux/argo, keys in cloud KMS. No server is a real win. You give up push/pull between dev machines, audit, roles and one-command offboarding — key distribution is on you.</li>
+  <li data-i18n="pick_dv"><b>dotenv-vault</b> — honestly: don't. Its own authors deprecated it in favour of <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, which encrypts <code>.env</code> in-repo with no server. dotenvx is a fine sops-like choice if you want secrets in git rather than synced through your own server.</li>
+  <li data-i18n="pick_dop"><b>Doppler</b> — you want maximum polish and a huge integration catalog, and are fine with a closed-source SaaS holding secrets it can read. If "self-hosted" is not on your requirements list, it's a very smooth product.</li>
+</ul>
+
+<h3 data-i18n="h_dm_loses">Where dotMage honestly loses</h3>
+<ul>
+  <li data-i18n="lose_ui">No web editing of values — the admin panel is metadata-only by design (the server has nothing to show).</li>
+  <li data-i18n="lose_dyn">No dynamic secrets, no automatic rotation of cloud credentials, no Kubernetes operator, no SSO.</li>
+  <li data-i18n="lose_ha">Single node, SQLite: perfect up to a team, not built for an org of hundreds or HA clusters.</li>
+  <li data-i18n="lose_young">Young project with a small community. The crypto is boring on purpose (XChaCha20-Poly1305, Argon2id) and the <a href="https://github.com/dotMage/dotmage-spec/blob/main/THREAT_MODEL.md" style="text-decoration:underline">threat model is public</a> — but the ecosystem is CLI + Python SDK, not fifty integrations.</li>
+</ul>
+
+<div class="note">
+  <span class="ic">?</span>
+  <span data-i18n="note_compare">The one-line version: if you want <b>your</b> server, E2E by default, and a footprint smaller than most hello-world apps — that's the niche dotMage was built for. If you spotted an error in this table, <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">file an issue</a> — being honest here matters to us.</span>
+</div>
+
 <h2 id="flags" data-i18n="h_flags">Global flags</h2>
 <p data-i18n="p_flags">Available on every command:</p>
 <table>
@@ -1029,6 +1078,28 @@ en: {
   p_python3:'Full docs — getting started, API reference, security model and the crypto contract — live in the <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">repository</a>.',
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup & restore",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
+  g_faq:"FAQ", s_compare:"vs alternatives",
+  h_compare:"How does it compare to X?",
+  p_compare:'Honest answer: dotMage does one thing — syncs <code>.env</code>-style secrets between your machines with end-to-end encryption, on a server so small you forget it\'s there. The tools below do more, or do it differently. Pick by what you actually need.',
+  th_tool:"Tool", th_e2e:"E2E by default", th_selfhost:"Self-hosted", th_weight:"Weight & dependencies",
+  c_dm_e2e:'yes — the server only ever stores ciphertext', c_dm_host:'yes; no vendor account', c_dm_weight:'one container + SQLite, ~75 MiB RAM for the whole stack',
+  c_inf_e2e:'no — encryption is server-side, so the backend can power rotation and integrations', c_inf_host:'yes', c_inf_weight:'Postgres + Redis + API/UI — a small cluster',
+  c_vw_e2e:'yes (Bitwarden protocol)', c_vw_host:'yes', c_vw_weight:'one container + SQLite — as light as dotMage',
+  c_sops_e2e:'yes (age/GPG) — files are encrypted before commit', c_sops_host:'no server at all', c_sops_weight:'zero infrastructure',
+  c_dv_e2e:'partially — <code>.env.vault</code> is encrypted, but keys flow through dotenv.org', c_dv_host:'no — cloud only', c_dv_weight:'zero infra + vendor cloud',
+  c_dop_e2e:"no — server-side, that's what makes its integrations possible", c_dop_host:'no — SaaS only, closed source', c_dop_weight:'zero infra (their cloud)',
+  h_pick_them:"When to pick them instead",
+  pick_inf:'<b>Infisical</b> — you want a web UI where the team edits secret values, dynamic secrets, automatic credential rotation, a Kubernetes operator, SSO. It\'s a secrets <i>platform</i>; dotMage is a secrets <i>pipe</i>. The price is Postgres+Redis and a server that can technically read your secrets.',
+  pick_vw:'<b>Vaultwarden</b> — you need a password manager for humans: logins, browser extensions, mobile apps. It does not do <code>.env</code> sync or CI injection (Bitwarden\'s Secrets Manager isn\'t part of Vaultwarden) — that\'s exactly the gap dotMage fills. Many people run both.',
+  pick_sops:'<b>sops + git</b> — you live in GitOps: secrets versioned next to code, reviewed in PRs, decrypted by flux/argo, keys in cloud KMS. No server is a real win. You give up push/pull between dev machines, audit, roles and one-command offboarding — key distribution is on you.',
+  pick_dv:'<b>dotenv-vault</b> — honestly: don\'t. Its own authors deprecated it in favour of <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, which encrypts <code>.env</code> in-repo with no server. dotenvx is a fine sops-like choice if you want secrets in git rather than synced through your own server.',
+  pick_dop:'<b>Doppler</b> — you want maximum polish and a huge integration catalog, and are fine with a closed-source SaaS holding secrets it can read. If "self-hosted" is not on your requirements list, it\'s a very smooth product.',
+  h_dm_loses:"Where dotMage honestly loses",
+  lose_ui:'No web editing of values — the admin panel is metadata-only by design (the server has nothing to show).',
+  lose_dyn:'No dynamic secrets, no automatic rotation of cloud credentials, no Kubernetes operator, no SSO.',
+  lose_ha:'Single node, SQLite: perfect up to a team, not built for an org of hundreds or HA clusters.',
+  lose_young:'Young project with a small community. The crypto is boring on purpose (XChaCha20-Poly1305, Argon2id) and the <a href="https://github.com/dotMage/dotmage-spec/blob/main/THREAT_MODEL.md" style="text-decoration:underline">threat model is public</a> — but the ecosystem is CLI + Python SDK, not fifty integrations.',
+  note_compare:'The one-line version: if you want <b>your</b> server, E2E by default, and a footprint smaller than most hello-world apps — that\'s the niche dotMage was built for. If you spotted an error in this table, <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">file an issue</a> — being honest here matters to us.',
   title:"Documentation",
   subtitle:"Everything you need to install, deploy and use dotMage — the E2E-encrypted .env manager.",
   h_install:"Install CLI",
@@ -1179,6 +1250,28 @@ ru: {
   p_python3:'Полная документация — getting started, API reference, модель безопасности и крипто-контракт — в <a href="https://github.com/dotMage/dotmage-python/tree/main/docs" style="text-decoration:underline">репозитории</a>.',
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап и восстановление",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
+  g_faq:"FAQ", s_compare:"vs альтернативы",
+  h_compare:"Чем это лучше X?",
+  p_compare:'Честный ответ: dotMage делает одну вещь — синхронизирует секреты в духе <code>.env</code> между вашими машинами со сквозным шифрованием, на сервере настолько маленьком, что о нём забываешь. Инструменты ниже умеют больше — или делают это иначе. Выбирайте по тому, что реально нужно.',
+  th_tool:"Инструмент", th_e2e:"E2E по умолчанию", th_selfhost:"Self-hosted", th_weight:"Вес и зависимости",
+  c_dm_e2e:'да — сервер хранит только шифротекст', c_dm_host:'да; без аккаунта у вендора', c_dm_weight:'один контейнер + SQLite, ~75 MiB RAM на весь стек',
+  c_inf_e2e:'нет — шифрование на сервере, за счёт этого работают ротация и интеграции', c_inf_host:'да', c_inf_weight:'Postgres + Redis + API/UI — маленький кластер',
+  c_vw_e2e:'да (протокол Bitwarden)', c_vw_host:'да', c_vw_weight:'один контейнер + SQLite — так же легко, как dotMage',
+  c_sops_e2e:'да (age/GPG) — файлы шифруются до коммита', c_sops_host:'сервера нет вообще', c_sops_weight:'ноль инфраструктуры',
+  c_dv_e2e:'частично — <code>.env.vault</code> зашифрован, но ключи ходят через dotenv.org', c_dv_host:'нет — только облако', c_dv_weight:'ноль инфры + облако вендора',
+  c_dop_e2e:'нет — на сервере, именно поэтому возможны его интеграции', c_dop_host:'нет — только SaaS, закрытый код', c_dop_weight:'ноль инфры (их облако)',
+  h_pick_them:"Когда взять их, а не dotMage",
+  pick_inf:'<b>Infisical</b> — если нужен веб-UI, где команда редактирует значения секретов, динамические секреты, автоматическая ротация учёток, оператор Kubernetes, SSO. Это <i>платформа</i> секретов; dotMage — <i>труба</i> для секретов. Цена — Postgres+Redis и сервер, который технически может читать ваши секреты.',
+  pick_vw:'<b>Vaultwarden</b> — если нужен парольный менеджер для людей: логины, браузерные расширения, мобильные приложения. Синка <code>.env</code> и инъекции в CI у него нет (Bitwarden Secrets Manager не входит в Vaultwarden) — ровно эту нишу закрывает dotMage. Многие держат оба.',
+  pick_sops:'<b>sops + git</b> — если вы живёте в GitOps: секреты версионируются рядом с кодом, ревьюятся в PR, расшифровываются flux/argo, ключи в облачном KMS. Отсутствие сервера — реальный плюс. Взамен теряете push/pull между дев-машинами, аудит, роли и офбординг одной командой — раздача ключей на вас.',
+  pick_dv:'<b>dotenv-vault</b> — честно: не надо. Его собственные авторы задепрекейтили его в пользу <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, который шифрует <code>.env</code> прямо в репо без сервера. dotenvx — нормальный выбор в духе sops, если секреты хочется в git, а не через собственный сервер.',
+  pick_dop:'<b>Doppler</b> — если нужен максимум полировки и огромный каталог интеграций, и вас устраивает закрытый SaaS, хранящий секреты, которые он может прочитать. Если «self-hosted» не в списке требований — очень гладкий продукт.',
+  h_dm_loses:"Где dotMage честно проигрывает",
+  lose_ui:'Нет редактирования значений через веб — админка показывает только метаданные, так задумано (серверу нечего показывать).',
+  lose_dyn:'Нет динамических секретов, автоматической ротации облачных учёток, оператора Kubernetes, SSO.',
+  lose_ha:'Один узел, SQLite: идеально до размера команды, не рассчитано на организацию в сотни человек и HA-кластеры.',
+  lose_young:'Молодой проект с маленьким комьюнити. Криптография скучная намеренно (XChaCha20-Poly1305, Argon2id), <a href="https://github.com/dotMage/dotmage-spec/blob/main/THREAT_MODEL.md" style="text-decoration:underline">модель угроз публична</a> — но экосистема это CLI + Python SDK, а не полсотни интеграций.',
+  note_compare:'Версия в одну строку: если нужен <b>свой</b> сервер, E2E по умолчанию и футпринт меньше среднего hello-world — это ниша, под которую dotMage и сделан. Нашли ошибку в таблице — <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">заведите issue</a>: честность здесь для нас важна.',
   title:"Документация",
   subtitle:"Всё, что нужно для установки, деплоя и использования dotMage — E2E-шифрованного менеджера .env.",
   h_install:"Установка CLI",
