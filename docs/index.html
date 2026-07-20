@@ -66,6 +66,12 @@ pre .s{color:var(--lime)}
 pre .f{color:var(--amber)}
 pre .k{color:#5fd7d0}
 code{font-family:var(--mono); font-size:12px; background:var(--card); border:1px solid rgba(22,20,13,.15); padding:2px 6px}
+pre{position:relative}
+pre .p, pre .c, pre .k, pre .f, pre .d{user-select:none; -webkit-user-select:none}
+.copybtn{position:absolute; top:8px; right:8px; font-family:var(--mono); font-size:10.5px; padding:2px 8px; border:1.5px solid #6b6656; background:transparent; color:#d7d2c4; cursor:pointer; opacity:0; transition:opacity .12s}
+pre:hover .copybtn, .copybtn:focus-visible{opacity:1}
+.copybtn:hover{background:var(--lime); color:var(--ink); border-color:var(--lime)}
+.copybtn.done{opacity:1; background:var(--lime); color:var(--ink); border-color:var(--lime)}
 .cmd-card{margin-top:24px; border:2px solid var(--line); background:var(--card)}
 .cmd-card .head{display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:2px solid var(--line); background:var(--paper2)}
 .cmd-card .head .name{font-weight:800; font-size:15px}
@@ -157,6 +163,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   </div>
   <nav>
     <div class="group" data-i18n="g_start">Getting started</div>
+    <a href="#why" data-i18n="s_why">Overview</a>
     <a href="#install" data-i18n="s_install">Install CLI</a>
     <a href="#server" data-i18n="s_server">Deploy server</a>
     <a href="#quickstart" data-i18n="s_quick">Quick start</a>
@@ -172,6 +179,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#init">init</a>
     <a href="#push">push</a>
     <a href="#pull">pull</a>
+    <a href="#sync">sync</a>
     <a href="#exec">exec</a>
     <a href="#diff">diff</a>
     <a href="#history">history</a>
@@ -181,7 +189,9 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <a href="#env">env</a>
     <a href="#status">status</a>
     <a href="#gen-token">gen-token</a>
+    <a href="#open">open</a>
     <a href="#token">token</a>
+    <a href="#completions">completions</a>
     <a href="#gen-ci-token">gen-ci-token</a>
     <a href="#lock">lock</a>
     <a href="#logout">logout</a>
@@ -214,7 +224,27 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <main>
 
 <h1 data-i18n="title">Documentation</h1>
-<p data-i18n="subtitle">Everything you need to install, deploy and use dotMage — the E2E-encrypted .env manager.</p>
+<p data-i18n="subtitle">Install, deploy and use dotMage — the end-to-end-encrypted .env manager.</p>
+
+<!-- ═══════════════════ OVERVIEW ═══════════════════ -->
+
+<h2 id="why" data-i18n="h_why">Overview</h2>
+
+<h3 data-i18n="h_why_conv">How it works</h3>
+<ul>
+  <li data-i18n="why_conv1">A single binary, no runtime dependencies. Run <code>dmage auth</code> once per machine; <code>pull</code>, <code>push</code> and <code>sync</code> then operate on the same <code>.env</code> from each machine.</li>
+  <li data-i18n="why_conv2">Reads and writes plain <code>.env</code> files. <code>dmage exec</code> passes secrets to a process through its environment, without writing them to disk.</li>
+  <li data-i18n="why_conv3">Secrets are stored on a server you run and synced to the machines you authorize. The full stack (server and web admin) uses about 75 MiB of RAM.</li>
+  <li data-i18n="why_conv4">Team mode adds users, roles, an audit log and offboarding. The server enforces roles but has no key to read secret values.</li>
+</ul>
+
+<h3 data-i18n="h_why_safe">Security model</h3>
+<ul>
+  <li data-i18n="why_safe1">End-to-end encryption: the server stores only ciphertext. If the server or its database is compromised, the stored secrets remain encrypted — the decryption key is not on the server.</li>
+  <li data-i18n="why_safe2">The master password stays on the client. It derives a key (Argon2id) that unwraps the account key locally; the server stores only the wrapped key.</li>
+  <li data-i18n="why_safe3">Each revision is encrypted with XChaCha20-Poly1305 and bound via AEAD to its app, environment and revision number, so the server cannot substitute or reattribute a blob.</li>
+  <li data-i18n="why_safe4">Device tokens are stored as hashes and expire; a lost device can be revoked individually. The web admin shows metadata only.</li>
+</ul>
 
 <!-- ═══════════════════ GETTING STARTED ═══════════════════ -->
 
@@ -286,6 +316,18 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 
 <span class="p">$</span> dmage pull myapp
   <span class="s">✓</span> Decrypted 12 keys → .env</pre>
+<p data-i18n="p_multi">Your identity is a set of devices, so laptop, home PC and a machine in another city can all use the same account. On a device you're already signed in on, mint a one-time enrollment token — <code>dmage token</code>, or the admin panel's <b>Devices → Add a device</b> — then on the new machine:</p>
+<pre><span class="p">$</span> dmage auth --server https://your-server --enroll dmage_etok_...
+<span class="c"># enter your master password → your key is unwrapped locally</span></pre>
+<p data-i18n="p_multi2">Each machine is its own device: independent token, its own TTL, revocable on its own from the Devices page if it's lost. Registering a device always needs proof — an enrollment token from a device you already have (or the server's bootstrap secret) — never just the password.</p>
+<div class="note">
+  <span class="ic">i</span>
+  <span data-i18n="note_multi">Working remotely? The server must be reachable from where you are. If your team isn't all on one network, expose it over HTTPS (a TLS reverse proxy) or put it behind a VPN — dotMage is client↔server, it doesn't sync peer-to-peer.</span>
+</div>
+<div class="note">
+  <span class="ic">!</span>
+  <span data-i18n="note_multi_untrusted">On a shared or untrusted computer, prefer <code>dmage exec</code> (secrets stay in memory, nothing written to disk) and <code>dmage lock</code> afterwards — or just use the web panel, which only ever shows metadata, never secret values. Revoke the device when you're done.</span>
+</div>
 
 <!-- ═══════════════════ FOLDERS ═══════════════════ -->
 
@@ -372,7 +414,7 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
   owner          owner    active    2026-07-03
   kolya          editor   active    2026-07-03</pre>
 
-<p data-i18n="p_team2">Roles — <code>owner</code> (everything), <code>editor</code> (push/pull/rollback), <code>viewer</code> (read-only) — are enforced by the server. Note the honest limit: roles are authorization, not cryptography — every member holds the vault key and could technically decrypt any blob they can download. The audit log now names people, not just devices.</p>
+<p data-i18n="p_team2">Roles — <code>owner</code> (everything), <code>editor</code> (push/pull/rollback), <code>viewer</code> (read-only) — are enforced by the server. Note the limit: roles are authorization, not cryptography — every member holds the vault key and could technically decrypt any blob they can download. The audit log now names people, not just devices.</p>
 
 <h3 data-i18n="h_offboard">Offboarding (someone leaves)</h3>
 <pre><span class="p">$</span> dmage user rm kolya
@@ -907,22 +949,6 @@ ok</pre>
   <span data-i18n="note_upgrade">The CLI can be upgraded the same way it was installed: <code>brew upgrade dotmage</code> on macOS, or re-run the curl/PowerShell command on Linux/Windows.</span>
 </div>
 
-<!-- ═══════════════════ MULTIPLE MACHINES ═══════════════════ -->
-
-<h2 id="multi" data-i18n="h_multi">Working from multiple machines</h2>
-<p data-i18n="p_multi">Your identity is a set of devices, so laptop, home PC and a machine in another city can all use the same account. On a device you're already signed in on, mint a one-time enrollment token — <code>dmage token</code>, or the admin panel's <b>Devices → Add a device</b> — then on the new machine:</p>
-<pre><span class="p">$</span> dmage auth --server https://your-server --enroll dmage_etok_...
-<span class="c"># enter your master password → your key is unwrapped locally</span></pre>
-<p data-i18n="p_multi2">Each machine is its own device: independent token, its own TTL, revocable on its own from the Devices page if it's lost. Registering a device always needs proof — an enrollment token from a device you already have (or the server's bootstrap secret) — never just the password.</p>
-<div class="note">
-  <span class="ic">i</span>
-  <span data-i18n="note_multi">Working remotely? The server must be reachable from where you are. If your team isn't all on one network, expose it over HTTPS (a TLS reverse proxy) or put it behind a VPN — dotMage is client↔server, it doesn't sync peer-to-peer.</span>
-</div>
-<div class="note">
-  <span class="ic">!</span>
-  <span data-i18n="note_multi_untrusted">On a shared or untrusted computer, prefer <code>dmage exec</code> (secrets stay in memory, nothing written to disk) and <code>dmage lock</code> afterwards — or just use the web panel, which only ever shows metadata, never secret values. Revoke the device when you're done.</span>
-</div>
-
 <!-- ═══════════════════ CI/CD ═══════════════════ -->
 
 <h2 id="ci-setup" data-i18n="h_ci_setup">CI/CD setup</h2>
@@ -984,8 +1010,8 @@ ok</pre>
 
 <!-- ═══════════════════ COMPARISON ═══════════════════ -->
 
-<h2 id="compare" data-i18n="h_compare">How does it compare to X?</h2>
-<p data-i18n="p_compare">Honest answer: dotMage does one thing — syncs <code>.env</code>-style secrets between your machines with end-to-end encryption, on a server so small you forget it's there. The tools below do more, or do it differently. Pick by what you actually need.</p>
+<h2 id="compare" data-i18n="h_compare">How does it compare to Infisical, Vaultwarden, sops &amp; Doppler?</h2>
+<p data-i18n="p_compare">dotMage syncs <code>.env</code>-style secrets between machines with end-to-end encryption, using a small self-hosted server. The tools below overlap with it in some areas and differ in others.</p>
 
 <div style="overflow-x:auto">
 <table>
@@ -998,7 +1024,7 @@ ok</pre>
   <tbody>
     <tr><td><b>dotMage</b></td><td data-i18n="c_dm_e2e">yes — the server only ever stores ciphertext</td><td data-i18n="c_dm_host">yes; no vendor account</td><td data-i18n="c_dm_weight">one container + SQLite, ~75 MiB RAM for the whole stack</td></tr>
     <tr><td><b>Infisical</b></td><td data-i18n="c_inf_e2e">no — encryption is server-side, so the backend can power rotation and integrations</td><td data-i18n="c_inf_host">yes</td><td data-i18n="c_inf_weight">Postgres + Redis + API/UI — a small cluster</td></tr>
-    <tr><td><b>Vaultwarden</b></td><td data-i18n="c_vw_e2e">yes (Bitwarden protocol)</td><td data-i18n="c_vw_host">yes</td><td data-i18n="c_vw_weight">one container + SQLite — as light as dotMage</td></tr>
+    <tr><td><b>Vaultwarden</b></td><td data-i18n="c_vw_e2e">yes (Bitwarden protocol)</td><td data-i18n="c_vw_host">yes</td><td data-i18n="c_vw_weight">one container + SQLite</td></tr>
     <tr><td><b>sops + git</b></td><td data-i18n="c_sops_e2e">yes (age/GPG) — files are encrypted before commit</td><td data-i18n="c_sops_host">no server at all</td><td data-i18n="c_sops_weight">zero infrastructure</td></tr>
     <tr><td><b>dotenv-vault</b></td><td data-i18n="c_dv_e2e">partially — <code>.env.vault</code> is encrypted, but keys flow through dotenv.org</td><td data-i18n="c_dv_host">no — cloud only</td><td data-i18n="c_dv_weight">zero infra + vendor cloud</td></tr>
     <tr><td><b>Doppler</b></td><td data-i18n="c_dop_e2e">no — server-side, that's what makes its integrations possible</td><td data-i18n="c_dop_host">no — SaaS only, closed source</td><td data-i18n="c_dop_weight">zero infra (their cloud)</td></tr>
@@ -1008,24 +1034,24 @@ ok</pre>
 
 <h3 data-i18n="h_pick_them">When to pick them instead</h3>
 <ul>
-  <li data-i18n="pick_inf"><b>Infisical</b> — you want a web UI where the team edits secret values, dynamic secrets, automatic credential rotation, a Kubernetes operator, SSO. It's a secrets <i>platform</i>; dotMage is a secrets <i>pipe</i>. The price is Postgres+Redis and a server that can technically read your secrets.</li>
-  <li data-i18n="pick_vw"><b>Vaultwarden</b> — you need a password manager for humans: logins, browser extensions, mobile apps. It does not do <code>.env</code> sync or CI injection (Bitwarden's Secrets Manager isn't part of Vaultwarden) — that's exactly the gap dotMage fills. Many people run both.</li>
-  <li data-i18n="pick_sops"><b>sops + git</b> — you live in GitOps: secrets versioned next to code, reviewed in PRs, decrypted by flux/argo, keys in cloud KMS. No server is a real win. You give up push/pull between dev machines, audit, roles and one-command offboarding — key distribution is on you.</li>
-  <li data-i18n="pick_dv"><b>dotenv-vault</b> — honestly: don't. Its own authors deprecated it in favour of <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, which encrypts <code>.env</code> in-repo with no server. dotenvx is a fine sops-like choice if you want secrets in git rather than synced through your own server.</li>
-  <li data-i18n="pick_dop"><b>Doppler</b> — you want maximum polish and a huge integration catalog, and are fine with a closed-source SaaS holding secrets it can read. If "self-hosted" is not on your requirements list, it's a very smooth product.</li>
+  <li data-i18n="pick_inf"><b>Infisical</b> — a web UI where the team edits secret values, plus dynamic secrets, credential rotation, a Kubernetes operator and SSO. Encryption is server-side (the backend can read secrets), and it runs Postgres and Redis.</li>
+  <li data-i18n="pick_vw"><b>Vaultwarden</b> — a password manager: logins, browser extensions, mobile apps. It does not sync <code>.env</code> files or inject secrets into CI (Bitwarden's Secrets Manager isn't part of Vaultwarden).</li>
+  <li data-i18n="pick_sops"><b>sops + git</b> — GitOps: secrets versioned next to code, reviewed in PRs, decrypted by flux/argo, keys in a cloud KMS. There is no server; in exchange there is no push/pull between machines, no audit, no roles or offboarding, and key distribution is manual.</li>
+  <li data-i18n="pick_dv"><b>dotenv-vault</b> — deprecated by its own authors in favour of <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, which encrypts <code>.env</code> in-repo without a server. dotenvx is a reasonable sops-style option if you prefer secrets in git rather than synced through a server.</li>
+  <li data-i18n="pick_dop"><b>Doppler</b> — a closed-source SaaS with a large integration catalogue. Encryption is server-side, and it is not self-hostable.</li>
 </ul>
 
-<h3 data-i18n="h_dm_loses">Where dotMage honestly loses</h3>
+<h3 data-i18n="h_dm_loses">Limitations</h3>
 <ul>
-  <li data-i18n="lose_ui">No web editing of values — the admin panel is metadata-only by design (the server has nothing to show).</li>
+  <li data-i18n="lose_ui">No editing of secret values in the web admin — it shows metadata only.</li>
   <li data-i18n="lose_dyn">No dynamic secrets, no automatic rotation of cloud credentials, no Kubernetes operator, no SSO.</li>
-  <li data-i18n="lose_ha">Single node, SQLite: perfect up to a team, not built for an org of hundreds or HA clusters.</li>
-  <li data-i18n="lose_young">Young project with a small community. The crypto is boring on purpose (XChaCha20-Poly1305, Argon2id) and the <a href="https://github.com/dotMage/dotmage-spec/blob/main/THREAT_MODEL.md" style="text-decoration:underline">threat model is public</a> — but the ecosystem is CLI + Python SDK, not fifty integrations.</li>
+  <li data-i18n="lose_ha">Single node on SQLite: suitable for a team, not for organizations of hundreds or HA clusters.</li>
+  <li data-i18n="lose_young">Young project with a small community. Cryptography is XChaCha20-Poly1305 and Argon2id. The ecosystem is the CLI and a Python SDK.</li>
 </ul>
 
 <div class="note">
   <span class="ic">?</span>
-  <span data-i18n="note_compare">The one-line version: if you want <b>your</b> server, E2E by default, and a footprint smaller than most hello-world apps — that's the niche dotMage was built for. If you spotted an error in this table, <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">file an issue</a> — being honest here matters to us.</span>
+  <span data-i18n="note_compare">Found an error in this table? <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">File an issue</a>.</span>
 </div>
 
 <h2 id="flags" data-i18n="h_flags">Global flags</h2>
@@ -1102,7 +1128,18 @@ updateActive();
 var I18N = {
 en: {
   back:"&larr; Back to landing",
-  g_start:"Getting started", s_install:"Install CLI", s_server:"Deploy server", s_quick:"Quick start",
+  h_why:"Overview",
+  h_why_conv:"How it works",
+  why_conv1:"A single binary, no runtime dependencies. Run <code>dmage auth</code> once per machine; <code>pull</code>, <code>push</code> and <code>sync</code> then operate on the same <code>.env</code> from each machine.",
+  why_conv2:"Reads and writes plain <code>.env</code> files. <code>dmage exec</code> passes secrets to a process through its environment, without writing them to disk.",
+  why_conv3:"Secrets are stored on a server you run and synced to the machines you authorize. The full stack (server and web admin) uses about 75 MiB of RAM.",
+  why_conv4:"Team mode adds users, roles, an audit log and offboarding. The server enforces roles but has no key to read secret values.",
+  h_why_safe:"Security model",
+  why_safe1:"End-to-end encryption: the server stores only ciphertext. If the server or its database is compromised, the stored secrets remain encrypted — the decryption key is not on the server.",
+  why_safe2:"The master password stays on the client. It derives a key (Argon2id) that unwraps the account key locally; the server stores only the wrapped key.",
+  why_safe3:"Each revision is encrypted with XChaCha20-Poly1305 and bound via AEAD to its app, environment and revision number, so the server cannot substitute or reattribute a blob.",
+  why_safe4:"Device tokens are stored as hashes and expire; a lost device can be revoked individually. The web admin shows metadata only.",
+  g_start:"Getting started", s_why:"Overview", s_install:"Install CLI", s_server:"Deploy server", s_quick:"Quick start",
   h_quick_device:"Adding another device",
   p_quick_device:"On any new machine — just the bootstrap secret and your master password. No first device needed, no tokens to generate.",
   s_folders:"Folders",
@@ -1125,7 +1162,7 @@ en: {
   p_rotation2:'After a rotation: old cached keys stop working for new data (devices re-run <code>dmage auth</code>), CI tokens must be regenerated, and — important — <strong>backups taken before the rotation remain decryptable by the old key</strong>: destroy or re-encrypt them if you rotated because of a compromise.',
   h_team:'Team mode <span class="badge">v2</span>',
   p_team:'One product, two modes: solo is a team of one, and nothing changes until you invite a second person. Each member gets their <strong>own master password</strong> wrapping the shared vault key — offboarding stops being "change the shared password and hope".',
-  p_team2:'Roles — <code>owner</code> (everything), <code>editor</code> (push/pull/rollback), <code>viewer</code> (read-only) — are enforced by the server. Note the honest limit: roles are authorization, not cryptography — every member holds the vault key and could technically decrypt any blob they can download. The audit log now names people, not just devices.',
+  p_team2:'Roles — <code>owner</code> (everything), <code>editor</code> (push/pull/rollback), <code>viewer</code> (read-only) — are enforced by the server. Note the limit: roles are authorization, not cryptography — every member holds the vault key and could technically decrypt any blob they can download. The audit log now names people, not just devices.',
   h_offboard:"Offboarding (someone leaves)",
   p_offboard:'Removal deletes their key wraps and revokes their devices; the chained <code>rotate-key</code> makes their cached key useless for anything pushed afterwards. Then: <strong>rotate the secret values they saw</strong> (what they read, they read) and <strong>destroy pre-rotation backups</strong> — rotation cannot reach into old backups.',
   h_sharedpw:"Migrating from a shared password",
@@ -1138,29 +1175,29 @@ en: {
   g_cli:"CLI Reference", g_srv:"Server", s_config:"Configuration", s_tls:"TLS / Production", s_backup:"Backup & restore",
   g_other:"Other", s_flags:"Global flags", s_exit:"Exit codes",
   g_faq:"FAQ", s_compare:"vs alternatives",
-  h_compare:"How does it compare to X?",
-  p_compare:'Honest answer: dotMage does one thing — syncs <code>.env</code>-style secrets between your machines with end-to-end encryption, on a server so small you forget it\'s there. The tools below do more, or do it differently. Pick by what you actually need.',
+  h_compare:"How does it compare to Infisical, Vaultwarden, sops &amp; Doppler?",
+  p_compare:'dotMage syncs <code>.env</code>-style secrets between machines with end-to-end encryption, using a small self-hosted server. The tools below overlap with it in some areas and differ in others.',
   th_tool:"Tool", th_e2e:"E2E by default", th_selfhost:"Self-hosted", th_weight:"Weight & dependencies",
   c_dm_e2e:'yes — the server only ever stores ciphertext', c_dm_host:'yes; no vendor account', c_dm_weight:'one container + SQLite, ~75 MiB RAM for the whole stack',
   c_inf_e2e:'no — encryption is server-side, so the backend can power rotation and integrations', c_inf_host:'yes', c_inf_weight:'Postgres + Redis + API/UI — a small cluster',
-  c_vw_e2e:'yes (Bitwarden protocol)', c_vw_host:'yes', c_vw_weight:'one container + SQLite — as light as dotMage',
+  c_vw_e2e:'yes (Bitwarden protocol)', c_vw_host:'yes', c_vw_weight:'one container + SQLite',
   c_sops_e2e:'yes (age/GPG) — files are encrypted before commit', c_sops_host:'no server at all', c_sops_weight:'zero infrastructure',
   c_dv_e2e:'partially — <code>.env.vault</code> is encrypted, but keys flow through dotenv.org', c_dv_host:'no — cloud only', c_dv_weight:'zero infra + vendor cloud',
   c_dop_e2e:"no — server-side, that's what makes its integrations possible", c_dop_host:'no — SaaS only, closed source', c_dop_weight:'zero infra (their cloud)',
   h_pick_them:"When to pick them instead",
-  pick_inf:'<b>Infisical</b> — you want a web UI where the team edits secret values, dynamic secrets, automatic credential rotation, a Kubernetes operator, SSO. It\'s a secrets <i>platform</i>; dotMage is a secrets <i>pipe</i>. The price is Postgres+Redis and a server that can technically read your secrets.',
-  pick_vw:'<b>Vaultwarden</b> — you need a password manager for humans: logins, browser extensions, mobile apps. It does not do <code>.env</code> sync or CI injection (Bitwarden\'s Secrets Manager isn\'t part of Vaultwarden) — that\'s exactly the gap dotMage fills. Many people run both.',
-  pick_sops:'<b>sops + git</b> — you live in GitOps: secrets versioned next to code, reviewed in PRs, decrypted by flux/argo, keys in cloud KMS. No server is a real win. You give up push/pull between dev machines, audit, roles and one-command offboarding — key distribution is on you.',
-  pick_dv:'<b>dotenv-vault</b> — honestly: don\'t. Its own authors deprecated it in favour of <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, which encrypts <code>.env</code> in-repo with no server. dotenvx is a fine sops-like choice if you want secrets in git rather than synced through your own server.',
-  pick_dop:'<b>Doppler</b> — you want maximum polish and a huge integration catalog, and are fine with a closed-source SaaS holding secrets it can read. If "self-hosted" is not on your requirements list, it\'s a very smooth product.',
-  h_dm_loses:"Where dotMage honestly loses",
-  lose_ui:'No web editing of values — the admin panel is metadata-only by design (the server has nothing to show).',
+  pick_inf:'<b>Infisical</b> — a web UI where the team edits secret values, plus dynamic secrets, credential rotation, a Kubernetes operator and SSO. Encryption is server-side (the backend can read secrets), and it runs Postgres and Redis.',
+  pick_vw:'<b>Vaultwarden</b> — a password manager: logins, browser extensions, mobile apps. It does not sync <code>.env</code> files or inject secrets into CI (Bitwarden\'s Secrets Manager isn\'t part of Vaultwarden).',
+  pick_sops:'<b>sops + git</b> — GitOps: secrets versioned next to code, reviewed in PRs, decrypted by flux/argo, keys in a cloud KMS. There is no server; in exchange there is no push/pull between machines, no audit, no roles or offboarding, and key distribution is manual.',
+  pick_dv:'<b>dotenv-vault</b> — deprecated by its own authors in favour of <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, which encrypts <code>.env</code> in-repo without a server. dotenvx is a reasonable sops-style option if you prefer secrets in git rather than synced through a server.',
+  pick_dop:'<b>Doppler</b> — a closed-source SaaS with a large integration catalogue. Encryption is server-side, and it is not self-hostable.',
+  h_dm_loses:"Limitations",
+  lose_ui:'No editing of secret values in the web admin — it shows metadata only.',
   lose_dyn:'No dynamic secrets, no automatic rotation of cloud credentials, no Kubernetes operator, no SSO.',
-  lose_ha:'Single node, SQLite: perfect up to a team, not built for an org of hundreds or HA clusters.',
-  lose_young:'Young project with a small community. The crypto is boring on purpose (XChaCha20-Poly1305, Argon2id) and the <a href="https://github.com/dotMage/dotmage-spec/blob/main/THREAT_MODEL.md" style="text-decoration:underline">threat model is public</a> — but the ecosystem is CLI + Python SDK, not fifty integrations.',
-  note_compare:'The one-line version: if you want <b>your</b> server, E2E by default, and a footprint smaller than most hello-world apps — that\'s the niche dotMage was built for. If you spotted an error in this table, <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">file an issue</a> — being honest here matters to us.',
+  lose_ha:'Single node on SQLite: suitable for a team, not for organizations of hundreds or HA clusters.',
+  lose_young:'Young project with a small community. Cryptography is XChaCha20-Poly1305 and Argon2id. The ecosystem is the CLI and a Python SDK.',
+  note_compare:'Found an error in this table? <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">File an issue</a>.',
   title:"Documentation",
-  subtitle:"Everything you need to install, deploy and use dotMage — the E2E-encrypted .env manager.",
+  subtitle:"Install, deploy and use dotMage — the end-to-end-encrypted .env manager.",
   h_install:"Install CLI",
   p_install:"dotMage CLI is a single Rust binary with no dependencies. Choose your platform:",
   p_install2:'Or download from <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
@@ -1260,7 +1297,6 @@ en: {
   ex_3:'Not authenticated — run <code>dmage auth</code>',
   ex_4:"Conflict (e.g. concurrent push)",
   g_ci:"CI/CD", s_ci_setup:"Setup", s_ci_github:"GitHub Actions", s_ci_gitlab:"GitLab CI",
-  h_multi:"Working from multiple machines",
   p_multi:"Your identity is a set of devices, so laptop, home PC and a machine in another city can all use the same account. On a device you're already signed in on, mint a one-time enrollment token — <code>dmage token</code>, or the admin panel's <b>Devices → Add a device</b> — then on the new machine:",
   p_multi2:"Each machine is its own device: independent token, its own TTL, revocable on its own from the Devices page if it's lost. Registering a device always needs proof — an enrollment token from a device you already have (or the server's bootstrap secret) — never just the password.",
   note_multi:"Working remotely? The server must be reachable from where you are. If your team isn't all on one network, expose it over HTTPS (a TLS reverse proxy) or put it behind a VPN — dotMage is client↔server, it doesn't sync peer-to-peer.",
@@ -1285,7 +1321,18 @@ en: {
 },
 ru: {
   back:"&larr; На главную",
-  g_start:"Начало работы", s_install:"Установка CLI", s_server:"Деплой сервера", s_quick:"Быстрый старт",
+  h_why:"Обзор",
+  h_why_conv:"Как это работает",
+  why_conv1:"Один бинарь, без рантайм-зависимостей. <code>dmage auth</code> один раз на машину; дальше <code>pull</code>, <code>push</code> и <code>sync</code> работают с одним и тем же <code>.env</code> с каждой машины.",
+  why_conv2:"Читает и пишет обычные <code>.env</code>. <code>dmage exec</code> передаёт секреты процессу через окружение, не записывая их на диск.",
+  why_conv3:"Секреты хранятся на вашем сервере и синхронизируются на авторизованные машины. Весь стек (сервер и веб-админка) занимает около 75 MiB RAM.",
+  why_conv4:"Командный режим добавляет пользователей, роли, аудит-лог и офбординг. Сервер применяет роли, но не имеет ключа для чтения значений секретов.",
+  h_why_safe:"Модель безопасности",
+  why_safe1:"Сквозное шифрование: сервер хранит только шифртекст. При компрометации сервера или его БД сохранённые секреты остаются зашифрованными — ключа расшифровки на сервере нет.",
+  why_safe2:"Мастер-пароль остаётся на клиенте. Из него выводится ключ (Argon2id), который локально разворачивает ключ аккаунта; на сервере лежит только обёрнутый ключ.",
+  why_safe3:"Каждая ревизия шифруется XChaCha20-Poly1305 и через AEAD привязана к app, окружению и номеру ревизии, поэтому сервер не может подменить блоб или выдать один за другой.",
+  why_safe4:"Токены устройств хранятся хешами и истекают; потерянное устройство отзывается по отдельности. Веб-админка показывает только метаданные.",
+  g_start:"Начало работы", s_why:"Обзор", s_install:"Установка CLI", s_server:"Деплой сервера", s_quick:"Быстрый старт",
   h_quick_device:"Добавление нового устройства",
   p_quick_device:"На любой новой машине — только bootstrap secret и мастер-пароль. Первое устройство не нужно, токены генерировать не надо.",
   s_folders:"Папки",
@@ -1308,7 +1355,7 @@ ru: {
   p_rotation2:'После ротации: старые кэши ключа перестают работать для новых данных (устройства заново выполняют <code>dmage auth</code>), CI-токены нужно перегенерировать, и — важно — <strong>бэкапы, снятые до ротации, по-прежнему расшифровываются старым ключом</strong>: уничтожьте или перешифруйте их, если ротация была из-за компрометации.',
   h_team:'Командный режим <span class="badge">v2</span>',
   p_team:'Один продукт, два режима: solo — это команда из одного, и ничего не меняется, пока вы не пригласите второго человека. У каждого участника <strong>свой мастер-пароль</strong>, оборачивающий общий ключ хранилища — офбординг перестаёт быть «сменим общий пароль и понадеемся».',
-  p_team2:'Роли — <code>owner</code> (всё), <code>editor</code> (push/pull/rollback), <code>viewer</code> (только чтение) — принуждаются сервером. Честная оговорка: роли — это авторизация, а не криптография: каждый участник владеет ключом хранилища и технически может расшифровать любой блоб, который сумеет скачать. Audit-журнал теперь называет людей, а не только устройства.',
+  p_team2:'Роли — <code>owner</code> (всё), <code>editor</code> (push/pull/rollback), <code>viewer</code> (только чтение) — принуждаются сервером. Оговорка: роли — это авторизация, а не криптография: каждый участник владеет ключом хранилища и технически может расшифровать любой блоб, который сумеет скачать. Audit-журнал теперь называет людей, а не только устройства.',
   h_offboard:"Офбординг (кто-то уходит)",
   p_offboard:'Удаление стирает его обёртки ключа и отзывает устройства; связанная <code>rotate-key</code> делает его кэшированный ключ бесполезным для всего, что запушено после. Дальше: <strong>ротируйте сами значения секретов, которые он видел</strong> (что прочитано — то прочитано) и <strong>уничтожьте доротационные бэкапы</strong> — ротация не дотягивается до старых бэкапов.',
   h_sharedpw:"Миграция с общего пароля",
@@ -1321,29 +1368,29 @@ ru: {
   g_cli:"Справка CLI", g_srv:"Сервер", s_config:"Конфигурация", s_tls:"TLS / Продакшн", s_backup:"Бэкап и восстановление",
   g_other:"Прочее", s_flags:"Глобальные флаги", s_exit:"Коды выхода",
   g_faq:"FAQ", s_compare:"vs альтернативы",
-  h_compare:"Чем это лучше X?",
-  p_compare:'Честный ответ: dotMage делает одну вещь — синхронизирует секреты в духе <code>.env</code> между вашими машинами со сквозным шифрованием, на сервере настолько маленьком, что о нём забываешь. Инструменты ниже умеют больше — или делают это иначе. Выбирайте по тому, что реально нужно.',
+  h_compare:"Чем отличается от Infisical, Vaultwarden, sops и Doppler?",
+  p_compare:'dotMage синхронизирует секреты в духе <code>.env</code> между машинами со сквозным шифрованием, используя небольшой self-hosted сервер. Инструменты ниже местами пересекаются с ним, местами отличаются.',
   th_tool:"Инструмент", th_e2e:"E2E по умолчанию", th_selfhost:"Self-hosted", th_weight:"Вес и зависимости",
   c_dm_e2e:'да — сервер хранит только шифротекст', c_dm_host:'да; без аккаунта у вендора', c_dm_weight:'один контейнер + SQLite, ~75 MiB RAM на весь стек',
   c_inf_e2e:'нет — шифрование на сервере, за счёт этого работают ротация и интеграции', c_inf_host:'да', c_inf_weight:'Postgres + Redis + API/UI — маленький кластер',
-  c_vw_e2e:'да (протокол Bitwarden)', c_vw_host:'да', c_vw_weight:'один контейнер + SQLite — так же легко, как dotMage',
+  c_vw_e2e:'да (протокол Bitwarden)', c_vw_host:'да', c_vw_weight:'один контейнер + SQLite',
   c_sops_e2e:'да (age/GPG) — файлы шифруются до коммита', c_sops_host:'сервера нет вообще', c_sops_weight:'ноль инфраструктуры',
   c_dv_e2e:'частично — <code>.env.vault</code> зашифрован, но ключи ходят через dotenv.org', c_dv_host:'нет — только облако', c_dv_weight:'ноль инфры + облако вендора',
   c_dop_e2e:'нет — на сервере, именно поэтому возможны его интеграции', c_dop_host:'нет — только SaaS, закрытый код', c_dop_weight:'ноль инфры (их облако)',
   h_pick_them:"Когда взять их, а не dotMage",
-  pick_inf:'<b>Infisical</b> — если нужен веб-UI, где команда редактирует значения секретов, динамические секреты, автоматическая ротация учёток, оператор Kubernetes, SSO. Это <i>платформа</i> секретов; dotMage — <i>труба</i> для секретов. Цена — Postgres+Redis и сервер, который технически может читать ваши секреты.',
-  pick_vw:'<b>Vaultwarden</b> — если нужен парольный менеджер для людей: логины, браузерные расширения, мобильные приложения. Синка <code>.env</code> и инъекции в CI у него нет (Bitwarden Secrets Manager не входит в Vaultwarden) — ровно эту нишу закрывает dotMage. Многие держат оба.',
-  pick_sops:'<b>sops + git</b> — если вы живёте в GitOps: секреты версионируются рядом с кодом, ревьюятся в PR, расшифровываются flux/argo, ключи в облачном KMS. Отсутствие сервера — реальный плюс. Взамен теряете push/pull между дев-машинами, аудит, роли и офбординг одной командой — раздача ключей на вас.',
-  pick_dv:'<b>dotenv-vault</b> — честно: не надо. Его собственные авторы задепрекейтили его в пользу <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, который шифрует <code>.env</code> прямо в репо без сервера. dotenvx — нормальный выбор в духе sops, если секреты хочется в git, а не через собственный сервер.',
-  pick_dop:'<b>Doppler</b> — если нужен максимум полировки и огромный каталог интеграций, и вас устраивает закрытый SaaS, хранящий секреты, которые он может прочитать. Если «self-hosted» не в списке требований — очень гладкий продукт.',
-  h_dm_loses:"Где dotMage честно проигрывает",
-  lose_ui:'Нет редактирования значений через веб — админка показывает только метаданные, так задумано (серверу нечего показывать).',
+  pick_inf:'<b>Infisical</b> — веб-UI, где команда редактирует значения секретов, плюс динамические секреты, ротация учёток, оператор Kubernetes и SSO. Шифрование серверное (бэкенд может читать секреты), требует Postgres и Redis.',
+  pick_vw:'<b>Vaultwarden</b> — парольный менеджер: логины, браузерные расширения, мобильные приложения. Он не синхронизирует <code>.env</code> и не инжектит секреты в CI (Bitwarden Secrets Manager не входит в Vaultwarden).',
+  pick_sops:'<b>sops + git</b> — GitOps: секреты версионируются рядом с кодом, ревьюятся в PR, расшифровываются flux/argo, ключи в облачном KMS. Сервера нет; взамен нет push/pull между машинами, аудита, ролей и офбординга, а раздача ключей ручная.',
+  pick_dv:'<b>dotenv-vault</b> — задепрекейчен собственными авторами в пользу <a href="https://dotenvx.com" style="text-decoration:underline">dotenvx</a>, который шифрует <code>.env</code> прямо в репо без сервера. dotenvx — разумный вариант в духе sops, если секреты предпочтительнее держать в git, а не синхронизировать через сервер.',
+  pick_dop:'<b>Doppler</b> — закрытый SaaS с большим каталогом интеграций. Шифрование серверное, self-hosting недоступен.',
+  h_dm_loses:"Ограничения",
+  lose_ui:'Значения секретов нельзя редактировать в веб-админке — она показывает только метаданные.',
   lose_dyn:'Нет динамических секретов, автоматической ротации облачных учёток, оператора Kubernetes, SSO.',
-  lose_ha:'Один узел, SQLite: идеально до размера команды, не рассчитано на организацию в сотни человек и HA-кластеры.',
-  lose_young:'Молодой проект с маленьким комьюнити. Криптография скучная намеренно (XChaCha20-Poly1305, Argon2id), <a href="https://github.com/dotMage/dotmage-spec/blob/main/THREAT_MODEL.md" style="text-decoration:underline">модель угроз публична</a> — но экосистема это CLI + Python SDK, а не полсотни интеграций.',
-  note_compare:'Версия в одну строку: если нужен <b>свой</b> сервер, E2E по умолчанию и футпринт меньше среднего hello-world — это ниша, под которую dotMage и сделан. Нашли ошибку в таблице — <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">заведите issue</a>: честность здесь для нас важна.',
+  lose_ha:'Один узел на SQLite: подходит для команды, не для организаций в сотни человек и HA-кластеров.',
+  lose_young:'Молодой проект с небольшим комьюнити. Криптография — XChaCha20-Poly1305 и Argon2id. Экосистема — CLI и Python SDK.',
+  note_compare:'Нашли ошибку в таблице? <a href="https://github.com/dotMage/dotmage/issues" style="text-decoration:underline">Заведите issue</a>.',
   title:"Документация",
-  subtitle:"Всё, что нужно для установки, деплоя и использования dotMage — E2E-шифрованного менеджера .env.",
+  subtitle:"Установка, деплой и использование dotMage — E2E-шифрованного менеджера .env.",
   h_install:"Установка CLI",
   p_install:"dotMage CLI — один Rust-бинарник без зависимостей. Выберите платформу:",
   p_install2:'Или скачайте с <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
@@ -1443,7 +1490,6 @@ ru: {
   ex_3:'Не авторизован — выполните <code>dmage auth</code>',
   ex_4:"Конфликт (например, одновременный push)",
   g_ci:"CI/CD", s_ci_setup:"Настройка", s_ci_github:"GitHub Actions", s_ci_gitlab:"GitLab CI",
-  h_multi:"Работа с нескольких машин",
   p_multi:"Идентичность — это набор устройств, поэтому ноутбук, домашний ПК и компьютер в другом городе могут работать с одним аккаунтом. На устройстве, где вы уже вошли, выпустите одноразовый enrollment-токен — <code>dmage token</code> или в админке <b>Devices → Add a device</b> — и на новой машине:",
   p_multi2:"Каждая машина — отдельное устройство: свой токен, свой TTL, отзывается отдельно на странице Devices, если потеряна. Регистрация устройства всегда требует доказательства — enrollment-токен с уже доверенного устройства (или bootstrap-secret сервера), а не просто пароль.",
   note_multi:"Работаете удалённо? Сервер должен быть достижим оттуда, где вы находитесь. Если команда не в одной сети — выставьте его по HTTPS (TLS reverse proxy) или заведите VPN: dotMage работает клиент↔сервер, без p2p-синхронизации.",
@@ -1486,5 +1532,35 @@ document.querySelectorAll('#langtog button').forEach(function(b){
 var saved = "en";
 try{ saved = localStorage.getItem('dm_lang') || "en"; }catch(e){}
 setLang(saved);
+
+// Click-to-copy for command blocks. Copies only the command lines (those with a
+// prompt), stripping the "$"/">" prompt and inline comments — no stray symbols.
+(function(){
+  function cmdText(pre){
+    return pre.innerHTML.split('\n').filter(function(line){
+      return line.indexOf('class="p"') !== -1;
+    }).map(function(line){
+      var d = document.createElement('div');
+      d.innerHTML = line;
+      d.querySelectorAll('.p,.c,.d').forEach(function(n){ n.remove(); });
+      return d.textContent.replace(/^\s+|\s+$/g, '');
+    }).filter(Boolean).join('\n');
+  }
+  document.querySelectorAll('main pre').forEach(function(pre){
+    var text = cmdText(pre);
+    if(!text) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'copybtn'; b.textContent = 'copy';
+    b.setAttribute('aria-label', 'Copy command');
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      function done(){ b.textContent = 'copied'; b.classList.add('done'); setTimeout(function(){ b.textContent = 'copy'; b.classList.remove('done'); }, 1200); }
+      function fallback(){ var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-999px'; document.body.appendChild(ta); ta.focus(); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); done(); }
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, fallback); }
+      else fallback();
+    });
+    pre.appendChild(b);
+  });
+})();
 </script>
 </body></html>

@@ -21,8 +21,8 @@ header shares `localStorage["dm_lang"]` with the landing and docs, so the choice
 the reader across the site. Missing `title_ru`/`summary_ru`/`<!-- ru -->` fall back to
 English — an EN-only post still gets a working RU page.
 
-For release posts, start from `_post-template.md` (see
-[dotmage-spec/RELEASING.md](https://github.com/dotMage/dotmage-spec/blob/main/RELEASING.md)).
+For release posts, start from `_post-template.md` (see the release runbook in the
+private `dotmage-spec` repo).
 
 ## Build & preview
 
