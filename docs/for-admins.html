@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dotMage — For admins</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="persona.css">
+</head>
+<body>
+<header class="ph">
+  <a class="logo" href="../index.html"><svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"/><rect x="6" y="6" width="20" height="20" fill="#c2f53f"/><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"/><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"/></svg> dot<b>Mage</b></a>
+  <div class="langtog" id="langtog"><button data-lang="en" class="on">EN</button><button data-lang="ru">RU</button></div>
+  <a class="back" href="index.html" data-i18n="back">← Docs</a>
+</header>
+
+<main>
+  <h1 data-i18n="h1">You deployed the server</h1>
+  <p class="lead" data-i18n="lead">The dotMage server is running. A few things to set up so your team can use it.</p>
+
+  <h2 data-i18n="s_boot">Save the bootstrap secret</h2>
+  <p data-i18n="p_boot">It is printed once at first start. You need it to create the account and to add new devices.</p>
+
+  <h2 data-i18n="s_reach">Make it reachable</h2>
+  <p data-i18n="p_reach">dotMage is client↔server — each machine connects directly to the server. If your team isn't all on one network, put the server behind HTTPS (a TLS reverse proxy) or a VPN. See <a href="index.html#tls">TLS / Production</a>.</p>
+
+  <h2 data-i18n="s_team">Team mode</h2>
+  <p data-i18n="p_team">Start the server with team endpoints, then invite members from an owner device:</p>
+  <pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | <b>DOTMAGE_MODE=team</b> bash
+<span class="p">$</span> dmage user invite alice --role editor</pre>
+  <p data-i18n="p_team2">See <a href="index.html#team">Team mode</a>.</p>
+
+  <h2 data-i18n="s_backup">Back up the database</h2>
+  <p data-i18n="p_backup">With end-to-end encryption the server cannot recover a lost database — schedule backups. See <a href="index.html#backup">Backup &amp; restore</a>.</p>
+
+  <h2 data-i18n="s_upgrade">Upgrades</h2>
+  <p data-i18n="p_upgrade">Re-run the installer (it is idempotent) or use the update banner in the admin panel:</p>
+  <pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash</pre>
+  <p data-i18n="p_upgrade2">See <a href="index.html#upgrade">Upgrading the server</a>.</p>
+
+  <p class="more" data-i18n="more">Full reference: <a href="index.html">Documentation</a>.</p>
+</main>
+
+<script>
+window.I18N = {
+  en: {
+    back: '← Docs',
+    h1: 'You deployed the server',
+    lead: 'The dotMage server is running. A few things to set up so your team can use it.',
+    s_boot: 'Save the bootstrap secret',
+    p_boot: 'It is printed once at first start. You need it to create the account and to add new devices.',
+    s_reach: 'Make it reachable',
+    p_reach: 'dotMage is client↔server — each machine connects directly to the server. If your team isn\'t all on one network, put the server behind HTTPS (a TLS reverse proxy) or a VPN. See <a href="index.html#tls">TLS / Production</a>.',
+    s_team: 'Team mode',
+    p_team: 'Start the server with team endpoints, then invite members from an owner device:',
+    p_team2: 'See <a href="index.html#team">Team mode</a>.',
+    s_backup: 'Back up the database',
+    p_backup: 'With end-to-end encryption the server cannot recover a lost database — schedule backups. See <a href="index.html#backup">Backup &amp; restore</a>.',
+    s_upgrade: 'Upgrades',
+    p_upgrade: 'Re-run the installer (it is idempotent) or use the update banner in the admin panel:',
+    p_upgrade2: 'See <a href="index.html#upgrade">Upgrading the server</a>.',
+    more: 'Full reference: <a href="index.html">Documentation</a>.'
+  },
+  ru: {
+    back: '← Документация',
+    h1: 'Вы развернули сервер',
+    lead: 'Сервер dotMage запущен. Вот что стоит настроить, чтобы команда могла им пользоваться.',
+    s_boot: 'Сохраните bootstrap-secret',
+    p_boot: 'Он выводится один раз при первом запуске и нужен, чтобы создать аккаунт и добавлять устройства.',
+    s_reach: 'Сделайте сервер доступным',
+    p_reach: 'dotMage работает по схеме клиент↔сервер — каждая машина подключается к серверу напрямую. Если команда не в одной сети, откройте сервер по HTTPS (через TLS reverse proxy) или заведите VPN. См. <a href="index.html#tls">TLS / Продакшн</a>.',
+    s_team: 'Командный режим',
+    p_team: 'Запустите сервер в командном режиме, затем приглашайте участников с устройства владельца:',
+    p_team2: 'См. <a href="index.html#team">Командный режим</a>.',
+    s_backup: 'Делайте бэкап базы',
+    p_backup: 'При сквозном шифровании сервер не восстановит потерянную базу — настройте регулярные бэкапы. См. <a href="index.html#backup">Бэкап и восстановление</a>.',
+    s_upgrade: 'Обновления',
+    p_upgrade: 'Запустите установщик заново (он идемпотентен) или воспользуйтесь баннером обновления в админке:',
+    p_upgrade2: 'См. <a href="index.html#upgrade">Обновление сервера</a>.',
+    more: 'Полная документация — в разделе <a href="index.html">Документация</a>.'
+  }
+};
+</script>
+<script src="persona.js"></script>
+</body>
+</html>

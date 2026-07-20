@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dotMage — Solo</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="persona.css">
+</head>
+<body>
+<header class="ph">
+  <a class="logo" href="../index.html"><svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"/><rect x="6" y="6" width="20" height="20" fill="#c2f53f"/><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"/><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"/></svg> dot<b>Mage</b></a>
+  <div class="langtog" id="langtog"><button data-lang="en" class="on">EN</button><button data-lang="ru">RU</button></div>
+  <a class="back" href="index.html" data-i18n="back">← Docs</a>
+</header>
+
+<main>
+  <h1 data-i18n="h1">Using dotMage on your own</h1>
+  <p class="lead" data-i18n="lead">dotMage keeps your <code>.env</code> files encrypted on a server you run and syncs them to the machines you use. The server stores only ciphertext; you unlock your copy with a master password that stays on your machine.</p>
+
+  <h2 data-i18n="s_deploy">Deploy a server</h2>
+  <p data-i18n="p_deploy">You need a small server — your own machine, a home box, or a cheap VPS. One command installs it via Docker:</p>
+  <pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash</pre>
+  <p data-i18n="p_deploy2">It prints a bootstrap secret (save it — you need it to create the account and add devices) and the server URL. Details and production notes: <a href="index.html#server">Deploy server</a>.</p>
+
+  <h2 data-i18n="s1">1. Authenticate (once per machine)</h2>
+  <pre><span class="p">$</span> dmage auth --server https://your-server
+  <span class="c" data-i18n="c_auth"># enter your master password — your key is unwrapped locally</span></pre>
+
+  <h2 data-i18n="s2">2. Put an app under dotMage</h2>
+  <p data-i18n="p_s2">From a directory that has a <code>.env</code>:</p>
+  <pre><span class="p">$</span> dmage init myapp</pre>
+
+  <h2 data-i18n="s3">3. Day to day</h2>
+  <p data-i18n="p_s3"><code>sync</code> decides for you: it pulls when the server is ahead, pushes when you have local changes, and shows a diff when both changed.</p>
+  <pre><span class="p">$</span> dmage sync
+  <span class="c" data-i18n="c_sync"># or be explicit:</span>
+<span class="p">$</span> dmage pull myapp
+<span class="p">$</span> dmage push myapp</pre>
+
+  <h2 data-i18n="s4">4. Run without writing secrets to disk</h2>
+  <pre><span class="p">$</span> dmage exec myapp -- npm run dev</pre>
+  <p data-i18n="p_s4">Secrets are passed to the process through its environment; nothing is written to <code>.env</code>.</p>
+
+  <h2 data-i18n="more_h">What else</h2>
+  <ul>
+    <li data-i18n="more1"><b>Work from another machine.</b> On a machine you're already on, run <code>dmage token</code> (or use the admin panel's <b>Devices → Add a device</b>), then on the new machine run <code>dmage auth --enroll &lt;token&gt;</code>. See <a href="index.html#quickstart">Adding another device</a>.</li>
+    <li data-i18n="more2"><b>Store any file</b>, not only <code>.env</code> — see <a href="index.html#files">Any file</a>.</li>
+    <li data-i18n="more3"><b>Back up the server database.</b> With end-to-end encryption, a lost database cannot be recovered — see <a href="index.html#backup">Backup &amp; restore</a>.</li>
+  </ul>
+
+  <h2 data-i18n="s_trouble">Troubleshooting</h2>
+  <ul>
+    <li data-i18n="t_docker"><b>“cannot connect to the Docker daemon”</b> — Docker isn't running. Start Docker (or Docker Desktop) and re-run the installer.</li>
+    <li data-i18n="t_perm"><b>Permission denied on the Docker socket</b> — re-run with <code>sudo</code>, or add yourself to the <code>docker</code> group and log in again.</li>
+    <li data-i18n="t_bootstrap"><b>Lost the bootstrap secret</b> — read it from the logs: <code>cd dotmage &amp;&amp; docker compose logs server | grep "bootstrap secret"</code>.</li>
+    <li data-i18n="t_reach"><b>Can't reach the server from another machine</b> — open the port (default 9470) and use a routable address; for remote use, put it behind TLS or a VPN (<a href="index.html#tls">TLS / Production</a>).</li>
+    <li data-i18n="t_auth"><b>“invalid password” on <code>dmage auth</code></b> — wrong master password. It never leaves your machine and can't be reset on the server; use your recovery code if you set one.</li>
+    <li data-i18n="t_rotated"><b>“key generation changed (AK was rotated)”</b> — the account key was rotated. Run <code>dmage auth</code> again to pick up the new key.</li>
+    <li data-i18n="t_overwrite"><b>“… differs from rev N. Overwrite?” on pull</b> — your local file has changes. Keep them (answer no, then <code>dmage push</code>) or discard them (<code>dmage pull --force</code>).</li>
+  </ul>
+
+  <p class="more" data-i18n="more">Full reference: <a href="index.html">Documentation</a>.</p>
+</main>
+
+<script>
+window.I18N = {
+  en: {
+    back: '← Docs',
+    h1: 'Using dotMage on your own',
+    lead: 'dotMage keeps your <code>.env</code> files encrypted on a server you run and syncs them to the machines you use. The server stores only ciphertext; you unlock your copy with a master password that stays on your machine.',
+    s1: '1. Authenticate (once per machine)',
+    c_auth: '# enter your master password — your key is unwrapped locally',
+    s2: '2. Put an app under dotMage',
+    p_s2: 'From a directory that has a <code>.env</code>:',
+    s3: '3. Day to day',
+    p_s3: '<code>sync</code> decides for you: it pulls when the server is ahead, pushes when you have local changes, and shows a diff when both changed.',
+    c_sync: '# or be explicit:',
+    s4: '4. Run without writing secrets to disk',
+    p_s4: 'Secrets are passed to the process through its environment; nothing is written to <code>.env</code>.',
+    more_h: 'What else',
+    more1: '<b>Work from another machine.</b> On a machine you\'re already on, run <code>dmage token</code> (or use the admin panel\'s <b>Devices → Add a device</b>), then on the new machine run <code>dmage auth --enroll &lt;token&gt;</code>. See <a href="index.html#quickstart">Adding another device</a>.',
+    more2: '<b>Store any file</b>, not only <code>.env</code> — see <a href="index.html#files">Any file</a>.',
+    more3: '<b>Back up the server database.</b> With end-to-end encryption, a lost database cannot be recovered — see <a href="index.html#backup">Backup &amp; restore</a>.',
+    s_deploy: 'Deploy a server',
+    p_deploy: 'You need a small server — your own machine, a home box, or a cheap VPS. One command installs it via Docker:',
+    p_deploy2: 'It prints a bootstrap secret (save it — you need it to create the account and add devices) and the server URL. Details and production notes: <a href="index.html#server">Deploy server</a>.',
+    s_trouble: 'Troubleshooting',
+    t_docker: '<b>“cannot connect to the Docker daemon”</b> — Docker isn\'t running. Start Docker (or Docker Desktop) and re-run the installer.',
+    t_perm: '<b>Permission denied on the Docker socket</b> — re-run with <code>sudo</code>, or add yourself to the <code>docker</code> group and log in again.',
+    t_bootstrap: '<b>Lost the bootstrap secret</b> — read it from the logs: <code>cd dotmage &amp;&amp; docker compose logs server | grep "bootstrap secret"</code>.',
+    t_reach: '<b>Can\'t reach the server from another machine</b> — open the port (default 9470) and use a routable address; for remote use, put it behind TLS or a VPN (<a href="index.html#tls">TLS / Production</a>).',
+    t_auth: '<b>“invalid password” on <code>dmage auth</code></b> — wrong master password. It never leaves your machine and can\'t be reset on the server; use your recovery code if you set one.',
+    t_rotated: '<b>“key generation changed (AK was rotated)”</b> — the account key was rotated. Run <code>dmage auth</code> again to pick up the new key.',
+    t_overwrite: '<b>“… differs from rev N. Overwrite?” on pull</b> — your local file has changes. Keep them (answer no, then <code>dmage push</code>) or discard them (<code>dmage pull --force</code>).',
+    more: 'Full reference: <a href="index.html">Documentation</a>.'
+  },
+  ru: {
+    back: '← Документация',
+    h1: 'Работа с dotMage в одиночку',
+    lead: 'dotMage хранит ваши файлы <code>.env</code> в зашифрованном виде на вашем сервере и синхронизирует их между вашими машинами. Сервер видит только шифртекст; свою копию вы открываете мастер-паролем, который не покидает вашу машину.',
+    s1: '1. Аутентификация (один раз на машину)',
+    c_auth: '# введите мастер-пароль — ключ разворачивается локально',
+    s2: '2. Заведите приложение в dotMage',
+    p_s2: 'Из директории, где есть <code>.env</code>:',
+    s3: '3. Повседневная работа',
+    p_s3: '<code>sync</code> сам решает, что сделать: pull, если сервер ушёл вперёд, push, если есть локальные изменения, а если менялось и там, и там — покажет diff.',
+    c_sync: '# или явно:',
+    s4: '4. Запуск без записи секретов на диск',
+    p_s4: 'Секреты передаются процессу через окружение; в <code>.env</code> ничего не пишется.',
+    more_h: 'Что ещё',
+    more1: '<b>Работать с другой машины.</b> На машине, где вы уже вошли, выполните <code>dmage token</code> (или в админке <b>Devices → Add a device</b>), затем на новой машине — <code>dmage auth --enroll &lt;token&gt;</code>. См. <a href="index.html#quickstart">Добавление нового устройства</a>.',
+    more2: '<b>Хранить любой файл</b>, не только <code>.env</code> — см. <a href="index.html#files">Любой файл</a>.',
+    more3: '<b>Делайте бэкап базы сервера.</b> При сквозном шифровании потерянную базу не восстановить — см. <a href="index.html#backup">Бэкап и восстановление</a>.',
+    s_deploy: 'Развернуть сервер',
+    p_deploy: 'Нужен небольшой сервер — своя машина, домашний сервер или дешёвый VPS. Одна команда поднимает его через Docker:',
+    p_deploy2: 'Он выведет bootstrap-secret (сохраните его — он нужен, чтобы создать аккаунт и добавлять устройства) и адрес сервера. Подробности и советы для продакшена — в разделе <a href="index.html#server">Деплой сервера</a>.',
+    s_trouble: 'Если что-то пошло не так',
+    t_docker: '<b>«cannot connect to the Docker daemon»</b> — Docker не запущен. Запустите Docker (или Docker Desktop) и повторите установщик.',
+    t_perm: '<b>Permission denied к docker-сокету</b> — запустите с <code>sudo</code> или добавьте себя в группу <code>docker</code> и перелогиньтесь.',
+    t_bootstrap: '<b>Потеряли bootstrap-secret</b> — возьмите из логов: <code>cd dotmage &amp;&amp; docker compose logs server | grep "bootstrap secret"</code>.',
+    t_reach: '<b>Сервер недоступен с другой машины</b> — откройте порт (по умолчанию 9470) и используйте маршрутизируемый адрес; для удалённой работы — TLS или VPN (<a href="index.html#tls">TLS / Продакшн</a>).',
+    t_auth: '<b>«invalid password» при <code>dmage auth</code></b> — неверный мастер-пароль. Он не покидает вашу машину, поэтому сбросить его на сервере нельзя; воспользуйтесь recovery-кодом, если настраивали его.',
+    t_rotated: '<b>«key generation changed (AK was rotated)»</b> — ключ аккаунта был ротирован. Выполните <code>dmage auth</code> ещё раз, чтобы подхватить новый ключ.',
+    t_overwrite: '<b>«… differs from rev N. Overwrite?» при pull</b> — в локальном файле есть изменения. Сохраните их (ответьте нет, затем <code>dmage push</code>) или отбросьте (<code>dmage pull --force</code>).',
+    more: 'Полная документация — в разделе <a href="index.html">Документация</a>.'
+  }
+};
+</script>
+<script src="persona.js"></script>
+</body>
+</html>

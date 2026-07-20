@@ -162,6 +162,11 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
     <button data-lang="ru">RU</button>
   </div>
   <nav>
+    <div class="group" data-i18n="g_role">Start by role</div>
+    <a href="start-solo.html" data-i18n="s_role_solo">Solo</a>
+    <a href="start-team.html" data-i18n="s_role_team">Team member</a>
+    <a href="for-admins.html" data-i18n="s_role_admin">Admin</a>
+
     <div class="group" data-i18n="g_start">Getting started</div>
     <a href="#why" data-i18n="s_why">Overview</a>
     <a href="#install" data-i18n="s_install">Install CLI</a>
@@ -1139,6 +1144,7 @@ en: {
   why_safe2:"The master password stays on the client. It derives a key (Argon2id) that unwraps the account key locally; the server stores only the wrapped key.",
   why_safe3:"Each revision is encrypted with XChaCha20-Poly1305 and bound via AEAD to its app, environment and revision number, so the server cannot substitute or reattribute a blob.",
   why_safe4:"Device tokens are stored as hashes and expire; a lost device can be revoked individually. The web admin shows metadata only.",
+  g_role:"Start by role", s_role_solo:"Solo", s_role_team:"Team member", s_role_admin:"Admin",
   g_start:"Getting started", s_why:"Overview", s_install:"Install CLI", s_server:"Deploy server", s_quick:"Quick start",
   h_quick_device:"Adding another device",
   p_quick_device:"On any new machine — just the bootstrap secret and your master password. No first device needed, no tokens to generate.",
@@ -1332,6 +1338,7 @@ ru: {
   why_safe2:"Мастер-пароль остаётся на клиенте. Из него выводится ключ (Argon2id), который локально разворачивает ключ аккаунта; на сервере лежит только обёрнутый ключ.",
   why_safe3:"Каждая ревизия шифруется XChaCha20-Poly1305 и через AEAD привязана к app, окружению и номеру ревизии, поэтому сервер не может подменить блоб или выдать один за другой.",
   why_safe4:"Токены устройств хранятся хешами и истекают; потерянное устройство отзывается по отдельности. Веб-админка показывает только метаданные.",
+  g_role:"По роли", s_role_solo:"Соло", s_role_team:"Участник команды", s_role_admin:"Админ",
   g_start:"Начало работы", s_why:"Обзор", s_install:"Установка CLI", s_server:"Деплой сервера", s_quick:"Быстрый старт",
   h_quick_device:"Добавление нового устройства",
   p_quick_device:"На любой новой машине — только bootstrap secret и мастер-пароль. Первое устройство не нужно, токены генерировать не надо.",

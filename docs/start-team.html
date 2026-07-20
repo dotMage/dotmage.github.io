@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dotMage — Joining a team</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="persona.css">
+</head>
+<body>
+<header class="ph">
+  <a class="logo" href="../index.html"><svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"/><rect x="6" y="6" width="20" height="20" fill="#c2f53f"/><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"/><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"/></svg> dot<b>Mage</b></a>
+  <div class="langtog" id="langtog"><button data-lang="en" class="on">EN</button><button data-lang="ru">RU</button></div>
+  <a class="back" href="index.html" data-i18n="back">← Docs</a>
+</header>
+
+<main>
+  <h1 data-i18n="h1">You've been invited to a team</h1>
+  <p class="lead" data-i18n="lead">Someone added you to a dotMage team. Secrets are end-to-end encrypted: the server stores only ciphertext, and you unlock your own copy with a master password you choose. Nobody, including the server, sees your password.</p>
+
+  <h2 data-i18n="s1">1. Join</h2>
+  <p data-i18n="p_s1">You were given an invite token. Redeem it and pick your own master password:</p>
+  <pre><span class="p">$</span> dmage auth --invite &lt;invite-token&gt;
+  <span class="c" data-i18n="c_join"># choose YOUR master password — it wraps your copy of the key</span></pre>
+  <p data-i18n="p_s1b">If instead you were given a server URL and a bootstrap secret, use those:</p>
+  <pre><span class="p">$</span> dmage auth --server https://your-server</pre>
+
+  <h2 data-i18n="s2">2. See what's there and pull</h2>
+  <pre><span class="p">$</span> dmage apps
+<span class="p">$</span> dmage pull myapp</pre>
+
+  <h2 data-i18n="s3">3. Work</h2>
+  <pre><span class="p">$</span> dmage sync
+<span class="p">$</span> dmage exec myapp -- npm run dev</pre>
+
+  <h2 data-i18n="s4">Your role</h2>
+  <p data-i18n="p_role">An owner sets your role, and the server enforces it:</p>
+  <ul>
+    <li><span class="role">owner</span> <span data-i18n="r_owner">everything</span></li>
+    <li><span class="role">editor</span> <span data-i18n="r_editor">pull, push, rollback</span></li>
+    <li><span class="role">viewer</span> <span data-i18n="r_viewer">read-only</span></li>
+  </ul>
+  <p data-i18n="p_role2">Roles are authorization, not cryptography: every member holds the vault key and can decrypt any blob they can download.</p>
+
+  <div class="note">
+    <span class="ic">i</span>
+    <span data-i18n="note">Add your other machines the same way you were added: run <code>dmage token</code> (or the admin panel's <b>Devices → Add a device</b>) on a machine you're already on, then <code>dmage auth --enroll &lt;token&gt;</code> on the new one. See <a href="index.html#quickstart">Adding another device</a>.</span>
+  </div>
+
+  <p class="more" data-i18n="more">Full reference: <a href="index.html">Documentation</a>.</p>
+</main>
+
+<script>
+window.I18N = {
+  en: {
+    back: '← Docs',
+    h1: 'You\'ve been invited to a team',
+    lead: 'Someone added you to a dotMage team. Secrets are end-to-end encrypted: the server stores only ciphertext, and you unlock your own copy with a master password you choose. Nobody, including the server, sees your password.',
+    s1: '1. Join',
+    p_s1: 'You were given an invite token. Redeem it and pick your own master password:',
+    c_join: '# choose YOUR master password — it wraps your copy of the key',
+    p_s1b: 'If instead you were given a server URL and a bootstrap secret, use those:',
+    s2: '2. See what\'s there and pull',
+    s3: '3. Work',
+    s4: 'Your role',
+    p_role: 'An owner sets your role, and the server enforces it:',
+    r_owner: 'everything',
+    r_editor: 'pull, push, rollback',
+    r_viewer: 'read-only',
+    p_role2: 'Roles are authorization, not cryptography: every member holds the vault key and can decrypt any blob they can download.',
+    note: 'Add your other machines the same way you were added: run <code>dmage token</code> (or the admin panel\'s <b>Devices → Add a device</b>) on a machine you\'re already on, then <code>dmage auth --enroll &lt;token&gt;</code> on the new one. See <a href="index.html#quickstart">Adding another device</a>.',
+    more: 'Full reference: <a href="index.html">Documentation</a>.'
+  },
+  ru: {
+    back: '← Документация',
+    h1: 'Вас пригласили в команду',
+    lead: 'Вас добавили в команду dotMage. Секреты защищены сквозным шифрованием: сервер видит только шифртекст, а свою копию вы открываете мастер-паролем, который выбираете сами. Ваш пароль не видит никто — в том числе сервер.',
+    s1: '1. Присоединиться',
+    p_s1: 'Вам выдали токен-приглашение. Активируйте его и задайте свой мастер-пароль:',
+    c_join: '# задайте СВОЙ мастер-пароль — им шифруется ваша копия ключа',
+    p_s1b: 'Если вместо этого вам дали URL сервера и bootstrap-secret — используйте их:',
+    s2: '2. Посмотрите, что есть, и заберите',
+    s3: '3. Работа',
+    s4: 'Ваша роль',
+    p_role: 'Роль назначает владелец, а сервер следит за её соблюдением:',
+    r_owner: 'всё',
+    r_editor: 'pull, push, rollback',
+    r_viewer: 'только чтение',
+    p_role2: 'Роли — это авторизация, а не криптография: каждый участник владеет ключом хранилища и может расшифровать любой блоб, который сумеет скачать.',
+    note: 'Добавьте свои другие машины так же, как добавили вас: на машине, где вы уже вошли, выполните <code>dmage token</code> (или в админке <b>Devices → Add a device</b>), затем на новой — <code>dmage auth --enroll &lt;token&gt;</code>. См. <a href="index.html#quickstart">Добавление нового устройства</a>.',
+    more: 'Полная документация — в разделе <a href="index.html">Документация</a>.'
+  }
+};
+</script>
+<script src="persona.js"></script>
+</body>
+</html>
