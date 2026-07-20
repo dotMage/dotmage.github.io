@@ -246,7 +246,9 @@ td code{background:rgba(22,20,13,.06); border:none; padding:1px 4px}
 <h3 data-i18n="h_cliupgrade">Upgrading</h3>
 <p data-i18n="p_cliupgrade">Direct-binary installs upgrade themselves — the CLI downloads the release, verifies it against the release's <code>SHA256SUMS</code>, and swaps atomically. Homebrew installs use brew:</p>
 <pre><span class="p">$</span> dmage upgrade
-<span class="p">$</span> brew upgrade dotmage   <span class="d"># if installed via Homebrew</span></pre>
+<span class="p">$</span> brew upgrade dotmage   <span class="d"># if installed via Homebrew</span>
+<span class="p">$</span> dmage upgrade --channel dev   <span class="d"># opt into prerelease builds</span></pre>
+<p data-i18n="p_channel">The default channel is stable and ignores prereleases. <code>--channel dev</code> installs the newest build including <code>vX.Y.Z-dev.N</code> prereleases; the next stable release is a regular upgrade off the channel.</p>
 
 <h2 id="server" data-i18n="h_server">Deploy server</h2>
 <p data-i18n="p_server">One command installs everything via Docker:</p>
@@ -602,10 +604,19 @@ with client:
   </div>
 </div>
 
+<h2 id="open">dmage open</h2>
+<div class="cmd-card">
+  <div class="head"><span class="name">open</span></div>
+  <div class="desc" data-i18n="d_open">Open the web admin panel in your browser, already logged in — the easiest way in. Resolves the server like push/pull, finds the panel from the server's /health, and signs you in with a one-time link. On a headless/SSH box, add <code>--print</code> to get the link to open elsewhere.</div>
+  <pre><span class="p">$</span> dmage open
+  <span class="s">✓ Opening admin panel — http://your-server:9471</span>
+  <span class="s">Logging you in automatically (one-time link, valid 5 min).</span></pre>
+</div>
+
 <h2 id="token">dmage token</h2>
 <div class="cmd-card">
   <div class="head"><span class="name">token</span></div>
-  <div class="desc" data-i18n="d_token">Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page.</div>
+  <div class="desc" data-i18n="d_token">Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page — or just use <code>dmage open</code>.</div>
   <pre><span class="p">$</span> dmage token
   <span class="s">Web admin login token (one-time, 5 min):</span>
 
@@ -844,6 +855,13 @@ ok</pre>
 
 <h2 id="upgrade" data-i18n="h_upgrade">Upgrading the server</h2>
 <p data-i18n="p_upgrade">dotMage server is distributed as a Docker image. To upgrade an existing installation:</p>
+
+<div class="note">
+  <span class="ic">i</span>
+  <span data-i18n="note_upgrade_banner">The admin panel shows a banner when a newer release is available, with the exact command to copy. The canonical upgrade is to re-run the installer — it is idempotent and pins the major, so minor and patch updates arrive on the next pull:</span>
+</div>
+<pre><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash</pre>
+<p data-i18n="p_upgrade_manual">Prefer to do it by hand? The steps below are what the installer runs.</p>
 
 <h3 data-i18n="h_upgrade_step1">1. Backup the database</h3>
 <pre><span class="p">$</span> cd dotmage
@@ -1107,6 +1125,7 @@ en: {
   p_install2:'Or download from <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
   h_cliupgrade:"Upgrading",
   p_cliupgrade:'Direct-binary installs upgrade themselves — the CLI downloads the release, verifies it against the release\'s <code>SHA256SUMS</code>, and swaps atomically. Homebrew installs use brew:',
+  p_channel:'The default channel is stable and ignores prereleases. <code>--channel dev</code> installs the newest build including <code>vX.Y.Z-dev.N</code> prereleases; the next stable release is a regular upgrade off the channel.',
   p_win:'Downloads the binary to <code>%LOCALAPPDATA%\\dotmage\\</code> and adds it to PATH. Restart your terminal — <code>dmage</code> works from anywhere.',
   h_server:"Deploy server",
   p_server:"One command installs everything via Docker:",
@@ -1138,7 +1157,8 @@ en: {
   d_status:"Show sync status — what's up-to-date and what's outdated on this device.",
   d_gentoken:'Generate an enrollment token for adding a new device programmatically (e.g. via <code>--enroll</code>). For CI/CD, use <code>gen-ci-token</code> instead.',
   a_tokname:"Token label (optional)", a_tokttl:'Time to live, e.g. <code>24h</code> (default: 24h)',
-  d_token:"Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page.",
+  d_open:"Open the web admin panel in your browser, already logged in — the easiest way in. Resolves the server like push/pull, finds the panel from the server's /health, and signs you in with a one-time link. On a headless/SSH box, add <code>--print</code> to get the link to open elsewhere.",
+  d_token:"Generate a one-time login code for the web admin. Creates a 5-minute enrollment token and prints it. Paste it in the web admin login page — or just use <code>dmage open</code>.",
   b_ci:"CI/CD",
   d_gencitoken:'Generate a scoped CI token for a specific app and environment. The token is self-contained — it includes both API access and decryption key, but is restricted to the specified app+env on the server.',
   a_ci_app:"Application name (required)", a_ci_env:"Environment name (required)", a_ci_ttl:'Token lifetime, e.g. <code>30d</code> (default: 30d)',
@@ -1205,6 +1225,8 @@ en: {
   h_ci_pipelines:"Pipeline examples",
   s_upgrade:"Upgrade",
   h_upgrade:"Upgrading the server",
+  note_upgrade_banner:"The admin panel shows a banner when a newer release is available, with the exact command to copy. The canonical upgrade is to re-run the installer — it is idempotent and pins the major, so minor and patch updates arrive on the next pull:",
+  p_upgrade_manual:"Prefer to do it by hand? The steps below are what the installer runs.",
   p_upgrade:"dotMage server is distributed as a Docker image. To upgrade an existing installation:",
   h_upgrade_step1:"1. Backup the database",
   h_upgrade_step2:"2. Pull the latest image and restart",
@@ -1279,6 +1301,7 @@ ru: {
   p_install2:'Или скачайте с <a href="https://github.com/dotMage/" style="text-decoration:underline">GitHub releases</a>.',
   h_cliupgrade:"Обновление",
   p_cliupgrade:'Бинарные установки обновляются сами — CLI скачивает релиз, сверяет его с <code>SHA256SUMS</code> релиза и атомарно заменяет себя. Homebrew-установки обновляются через brew:',
+  p_channel:'Канал по умолчанию — stable, prerelease-сборки он игнорирует. <code>--channel dev</code> ставит самую свежую сборку, включая prerelease <code>vX.Y.Z-dev.N</code>; следующий стабильный релиз — обычный апгрейд с канала.',
   p_win:'Скачивает бинарник в <code>%LOCALAPPDATA%\\dotmage\\</code> и добавляет в PATH. После перезапуска терминала <code>dmage</code> работает отовсюду.',
   h_server:"Деплой сервера",
   p_server_team:'Для <a href="#team" style="text-decoration:underline">командного сервера</a> добавьте один флаг — тот же инсталлер запустит сервер с командными эндпоинтами:',
@@ -1310,7 +1333,8 @@ ru: {
   d_status:"Показать статус синхронизации — что актуально, а что устарело на этом устройстве.",
   d_gentoken:'Сгенерировать enrollment-токен для программного добавления устройства (через <code>--enroll</code>). Для CI/CD используйте <code>gen-ci-token</code>.',
   a_tokname:"Метка токена (необязательно)", a_tokttl:'Время жизни, например <code>24h</code> (по умолчанию: 24h)',
-  d_token:"Сгенерировать одноразовый код для входа в веб-админку. Создаёт 5-минутный enrollment-токен. Вставьте его на странице логина веб-админки.",
+  d_open:"Открыть веб-админку в браузере уже залогиненным — самый простой вход. Резолвит сервер как push/pull, находит панель из /health сервера и логинит одноразовой ссылкой. На headless/SSH добавьте <code>--print</code>, чтобы получить ссылку и открыть её в другом месте.",
+  d_token:"Сгенерировать одноразовый код для входа в веб-админку. Создаёт 5-минутный enrollment-токен. Вставьте его на странице логина веб-админки — или просто используйте <code>dmage open</code>.",
   b_ci:"CI/CD",
   d_gencitoken:'Сгенерировать скоупленный CI-токен для конкретного приложения и окружения. Токен самодостаточный — содержит API-доступ и ключ расшифровки, но ограничен указанным app+env на сервере.',
   a_ci_app:"Имя приложения (обязательно)", a_ci_env:"Имя окружения (обязательно)", a_ci_ttl:'Время жизни, например <code>30d</code> (по умолчанию: 30d)',
@@ -1377,6 +1401,8 @@ ru: {
   h_ci_pipelines:"Примеры пайплайнов",
   s_upgrade:"Обновление",
   h_upgrade:"Обновление сервера",
+  note_upgrade_banner:"Админка показывает баннер, когда доступен новый релиз, с готовой командой для копирования. Канонический путь обновления — повторно запустить установщик: он идемпотентен и пинит мажор, поэтому minor- и patch-обновления приезжают на следующем pull:",
+  p_upgrade_manual:"Хотите вручную? Шаги ниже — это ровно то, что делает установщик.",
   p_upgrade:"Сервер dotMage распространяется как Docker-образ. Чтобы обновить существующую установку:",
   h_upgrade_step1:"1. Сделайте бэкап базы данных",
   h_upgrade_step2:"2. Скачайте новый образ и перезапустите",
