@@ -4,7 +4,15 @@
   <link href="https://dotmage.github.io/blog/"/>
   <link rel="self" href="https://dotmage.github.io/blog/atom.xml"/>
   <id>https://dotmage.github.io/blog/</id>
-  <updated>2026-07-06T00:00:00Z</updated>
+  <updated>2026-07-20T00:00:00Z</updated>
+  <entry>
+    <title>dotMage 2.1 — one verb, one command, less to remember</title>
+    <link href="https://dotmage.github.io/blog/2026/dotmage-2-1-0/"/>
+    <id>https://dotmage.github.io/blog/2026/dotmage-2-1-0/</id>
+    <updated>2026-07-20T00:00:00Z</updated>
+    <summary>dmage sync collapses pull/push into a single verb, dmage open drops you into the admin panel already logged in, shell completions end the flag-guessing, and the admin panel grows real controls. Plus the CI-token and Docker-build fixes.</summary>
+    <category term="release"/>
+  </entry>
   <entry>
     <title>dotMage 2.0.1 — team onboarding polish</title>
     <link href="https://dotmage.github.io/blog/2026/dotmage-2-0-1/"/>

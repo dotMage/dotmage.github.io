@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotMage 2.1 — один глагол, одна команда, меньше запоминать — dotMage blog</title>
+<meta name="description" content="dmage sync сворачивает pull/push в один глагол, dmage open открывает админку уже залогиненным, автодополнение снимает угадывание флагов, а в админке появились настоящие кнопки. Плюс фиксы CI-токена и docker-сборки.">
+<link rel="canonical" href="https://dotmage.github.io/blog/ru/2026/dotmage-2-1-0/">
+<link rel="alternate" hreflang="en" href="https://dotmage.github.io/blog/2026/dotmage-2-1-0/">
+<link rel="alternate" hreflang="ru" href="https://dotmage.github.io/blog/ru/2026/dotmage-2-1-0/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dotmage.github.io/blog/ru/2026/dotmage-2-1-0/">
+<meta property="og:title" content="dotMage 2.1 — один глагол, одна команда, меньше запоминать">
+<meta property="og:description" content="dmage sync сворачивает pull/push в один глагол, dmage open открывает админку уже залогиненным, автодополнение снимает угадывание флагов, а в админке появились настоящие кнопки. Плюс фиксы CI-токена и docker-сборки.">
+<meta property="og:image" content="https://dotmage.github.io/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate" type="application/atom+xml" title="dotMage blog" href="/blog/ru/atom.xml">
+<style>
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-0.woff2") format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-1.woff2") format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-2.woff2") format('woff2');unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-3.woff2") format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-4.woff2") format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/jetbrains-mono-5.woff2") format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{
+  --paper:#e9e5d8; --paper2:#f1eee4; --card:#f6f4ec; --ink:#16140d;
+  --line:#16140d; --dim:#5d584a; --faint:#8c8472;
+  --lime:#c2f53f; --amber:#e8a417; --red:#e0402b; --green:#54d06a;
+  --mono:"JetBrains Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--mono); background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.5}
+::selection{background:var(--lime)}
+a{color:inherit; text-decoration:none}
+.wrap{max-width:1120px; margin:0 auto; padding:0 28px}
+.nav{position:sticky; top:0; z-index:50; background:var(--paper2); border-bottom:2px solid var(--line)}
+.nav .in{display:flex; align-items:center; gap:14px; height:62px}
+.brand{display:flex; align-items:center; gap:11px; font-weight:800; font-size:18px; letter-spacing:-.02em}
+.brand b{background:var(--lime); padding:0 3px}
+.nav .links{display:flex; gap:4px; margin-left:28px}
+.nav .links a{font-size:12.5px; font-weight:600; color:var(--dim); padding:8px 12px; text-transform:uppercase; letter-spacing:.04em}
+.nav .links a:hover, .nav .links a.on{background:var(--card); color:var(--ink)}
+.nav .right{margin-left:auto; display:flex; gap:10px; align-items:center}
+.langtog{display:flex; border:2px solid var(--line)}
+.langtog a{font-weight:700; font-size:12px; letter-spacing:.04em; padding:9px 11px; border-right:2px solid var(--line); background:var(--paper2); color:var(--dim)}
+.langtog a:last-child{border-right:none}
+.langtog a.on{background:var(--ink); color:var(--lime)}
+.langtog a:not(.on):hover{background:var(--card); color:var(--ink)}
+.btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; padding:10px 16px; border:2px solid var(--line); background:var(--paper2); color:var(--ink)}
+.btn:hover{background:var(--ink); color:var(--paper)}
+.post{max-width:760px; margin:0 auto; padding:56px 28px 90px}
+.kicker{display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--ink); background:var(--lime); padding:5px 9px}
+.post h1{font-size:38px; font-weight:800; line-height:1.08; letter-spacing:-.02em; margin:18px 0 10px}
+.pdate{font-size:12px; font-weight:600; color:var(--faint); text-transform:uppercase; letter-spacing:.06em}
+.content{margin-top:34px; font-size:14.5px; line-height:1.75}
+.content h2{font-size:24px; font-weight:800; letter-spacing:-.01em; margin:44px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--line)}
+.content h3{font-size:17px; font-weight:800; margin:30px 0 10px}
+.content p{margin:14px 0; color:#2a2618}
+.content a{font-weight:700; border-bottom:2px solid var(--lime)}
+.content a:hover{background:var(--lime)}
+.content ul,.content ol{margin:14px 0 14px 24px}
+.content li{margin:6px 0}
+.content code{background:var(--card); border:1px solid var(--line); padding:1px 5px; font-size:13px}
+.content pre{background:var(--ink); color:#d7d2c4; border:2px solid var(--line); box-shadow:6px 6px 0 var(--line); padding:16px 18px; overflow-x:auto; font-size:12.5px; line-height:1.7; margin:20px 0}
+.content pre code{background:none; border:none; padding:0; color:inherit; font-size:inherit}
+.content table{border-collapse:collapse; width:100%; margin:20px 0; font-size:12.5px; display:block; overflow-x:auto}
+.content th,.content td{border:2px solid var(--line); padding:8px 12px; text-align:left}
+.content th{background:var(--card); font-size:11px; text-transform:uppercase; letter-spacing:.05em}
+.content blockquote{border-left:4px solid var(--lime); background:var(--card); padding:10px 16px; margin:18px 0; color:var(--dim)}
+.backlink{display:inline-block; margin-top:56px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; border:2px solid var(--line); padding:10px 16px; background:var(--paper2)}
+.backlink:hover{background:var(--ink); color:var(--paper)}
+footer{border-top:2px solid var(--line); background:var(--paper2)}
+footer .in{display:flex; justify-content:space-between; align-items:center; padding:22px 0; font-size:11.5px; color:var(--faint); flex-wrap:wrap; gap:10px}
+@media (max-width:640px){.post h1{font-size:28px}.nav .links{margin-left:8px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap in">
+    <a class="brand" href="/"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="1.2" y="1.2" width="29.6" height="29.6" fill="#16140d"></rect><rect x="6" y="6" width="20" height="20" fill="#c2f53f"></rect><rect x="12.5" y="12.5" width="7" height="7" fill="#16140d"></rect><path d="M19 13 L26 6" stroke="#16140d" stroke-width="2.4"></path></svg> dot<b>Mage</b></a>
+    <div class="links">
+      <a href="/docs/">Docs</a>
+      <a href="/blog/ru/" class="on">Blog</a>
+    </div>
+    <div class="right">
+      <div class="langtog" id="langtog">
+        <a href="/blog/2026/dotmage-2-1-0/" data-lang="en" class="">EN</a>
+        <a href="/blog/ru/2026/dotmage-2-1-0/" data-lang="ru" class="on">RU</a>
+      </div>
+      <a class="btn" href="https://github.com/dotMage/">GitHub</a>
+    </div>
+  </div>
+</nav>
+<article class="post">
+  <span class="kicker">release</span>
+  <h1>dotMage 2.1 — один глагол, одна команда, меньше запоминать</h1>
+  <div class="pdate">20 июля 2026</div>
+  <div class="content">
+<p>2.1 — релиз про трение. Модель не изменилась: то же сквозное шифрование, тот же крошечный
+сервер — но повседневная работа стала короче: один глагол вместо «pull или push?», одна
+команда чтобы открыть панель, работающий Tab и админка, в которой можно что-то делать.</p>
+<h2>Главное</h2>
+<h3><code>dmage sync</code> — один глагол на 90% случаев</h3>
+<p>Решает сам: делает pull, когда сервер впереди, push — когда есть локальные изменения, а если
+разошлось и там и там, показывает key-diff и спрашивает — без молчаливого мерджа.</p>
+<pre><code>$ dmage sync
+  ✓ in sync (rev 7).
+$ dmage sync            # после правки .env
+  local changes → pushing
+  ✓ Pushed revision 8.
+</code></pre>
+<p>Голый <code>dmage</code> в проекте теперь подсказывает, если есть незапушенные изменения.</p>
+<h3><code>dmage open</code> — админка, сразу залогиненным</h3>
+<pre><code>$ dmage open
+  ✓ Opening admin panel — http://your-server:9471
+  Logging you in automatically (one-time link, valid 5 min).
+</code></pre>
+<p>Находит панель из <code>/health</code> и логинит одноразовым токеном в URL-фрагменте — он не попадает
+в логи сервера.</p>
+<h3><code>dmage completions</code> — хватит запоминать флаги</h3>
+<pre><code>$ dmage completions zsh &gt; ~/.zfunc/_dmage
+</code></pre>
+<p>bash / zsh / fish / elvish / powershell. Homebrew ставит их автоматически.</p>
+<h3>Админка, в которой можно работать</h3>
+<p>Страница Settings с версией сервера и баннером обновлений (dev-канал включается тумблером);
+управление командой — смена ролей, удаление участников; и <strong>Add a device</strong> — одноразовая
+ссылка для входа новой машины прямо из браузера. По-прежнему только метаданные: значений
+секретов панель не видит.</p>
+<h3>Из фиксов</h3>
+<p><code>dmage gen-ci-token</code> падал с <code>missing field token_expires_at</code> — починено на клиенте и сервере.
+Docker-образ сервера снова собирается.</p>
+<h2>Чейнджлог</h2>
+<h3>Добавлено</h3>
+<ul>
+<li><code>dmage sync</code> — pull / push / resolve одним глаголом; голый <code>dmage</code> подсказывает про незапушенное.</li>
+<li><code>dmage open</code> — открыть веб-админку уже залогиненным.</li>
+<li><code>dmage completions &lt;shell&gt;</code> — автодополнение в stdout.</li>
+<li><code>dmage upgrade --channel dev</code> — опт-ин на prerelease-сборки.</li>
+<li><code>--json</code> для <code>status</code>, <code>diff</code>, <code>history</code>, <code>apps</code>, <code>whoami</code>.</li>
+<li>Админка: Settings + баннер обновлений + dev-тумблер, роли/удаление в команде, Add-a-device.</li>
+<li><code>/health</code> отдаёт веб-порт; тег релиза теперь публикует GitHub Release.</li>
+</ul>
+<h3>Исправлено</h3>
+<ul>
+<li><code>dmage gen-ci-token</code> падал с <code>missing field token_expires_at</code> — починено на клиенте и сервере.</li>
+<li>Сборка Docker-образа сервера (<code>ModuleNotFoundError: No module named 'src'</code>).</li>
+<li>Пограничные случаи <code>dmage env new --copy-from</code> и <code>dmage rotate-key</code>.</li>
+</ul>
+<h2>Скачать</h2>
+<p>Бинарники CLI и <code>SHA256SUMS</code>: <a href="https://github.com/dotMage/dotmage/releases/tag/v2.1.0">github.com/dotMage/dotmage/releases/tag/v2.1.0</a></p>
+<pre><code>brew upgrade dotmage        # Homebrew
+dmage upgrade               # самообновление для бинарных установок
+</code></pre>
+<p>Сервер и веб — <code>ghcr.io/dotmage/{server,web}:2.1.0</code> (и <code>:2</code>). Чтобы обновить, перезапустите установщик:</p>
+<pre><code>curl -fsSL https://raw.githubusercontent.com/dotMage/server/main/install.sh | bash
+</code></pre>
+  </div>
+  <a class="backlink" href="/blog/ru/">◂ Все посты</a>
+</article>
+<footer>
+  <div class="wrap in">
+    <span>dotMage — E2E-шифрованный менеджер .env</span>
+    <span><a href="/blog/ru/atom.xml">Atom-лента</a> · AGPL-3.0</span>
+  </div>
+</footer>
+<script>
+(function(){
+  var lang = document.documentElement.lang;
+  var urls = { en: "/blog/2026/dotmage-2-1-0/", ru: "/blog/ru/2026/dotmage-2-1-0/" };
+  try {
+    var saved = localStorage.getItem('dm_lang');
+    if (saved && saved !== lang && urls[saved]) { location.replace(urls[saved]); return; }
+  } catch(e){}
+  document.querySelectorAll('#langtog a').forEach(function(a){
+    a.addEventListener('click', function(){
+      try { localStorage.setItem('dm_lang', a.dataset.lang); } catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
