@@ -907,6 +907,22 @@ ok</pre>
   <span data-i18n="note_upgrade">The CLI can be upgraded the same way it was installed: <code>brew upgrade dotmage</code> on macOS, or re-run the curl/PowerShell command on Linux/Windows.</span>
 </div>
 
+<!-- ═══════════════════ MULTIPLE MACHINES ═══════════════════ -->
+
+<h2 id="multi" data-i18n="h_multi">Working from multiple machines</h2>
+<p data-i18n="p_multi">Your identity is a set of devices, so laptop, home PC and a machine in another city can all use the same account. On a device you're already signed in on, mint a one-time enrollment token — <code>dmage token</code>, or the admin panel's <b>Devices → Add a device</b> — then on the new machine:</p>
+<pre><span class="p">$</span> dmage auth --server https://your-server --enroll dmage_etok_...
+<span class="c"># enter your master password → your key is unwrapped locally</span></pre>
+<p data-i18n="p_multi2">Each machine is its own device: independent token, its own TTL, revocable on its own from the Devices page if it's lost. Registering a device always needs proof — an enrollment token from a device you already have (or the server's bootstrap secret) — never just the password.</p>
+<div class="note">
+  <span class="ic">i</span>
+  <span data-i18n="note_multi">Working remotely? The server must be reachable from where you are. If your team isn't all on one network, expose it over HTTPS (a TLS reverse proxy) or put it behind a VPN — dotMage is client↔server, it doesn't sync peer-to-peer.</span>
+</div>
+<div class="note">
+  <span class="ic">!</span>
+  <span data-i18n="note_multi_untrusted">On a shared or untrusted computer, prefer <code>dmage exec</code> (secrets stay in memory, nothing written to disk) and <code>dmage lock</code> afterwards — or just use the web panel, which only ever shows metadata, never secret values. Revoke the device when you're done.</span>
+</div>
+
 <!-- ═══════════════════ CI/CD ═══════════════════ -->
 
 <h2 id="ci-setup" data-i18n="h_ci_setup">CI/CD setup</h2>
@@ -1244,6 +1260,11 @@ en: {
   ex_3:'Not authenticated — run <code>dmage auth</code>',
   ex_4:"Conflict (e.g. concurrent push)",
   g_ci:"CI/CD", s_ci_setup:"Setup", s_ci_github:"GitHub Actions", s_ci_gitlab:"GitLab CI",
+  h_multi:"Working from multiple machines",
+  p_multi:"Your identity is a set of devices, so laptop, home PC and a machine in another city can all use the same account. On a device you're already signed in on, mint a one-time enrollment token — <code>dmage token</code>, or the admin panel's <b>Devices → Add a device</b> — then on the new machine:",
+  p_multi2:"Each machine is its own device: independent token, its own TTL, revocable on its own from the Devices page if it's lost. Registering a device always needs proof — an enrollment token from a device you already have (or the server's bootstrap secret) — never just the password.",
+  note_multi:"Working remotely? The server must be reachable from where you are. If your team isn't all on one network, expose it over HTTPS (a TLS reverse proxy) or put it behind a VPN — dotMage is client↔server, it doesn't sync peer-to-peer.",
+  note_multi_untrusted:"On a shared or untrusted computer, prefer <code>dmage exec</code> (secrets stay in memory, nothing written to disk) and <code>dmage lock</code> afterwards — or just use the web panel, which only ever shows metadata, never secret values. Revoke the device when you're done.",
   h_ci_setup:"CI/CD setup",
   p_ci_intro:"dotMage can inject secrets into CI/CD pipelines using scoped CI tokens. Each token gives access to exactly one app+environment — nothing more.",
   h_ci_step1:"1. Generate a scoped CI token",
@@ -1422,6 +1443,11 @@ ru: {
   ex_3:'Не авторизован — выполните <code>dmage auth</code>',
   ex_4:"Конфликт (например, одновременный push)",
   g_ci:"CI/CD", s_ci_setup:"Настройка", s_ci_github:"GitHub Actions", s_ci_gitlab:"GitLab CI",
+  h_multi:"Работа с нескольких машин",
+  p_multi:"Идентичность — это набор устройств, поэтому ноутбук, домашний ПК и компьютер в другом городе могут работать с одним аккаунтом. На устройстве, где вы уже вошли, выпустите одноразовый enrollment-токен — <code>dmage token</code> или в админке <b>Devices → Add a device</b> — и на новой машине:",
+  p_multi2:"Каждая машина — отдельное устройство: свой токен, свой TTL, отзывается отдельно на странице Devices, если потеряна. Регистрация устройства всегда требует доказательства — enrollment-токен с уже доверенного устройства (или bootstrap-secret сервера), а не просто пароль.",
+  note_multi:"Работаете удалённо? Сервер должен быть достижим оттуда, где вы находитесь. Если команда не в одной сети — выставьте его по HTTPS (TLS reverse proxy) или заведите VPN: dotMage работает клиент↔сервер, без p2p-синхронизации.",
+  note_multi_untrusted:"На общем или недоверенном компьютере лучше <code>dmage exec</code> (секреты только в памяти, ничего не пишется на диск) и <code>dmage lock</code> после — или просто веб-панель, которая показывает лишь метаданные, никогда значения. Отзовите устройство, когда закончите.",
   h_ci_setup:"Настройка CI/CD",
   p_ci_intro:"dotMage может инжектить секреты в CI/CD пайплайны через скоупленные CI-токены. Каждый токен даёт доступ ровно к одному app+environment — ни к чему больше.",
   h_ci_step1:"1. Сгенерируйте скоупленный CI-токен",
